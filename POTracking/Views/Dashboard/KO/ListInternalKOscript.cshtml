@@ -75,7 +75,6 @@ var viewModel = function(){
             var VendorName = (s.VendorName != null && s.VendorName() != null && s.VendorName() != "")?s.VendorName().toLowerCase():null;            
             var BrandName = (s.BrandName != null && s.BrandName() != null && s.BrandName() != "")?s.BrandName().toLowerCase():null;
             var ShipToCity = (s.ShipToCity != null && s.ShipToCity() != null && s.ShipToCity() != "")?s.ShipToCity().toLowerCase():null;
-            var Salesperson = (s.Salesperson != null && s.Salesperson() != null && s.Salesperson() != "")?s.Salesperson().toLowerCase():null;
             
             var PODateFrom = (s.PODateFrom != null && s.PODateFrom() != "")?s.PODateFrom():null;
             var PODateTo = (s.PODateTo != null && s.PODateTo() != "")?s.PODateTo():null;
@@ -100,7 +99,6 @@ var viewModel = function(){
                     
                     (BrandName == null || rec.BrandName.toLowerCase().indexOf(BrandName) > -1) &&
                     (ShipToCity == null || rec.ShipToCity.toLowerCase().indexOf(ShipToCity) > -1) &&
-                    (Salesperson == null || rec.Salesperson.toLowerCase().indexOf(Salesperson) > -1) &&                    
                     (PODateFrom == null || new Date(rec.PODateOnly) >= new Date(PODateFrom)) &&
                     (PODateTo == null || new Date(rec.PODateOnly) <= new Date(PODateTo)) &&
                     (ETAFrom == null || new Date(rec.ETAOnly) >= new Date(ETAFrom)) &&
@@ -160,9 +158,6 @@ var viewModel = function(){
             case "BrandName":
                 self.fields.sort(function (l, r) { return l.BrandName > r.BrandName ? 1*sortOrder : -1*sortOrder });
                 break;                  
-            case "Salesperson":
-                  self.fields.sort(function (l, r) { return l.Salesperson > r.Salesperson ? 1*sortOrder : -1*sortOrder });                  
-                  break;
             case "Status":
                   self.fields.sort(function (l, r) { return l.Status > r.Status ? 1*sortOrder : -1*sortOrder });                  
                   break;

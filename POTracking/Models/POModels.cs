@@ -100,11 +100,7 @@ namespace POT.DAL
 
         [DisplayName("Location")]
         [Required(ErrorMessage = "Location" + Defaults.RequiredMsgAppend)]
-        public int ShipToLocationID { get; set; }
-
-        [DisplayName("Salesperson")]
-        [Required(ErrorMessage = "Salesperson" + Defaults.RequiredMsgAppend)]
-        public int SalespersonID { get; set; }
+        public int ShipToLocationID { get; set; }        
     }
     
     #endregion

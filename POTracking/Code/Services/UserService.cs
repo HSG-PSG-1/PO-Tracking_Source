@@ -151,7 +151,8 @@ namespace POT.Services
                          EmailOLD = vw_u.Email,
                          LastModifiedByVal = vw_u.LastModifiedByName,
                          OrgName = vw_u.OrgName,
-                         OrgTypeName = vw_u.OrgType                         
+                         OrgTypeName = vw_u.OrgType,
+                         Comment = vw_u.Comment
                      };
                 
                 usr.OriOrgId = usr.OrgID;//Required ahead
@@ -179,7 +180,7 @@ namespace POT.Services
 
         #region Add / Edit / Delete
 
-        public int Add(Users userObj, string LinkedLoc, string UnlinkedLoc)
+        public int Add(Users userObj)//, string LinkedLoc, string UnlinkedLoc)
         {
             //Set lastmodified fields
             userObj.LastModifiedBy = _SessionUsr.ID;
@@ -194,12 +195,12 @@ namespace POT.Services
             return userObj.ID; // Return the 'newly inserted id'
         }
 
-        public int AddEdit(Users userObj, string LinkedLoc, string UnlinkedLoc)
+        public int AddEdit(Users userObj)//, string LinkedLoc, string UnlinkedLoc)
         {
             int userID = userObj.ID;
 
             if (userID <= Defaults.Integer) // Insert
-                userID = Add(userObj, LinkedLoc, UnlinkedLoc);
+                userID = Add(userObj);
 
             else
             {
@@ -252,7 +253,6 @@ namespace POT.Services
             bool referred = false;// (dbc.POHeaders.Where(p => p.UserID == uObj.ID).Count() > 0);
 
             referred = referred || (dbc.POComments.Where(c => c.UserID == uObj.ID).Count() > 0);
-            referred = referred || (dbc.POStatusHistories.Where(s => s.UserID == uObj.ID).Count() > 0);
             referred = referred || (dbc.POFiles.Where(f => f.UserID == uObj.ID).Count() > 0);            
             
             // For future usage - not really because tis just archvied history!
