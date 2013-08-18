@@ -123,12 +123,12 @@
                                 @if (_Session.RoleRights.ManageRole)
                                 {<li>@Html.ActionLink("Roles", "Manage", "Role")</li>}
                                 @if (_Session.RoleRights.ManageMaster)
-                                {<li>@Html.ActionLink("Master", "Defect", "Manage")
+                                {<li>@Html.ActionLink("Master", "Status", "Manage")
                                 <ul>
-                                    <li>@Html.ActionLink("Defect", "Defect", "Manage")</li>
-                                    <li>@Html.ActionLink("PO Status", "PO_Status", "Manage")</li>
-                                    <li>@Html.ActionLink("File Type Header", "File_Type_Header", "Manage")</li>
-                                    <li>@Html.ActionLink("File Type Detail", "File_Type_Detail", "Manage")</li>
+                                    <li>@Html.ActionLink("Carrier", "Carrier", "Manage")</li>
+                                    <li>@Html.ActionLink("Container Type", "Container_Type", "Manage")</li>
+                                    <li>@Html.ActionLink("File Type", "File_Type", "Manage")</li>
+                                    <li>@Html.ActionLink("Status", "Status", "Manage")</li>
                                 </ul>
                                 </li>                                
                                 }  

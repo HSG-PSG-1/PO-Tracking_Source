@@ -72,9 +72,9 @@ namespace POT.Services
             }
         }
 
-        public List<vw_Users_Role_Org> SearchKO(string orderBy, int? pgIndex, int pageSize, vw_Users_Role_Org usr, bool fetchAll)
+        public List<vw_Users_Role_Org> SearchKO(vw_Users_Role_Org usr)//string orderBy, int? pgIndex, int pageSize, vw_Users_Role_Org usr, bool fetchAll)
         {
-            orderBy = string.IsNullOrEmpty(orderBy) ? sortOn : orderBy;
+            //orderBy = string.IsNullOrEmpty(orderBy) ? sortOn : orderBy;
 
             using (dbc)
             {
@@ -82,12 +82,12 @@ namespace POT.Services
                 //Get filters - if any
                 userQuery = PrepareQuery(userQuery, usr);
                 // Apply Sorting
-                userQuery = userQuery.OrderBy(orderBy);
+                userQuery = userQuery.OrderBy(sortOn);//orderBy);
                 // Apply pagination and return
-                if (fetchAll)
+                //if (fetchAll)
                     return userQuery.ToList<vw_Users_Role_Org>();
-                else
-                    return userQuery.Skip(pgIndex.Value).Take(pageSize).ToList<vw_Users_Role_Org>();
+                //else
+                //    return userQuery.Skip(pgIndex.Value).Take(pageSize).ToList<vw_Users_Role_Org>();
             }
         }
 
@@ -250,7 +250,7 @@ namespace POT.Services
         {
             Users uObj = (Users)oObj;
             //Check if tis user has any POs or if he's assigned any pos
-            bool referred = false;// (dbc.POHeaders.Where(p => p.UserID == uObj.ID).Count() > 0);
+            bool referred = (dbc.POHeaders.Where(p => p.AssignTo == uObj.ID).Count() > 0);
 
             referred = referred || (dbc.POComments.Where(c => c.UserID == uObj.ID).Count() > 0);
             referred = referred || (dbc.POFiles.Where(f => f.UserID == uObj.ID).Count() > 0);            

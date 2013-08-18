@@ -110,12 +110,6 @@
         <elementListCompartment Id="6593152e-696a-42b6-ba97-d330abcdef7f" absoluteBounds="6.2650000005960464, 4.08500000089407, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="5f94490d-f77a-417c-80c7-a8ba522de52b" absoluteBounds="6.25, 7.875, 2, 2.1554996744791666">
-      <DataClassMoniker Name="/POTmodel/POStatusHistory" />
-      <nestedChildShapes>
-        <elementListCompartment Id="f7322808-d041-430e-a62b-03603dfb8eef" absoluteBounds="6.265, 8.335, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="670f968f-55ac-476f-bb5b-98b770bb121d" absoluteBounds="11.75, 7.75, 2, 2.1554996743798256">
       <DataClassMoniker Name="/POTmodel/Setting" />
       <nestedChildShapes>
@@ -141,7 +135,7 @@
         <classShapeMoniker Id="d865d1c2-9862-4349-bc54-2be79957a021" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.75 : 15.9527498371899); (6.04166666666667 : 15.9527498371899 : JumpStart); (6.20833333333333 : 15.9527498371899 : JumpEnd); (6.5 : 15.9527498371899)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.75 : 15.9527498371899); (6.26041666666667 : 15.9527498371899 : JumpStart); (6.42708333333333 : 15.9527498371899 : JumpEnd); (6.5 : 15.9527498371899)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/POTmodel/MasterBrand/MasterBrand_MasterItem" />
       <nodes>
         <classShapeMoniker Id="00cd38c4-c212-4033-879f-7fdd98bd101a" />
@@ -155,7 +149,7 @@
         <classShapeMoniker Id="8c9537f6-8d3d-417d-b128-462f34d7e0da" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(8.40625 : 14.75); (8.40625 : 7.02005126979202); (9.25 : 7.02005126979202)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(8.40625 : 14.75); (8.40625 : 6.82193658724003); (9.25 : 6.82193658724003)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/POTmodel/MasterItem/MasterItem_PODetail" />
       <nodes>
         <classShapeMoniker Id="1d388452-6cfd-4089-8337-c274a265eaba" />
@@ -167,20 +161,6 @@
       <nodes>
         <classShapeMoniker Id="610e1a0d-a9d9-47ec-a7c5-8b492c770cc1" />
         <classShapeMoniker Id="84556554-129a-446a-858f-dd38a36ac0e5" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(1.75 : 10.0304996743798); (1.75 : 10.2804996743798); (2.91666666666667 : 10.2804996743798 : JumpStart); (3.20833333333333 : 10.2804996743798 : JumpEnd); (3.25 : 10.2804996743798); (3.25 : 14.0975569661458); (3.44791541666667 : 14.0975569661458 : JumpStart); (3.67708333333333 : 14.0975569661458 : JumpEnd); (5.875 : 14.0975569661458); (5.875 : 8.95274983723958); (5.91666666666667 : 8.95274983723958 : JumpStart); (6.08333333333333 : 8.95274983723958 : JumpEnd); (6.25 : 8.95274983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterStatus/MasterStatus_POStatusHistory" />
-      <nodes>
-        <classShapeMoniker Id="cfff4ebc-cac8-4321-9b19-95a248487aaa" />
-        <classShapeMoniker Id="5f94490d-f77a-417c-80c7-a8ba522de52b" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(1.75 : 7.875); (1.75 : 7.625); (3 : 7.625); (3 : 14.3475569661458); (3.04166666666667 : 14.3475569661458 : JumpStart); (3.20833333333333 : 14.3475569661458 : JumpEnd); (3.44791541666667 : 14.3475569661458 : JumpStart); (3.64583083333333 : 14.3475569661458 : JumpEnd); (6 : 14.3475569661458); (6 : 8.38262291861979); (6.25 : 8.38262291861979)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterStatus/MasterStatus_POStatusHistory1" />
-      <nodes>
-        <classShapeMoniker Id="cfff4ebc-cac8-4321-9b19-95a248487aaa" />
-        <classShapeMoniker Id="5f94490d-f77a-417c-80c7-a8ba522de52b" />
       </nodes>
     </associationConnector>
     <associationConnector edgePoints="[(2.125 : 34.25); (2.125 : 32.8093082681298)]" fixedFrom="NotFixed" fixedTo="NotFixed">
@@ -251,108 +231,11 @@
         <classShapeMoniker Id="ddc513be-4048-45e9-b969-4bb5c22bb464" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.5 : 29.875); (4.5 : 24.6169254557292); (6.125 : 24.6169254557292); (6.125 : 9.52287675585938); (6.25 : 9.52287675585938)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/Users/Users_POStatusHistory" />
-      <nodes>
-        <classShapeMoniker Id="a7d61466-8a9b-4d67-af03-105ddd6bac81" />
-        <classShapeMoniker Id="5f94490d-f77a-417c-80c7-a8ba522de52b" />
-      </nodes>
-    </associationConnector>
     <associationConnector edgePoints="[(2.75 : 31.145051269792); (3.5 : 31.145051269792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/POTmodel/UserRole/UserRole_Users" />
       <nodes>
         <classShapeMoniker Id="bf70afdb-258b-4dd3-9e27-6726cebcd73a" />
         <classShapeMoniker Id="a7d61466-8a9b-4d67-af03-105ddd6bac81" />
-      </nodes>
-    </associationConnector>
-    <classShape Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" absoluteBounds="3.5, 4, 2, 9.84755696614583">
-      <DataClassMoniker Name="/POTmodel/POHeader" />
-      <nestedChildShapes>
-        <elementListCompartment Id="53bbcf44-06d3-4261-89d9-4756a5f55f73" absoluteBounds="3.5149999999999997, 4.4600000000000009, 1.9700000000000002, 9.2875569661458321" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <associationConnector edgePoints="[(5.5 : 11.9527498372396); (6.25 : 11.9527498372396)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/POHeader/POHeader_POComment" />
-      <nodes>
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-        <classShapeMoniker Id="ddc513be-4048-45e9-b969-4bb5c22bb464" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(5.5 : 10.4527498372396); (8.32291666666667 : 10.4527498372396 : JumpStart); (8.48958333333333 : 10.4527498372396 : JumpEnd); (9.25 : 10.4527498372396)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/POHeader/POHeader_PODetail" />
-      <nodes>
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-        <classShapeMoniker Id="68c55e64-91e2-4ae2-be08-c51e63a52f98" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(5.5 : 5.08255126979202); (6.25 : 5.08255126979202)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/POHeader/POHeader_POFile" />
-      <nodes>
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-        <classShapeMoniker Id="84556554-129a-446a-858f-dd38a36ac0e5" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(5.5 : 8.0663114593099); (6.25 : 8.0663114593099)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/POHeader/POHeader_POStatusHistory" />
-      <nodes>
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-        <classShapeMoniker Id="5f94490d-f77a-417c-80c7-a8ba522de52b" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 12.8612784830729); (3.04166666666667 : 12.8612784830729 : JumpStart); (3.20833333333333 : 12.8612784830729 : JumpEnd); (3.5 : 12.8612784830729)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterCarrier/MasterCarrier_POHeader" />
-      <nodes>
-        <classShapeMoniker Id="7e6d9233-0860-4dc1-8ecc-1ddf4e672a73" />
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 14.78125); (3.04166666666667 : 14.78125 : JumpStart); (3.20833333333333 : 14.78125 : JumpEnd); (3.59375 : 14.78125); (3.59375 : 13.8475569661458)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterContainerType/MasterContainerType_POHeader" />
-      <nodes>
-        <classShapeMoniker Id="14b93e8c-5725-4cd6-b08c-e1d3aae83eb5" />
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 18.15625); (3.04166666666667 : 18.15625 : JumpStart); (3.20833333333333 : 18.15625 : JumpEnd); (3.5624975 : 18.15625); (3.5624975 : 13.8475569661458)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterOrderType/MasterOrderType_POHeader" />
-      <nodes>
-        <classShapeMoniker Id="2bd79168-fd14-4943-bce8-5d2d51c0031a" />
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 20.5); (3.125 : 20.125); (3.125 : 7.14025033718991); (3.5 : 7.14025033718991)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterShipVia/MasterShipVia_POHeader" />
-      <nodes>
-        <classShapeMoniker Id="9f5255f4-3068-4b86-b405-176f7b548001" />
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 8.95274983718991); (3.04166666666667 : 8.95274983718991 : JumpStart); (3.20833333333333 : 8.95274983718991 : JumpEnd); (3.5 : 8.95274983718991)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterStatus/MasterStatus_POHeader" />
-      <nodes>
-        <classShapeMoniker Id="cfff4ebc-cac8-4321-9b19-95a248487aaa" />
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 25.1362125650545); (3.10416666666667 : 25.1362125650545 : JumpStart); (3.27083333333333 : 25.1362125650545 : JumpEnd); (3.44791541666667 : 25.1362125650545 : JumpStart); (3.61458208333333 : 25.1362125650545 : JumpEnd); (3.6250025 : 25.1362125650545); (3.6250025 : 13.8475569661458)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterTerm/MasterTerm_POHeader" />
-      <nodes>
-        <classShapeMoniker Id="839dec0e-f7ef-49f9-ac73-8e062296e02c" />
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 27.4527498371899); (3.53124875 : 27.4527498371899); (3.53124875 : 13.8475569661458)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/MasterWarehouse/MasterWarehouse_POHeader" />
-      <nodes>
-        <classShapeMoniker Id="b0330b1d-9b59-471e-964c-3c778aa7b708" />
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(3.56153746153846 : 29.875); (3.1875 : 29.5009625384615); (3.1875 : 14.1615944276843); (3.50153746153846 : 13.8475569661458)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/POTmodel/Users/Users_POHeader" />
-      <nodes>
-        <classShapeMoniker Id="a7d61466-8a9b-4d67-af03-105ddd6bac81" />
-        <classShapeMoniker Id="ae22a2ba-cf5c-4812-b1e6-574123da7f8f" />
       </nodes>
     </associationConnector>
     <classShape Id="7f111a9c-b576-46b1-9321-d78a2fd404d1" absoluteBounds="3.75, 18.75, 2, 5.6169254557291666">
@@ -367,5 +250,115 @@
         <elementListCompartment Id="3476ca61-7916-445c-97bf-f933a6bd5868" absoluteBounds="17.515, 4.46, 1.9700000000000002, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" absoluteBounds="3.5, 3.5, 2, 9.6552555338541648">
+      <DataClassMoniker Name="/POTmodel/POHeader" />
+      <nestedChildShapes>
+        <elementListCompartment Id="50ccb2c8-1320-4ba8-955f-3d3ba5a610af" absoluteBounds="3.5150000000000006, 3.96, 1.9700000000000002, 9.0952555338541661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.5 : 11.9527498372396); (5.66666666666667 : 11.9527498372396 : JumpStart); (5.83333333333333 : 11.9527498372396 : JumpEnd); (6.25 : 11.9527498372396)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/POHeader/POHeader_POComment" />
+      <nodes>
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+        <classShapeMoniker Id="ddc513be-4048-45e9-b969-4bb5c22bb464" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 7.47877563489601); (9.25 : 7.47877563489601)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/POHeader/POHeader_PODetail" />
+      <nodes>
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+        <classShapeMoniker Id="68c55e64-91e2-4ae2-be08-c51e63a52f98" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 4.89505126979202); (6.25 : 4.89505126979202)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/POHeader/POHeader_POFile" />
+      <nodes>
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+        <classShapeMoniker Id="84556554-129a-446a-858f-dd38a36ac0e5" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 12.5151277669271); (2.79166666666667 : 12.5151277669271 : JumpStart); (2.95833333333333 : 12.5151277669271 : JumpEnd); (3.04166666666667 : 12.5151277669271 : JumpStart); (3.20833333333333 : 12.5151277669271 : JumpEnd); (3.5 : 12.5151277669271)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterCarrier/MasterCarrier_POHeader" />
+      <nodes>
+        <classShapeMoniker Id="7e6d9233-0860-4dc1-8ecc-1ddf4e672a73" />
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 14.78125); (3.04166666666667 : 14.78125 : JumpStart); (3.20833333333333 : 14.78125 : JumpEnd); (3.22916666666667 : 14.78125 : JumpStart); (3.39583333333333 : 14.78125 : JumpEnd); (3.59375 : 14.78125); (3.59375 : 13.1552555338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterContainerType/MasterContainerType_POHeader" />
+      <nodes>
+        <classShapeMoniker Id="14b93e8c-5725-4cd6-b08c-e1d3aae83eb5" />
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 18.15625); (3.22916666666667 : 18.15625 : JumpStart); (3.39583333333333 : 18.15625 : JumpEnd); (3.5624975 : 18.15625); (3.5624975 : 13.1552555338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterOrderType/MasterOrderType_POHeader" />
+      <nodes>
+        <classShapeMoniker Id="2bd79168-fd14-4943-bce8-5d2d51c0031a" />
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 20.5); (3.125 : 20.125); (3.125 : 6.22637541859496); (3.5 : 6.22637541859496)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterShipVia/MasterShipVia_POHeader" />
+      <nodes>
+        <classShapeMoniker Id="9f5255f4-3068-4b86-b405-176f7b548001" />
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 8.35137491859496); (3.5 : 8.35137491859496)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterStatus/MasterStatus_POHeader" />
+      <nodes>
+        <classShapeMoniker Id="cfff4ebc-cac8-4321-9b19-95a248487aaa" />
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 25.1362125650545); (3.22916666666667 : 25.1362125650545 : JumpStart); (3.39583333333333 : 25.1362125650545 : JumpEnd); (3.44791541666667 : 25.1362125650545 : JumpStart); (3.61458208333333 : 25.1362125650545 : JumpEnd); (3.6250025 : 25.1362125650545); (3.6250025 : 13.1552555338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterTerm/MasterTerm_POHeader" />
+      <nodes>
+        <classShapeMoniker Id="839dec0e-f7ef-49f9-ac73-8e062296e02c" />
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 27.4527498371899); (3.22916666666667 : 27.4527498371899 : JumpStart); (3.39583333333333 : 27.4527498371899 : JumpEnd); (3.53124875 : 27.4527498371899); (3.53124875 : 13.1552555338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterWarehouse/MasterWarehouse_POHeader" />
+      <nodes>
+        <classShapeMoniker Id="b0330b1d-9b59-471e-964c-3c778aa7b708" />
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(3.56153746153846 : 29.875); (3.3125 : 29.6259625384615); (3.3125 : 13.3442929953926); (3.50153746153846 : 13.1552555338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/Users/Users_POHeader" />
+      <nodes>
+        <classShapeMoniker Id="a7d61466-8a9b-4d67-af03-105ddd6bac81" />
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="288cb926-aaa5-44b6-bb10-596c05b20ca9" absoluteBounds="6, 8.375, 2, 1.9631982421875">
+      <DataClassMoniker Name="/POTmodel/POStatusHistory" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a0355a81-5b99-4ea5-9c81-3e19be9f354c" absoluteBounds="6.015, 8.835, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(1.75 : 10.0304996743798); (1.75 : 10.2804996743798); (2.79166666666667 : 10.2804996743798 : JumpStart); (2.95833333333333 : 10.2804996743798 : JumpEnd); (3 : 10.2804996743798); (3 : 13.4052555338542); (3.04166666666667 : 13.4052555338542 : JumpStart); (3.20833333333333 : 13.4052555338542 : JumpEnd); (3.44791541666667 : 13.4052555338542 : JumpStart); (3.70833583333333 : 13.4052555338542 : JumpEnd); (5.625 : 13.4052555338542); (5.625 : 9.35659912109375); (5.66666666666667 : 9.35659912109375 : JumpStart); (5.83333333333333 : 9.35659912109375 : JumpEnd); (6 : 9.35659912109375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterStatus/MasterStatus_POStatusHistory" />
+      <nodes>
+        <classShapeMoniker Id="cfff4ebc-cac8-4321-9b19-95a248487aaa" />
+        <classShapeMoniker Id="288cb926-aaa5-44b6-bb10-596c05b20ca9" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(1.75 : 7.875); (1.75 : 7.625); (2.875 : 7.625); (2.875 : 13.4052555338542); (5.75 : 13.4052555338542); (5.75 : 8.83454756054687); (6 : 8.83454756054687)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/MasterStatus/MasterStatus_POStatusHistory1" />
+      <nodes>
+        <classShapeMoniker Id="cfff4ebc-cac8-4321-9b19-95a248487aaa" />
+        <classShapeMoniker Id="288cb926-aaa5-44b6-bb10-596c05b20ca9" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 9.90989868164062); (5.66666666666667 : 9.90989868164062 : JumpStart); (5.83333333333333 : 9.90989868164062 : JumpEnd); (6 : 9.90989868164062)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/POTmodel/POHeader/POHeader_POStatusHistory" />
+      <nodes>
+        <classShapeMoniker Id="15dc9ca9-d33b-4e70-a38e-7b555bede304" />
+        <classShapeMoniker Id="288cb926-aaa5-44b6-bb10-596c05b20ca9" />
+      </nodes>
+    </associationConnector>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

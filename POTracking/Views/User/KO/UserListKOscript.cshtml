@@ -127,7 +127,7 @@ var viewModel = function(){
             self.pageIndex(0);  self.cachedPagesTill(0);
         }
     };
-    var delID=-1;var isDel = false;
+    var delID=-1;var isDel = false; var usrIDToDel = "";
         function doUserDelPost(txtId, txtVal) {
             if(!isDel){@*alert("doUserDelPost:" + txtVal);*@ return true;}
             else isDel = false;
@@ -135,9 +135,12 @@ var viewModel = function(){
             var data = {}; data[txtId] = txtVal;
             var url = '@Url.Action("UserKODelete", "User", new { ID = "" })';
             $.post(url, data);
+
+            usrIDToDel = txtVal;            
+
             return false; // prevent any postback
         }
         function doDelPost(txtId, txtVal) {
             isDel = true;
-        }
+        }        
 </script>

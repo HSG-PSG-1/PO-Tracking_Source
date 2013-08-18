@@ -341,13 +341,13 @@ if(val.length < 1) return node.innerHTML;// text only
 return (val.attr('checked') != null)? val.attr('checked'): val.val(); //checkbox or txt/drop
 }
 
-var doFurtherProcessing = function(success) { };
+function doFurtherProcessing() { };//override in the child view-script
 function showOprResult(spanId, success) {   
     // Highlight, fadeOut and finally REMOVE!
     $(spanId).effect('highlight', {}, 4000).fadeOut((success == 1) ? 1000 : 8000, function () { $(spanId).html("&nbsp;").show(); /* remove();*/ });
     
     //Special case for forms which need to do post processing        
-    //doFurtherProcessing(success); HT: Handled at the end of effect call back    
+    //doFurtherProcessing(); HT: Handled at the end of effect call back    
     try {DisableSubmitButtons(false); /*$.unblockUI();*/ } catch (e) { }
 }
 

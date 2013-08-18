@@ -119,7 +119,7 @@ namespace HSG.Helper
 
         public static string getTaconite(bool success, string msg, string msgContainer = "msg", bool doCallback = false)
         {
-            string callback = doCallback?",function(){doFurtherProcessing(true);}":"";
+            string callback = doCallback?",function(){doFurtherProcessing();}":"";
             string hide = success ? (".toggle(500" + callback + ")") : "";
             return string.Format(
      "<taconite><replaceContent select=\"#{0}\">{1}</replaceContent>" +//<slideDown select=\"#{0}\" value=\"1000\" />

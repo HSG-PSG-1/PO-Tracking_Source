@@ -96,9 +96,9 @@ function editable(ctrl, show)
     else $(ctrl).removeClass('note').addClass('noBorder');//.attr('readOnly', true)
 }
 
-function doEditable(editDiv)
-{
-    try{$(editDiv).closest('tr').find("td input[class='noBorder']").focus().trigger("click");}catch(e){alert(e);}
+function doEditable(editDiv) {
+    // http://api.jquery.com/first/
+    try{$(editDiv).closest('tr').find("td input[class='noBorder']").first().focus().trigger("click");}catch(e){alert(e);}
     //editDiv.parentElement.parentElement.children[4].click();
 }
 

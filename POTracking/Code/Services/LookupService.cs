@@ -111,9 +111,9 @@ namespace POT.Services
                     break;
                 case Source.Status:
                     results = from i in dbc.MasterStatus
-                              where (noTerm || i.Code.ToLower().Contains(term))
+                              where (noTerm || i.Description.ToLower().Contains(term))
                               orderby i.SortOrder
-                              select new { id = i.ID, value = i.Code };
+                              select new { id = i.ID, value = i.Description };
 
                     break;
 

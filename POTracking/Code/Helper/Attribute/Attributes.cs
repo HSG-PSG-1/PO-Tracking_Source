@@ -115,9 +115,9 @@ namespace HSG.Helper
                 /*case Target.Location: if (fld == Field.LocationCode) 
                     return !(new LocationService().IsLocationCodeDuplicate(val)); break;*/
                 case Target.Master: if (fld == Field.Title)
-                        return !(new MasterService(null).IsTitleDuplicate(propNEW.ToString())); break;
+                        return !(new MasterService(null).IsCodeDuplicate(propNEW.ToString())); break;
                 case Target.Role: if (fld == Field.Title)
-                        return !(new SecurityService().IsTitleDuplicate(propNEW.ToString())); break;
+                        return !(new SecurityService().IsCodeDuplicate(propNEW.ToString())); break;
                 default: return false;
             }
             
@@ -173,7 +173,7 @@ namespace HSG.Helper
             {
                 //this.ErrorMessage = "Duplicate 'Title' found.";
                 IsReqOrDup = false;
-                return !(new MasterService(null).IsTitleDuplicate((mObj.Code ?? "")));
+                return !(new MasterService(null).IsCodeDuplicate((mObj.Code ?? "")));
             }
         }
     }

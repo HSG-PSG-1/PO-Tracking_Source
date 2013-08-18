@@ -132,9 +132,9 @@
       <Column Name="LastModifiedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="LastModifiedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="CanDelete" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="MasterStatus_POHeader" Member="POHeaders" ThisKey="ID" OtherKey="OrderStatusID" Type="POHeader" />
       <Association Name="MasterStatus_POStatusHistory" Member="POStatusHistories" ThisKey="ID" OtherKey="NewStatusID" Type="POStatusHistory" />
       <Association Name="MasterStatus_POStatusHistory1" Member="POStatusHistories1" ThisKey="ID" OtherKey="OldStatusID" Type="POStatusHistory" />
-      <Association Name="MasterStatus_POHeader" Member="POHeaders" ThisKey="ID" OtherKey="OrderStatusID" Type="POHeader" />
     </Type>
   </Table>
   <Table Name="dbo.MasterTerms" Member="MasterTerms">
@@ -242,21 +242,6 @@
       <Association Name="POHeader_POFile" Member="POHeader" ThisKey="POID" OtherKey="ID" Type="POHeader" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.POStatusHistory" Member="POStatusHistories">
-    <Type Name="POStatusHistory">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="POID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="UserID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="OldStatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="NewStatusID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="LastModifiedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="LastModifiedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="MasterStatus_POStatusHistory" Member="MasterStatus" ThisKey="NewStatusID" OtherKey="ID" Type="MasterStatus" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-      <Association Name="MasterStatus_POStatusHistory1" Member="MasterStatus1" ThisKey="OldStatusID" OtherKey="ID" Type="MasterStatus" IsForeignKey="true" />
-      <Association Name="Users_POStatusHistory" Member="Users" ThisKey="UserID" OtherKey="ID" Type="Users" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-      <Association Name="POHeader_POStatusHistory" Member="POHeader" ThisKey="POID" OtherKey="ID" Type="POHeader" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Setting" Member="Settings">
     <Type Name="Setting">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -299,7 +284,6 @@
       <Column Name="LastModifiedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="LastModifiedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="Users_POComment" Member="POComments" ThisKey="ID" OtherKey="UserID" Type="POComment" />
-      <Association Name="Users_POStatusHistory" Member="POStatusHistories" ThisKey="ID" OtherKey="UserID" Type="POStatusHistory" />
       <Association Name="Users_POHeader" Member="POHeaders" ThisKey="ID" OtherKey="AssignTo" Type="POHeader" />
       <Association Name="UserRole_Users" Member="UserRole" ThisKey="RoleID" OtherKey="ID" Type="UserRole" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
@@ -424,69 +408,6 @@
       <Column Name="Items" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.POHeader" Member="POHeaders">
-    <Type Name="POHeader">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="PONumber" Type="System.String" DbType="NVarChar(7)" CanBeNull="true" />
-      <Column Name="PODate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="OrderTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Division" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
-      <Column Name="VendorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="POShipToCodeIfDropShip" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ShipToName" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
-      <Column Name="ShipToAddress1" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
-      <Column Name="ShipToAddress2" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
-      <Column Name="ShipToAddress3" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
-      <Column Name="ShipToCity" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
-      <Column Name="ShipToState" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
-      <Column Name="ShipToZipCode" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
-      <Column Name="ShipToCountryCodeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ShipToCountryCode" Type="System.String" DbType="NVarChar(3)" CanBeNull="true" />
-      <Column Name="OrderStatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ShipViaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="FOB" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
-      <Column Name="WarehouseCodeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ConfirmTo" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
-      <Column Name="Comment" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
-      <Column Name="TermsCodeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="UserID" Type="System.String" DbType="NVarChar(3)" CanBeNull="true" />
-      <Column Name="TaxableAmount" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
-      <Column Name="NonTaxableAmount" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
-      <Column Name="SalesTaxAmount" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
-      <Column Name="FreightAmount" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
-      <Column Name="Ace_Po" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Container_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="ContainerTypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Date_Lc_Opened" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Eta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Etd" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Filler_Size" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Po_Placed_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="BLNumber" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
-      <Column Name="BLDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CarrierID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Vessel" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
-      <Column Name="SealNo" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
-      <Column Name="Weight" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Pieces" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AssignTo" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="LastModifiedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="LastModifiedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="BrandID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="POHeader_POComment" Member="POComments" ThisKey="ID" OtherKey="POID" Type="POComment" />
-      <Association Name="POHeader_PODetail" Member="PODetails" ThisKey="ID" OtherKey="POID" Type="PODetail" />
-      <Association Name="POHeader_POFile" Member="POFiles" ThisKey="ID" OtherKey="POID" Type="POFile" />
-      <Association Name="POHeader_POStatusHistory" Member="POStatusHistories" ThisKey="ID" OtherKey="POID" Type="POStatusHistory" />
-      <Association Name="MasterCarrier_POHeader" Member="MasterCarrier" ThisKey="CarrierID" OtherKey="ID" Type="MasterCarrier" IsForeignKey="true" />
-      <Association Name="MasterContainerType_POHeader" Member="MasterContainerType" ThisKey="ContainerTypeId" OtherKey="ID" Type="MasterContainerType" IsForeignKey="true" />
-      <Association Name="MasterOrderType_POHeader" Member="MasterOrderType" ThisKey="OrderTypeID" OtherKey="ID" Type="MasterOrderType" IsForeignKey="true" />
-      <Association Name="MasterShipVia_POHeader" Member="MasterShipVia" ThisKey="ShipViaID" OtherKey="ID" Type="MasterShipVia" IsForeignKey="true" />
-      <Association Name="MasterStatus_POHeader" Member="MasterStatus" ThisKey="OrderStatusID" OtherKey="ID" Type="MasterStatus" IsForeignKey="true" />
-      <Association Name="MasterTerm_POHeader" Member="MasterTerm" ThisKey="TermsCodeID" OtherKey="ID" Type="MasterTerm" IsForeignKey="true" />
-      <Association Name="MasterWarehouse_POHeader" Member="MasterWarehouse" ThisKey="WarehouseCodeId" OtherKey="ID" Type="MasterWarehouse" IsForeignKey="true" />
-      <Association Name="Users_POHeader" Member="Users" ThisKey="AssignTo" OtherKey="ID" Type="Users" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.vw_POHeader" Member="vw_POHeaders">
     <Type Name="vw_POHeader">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -535,6 +456,81 @@
       <Column Name="VendorName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="BrandID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="BrandName" Type="System.String" DbType="NVarChar(80) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.POHeader" Member="POHeaders">
+    <Type Name="POHeader">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PONumber" Type="System.String" DbType="NVarChar(7)" CanBeNull="true" />
+      <Column Name="PODate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="OrderTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Division" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
+      <Column Name="VendorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="POShipToCodeIfDropShip" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ShipToName" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="ShipToAddress1" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="ShipToAddress2" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="ShipToAddress3" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="ShipToCity" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="ShipToState" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
+      <Column Name="ShipToZipCode" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="ShipToCountryCodeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ShipToCountryCode" Type="System.String" DbType="NVarChar(3)" CanBeNull="true" />
+      <Column Name="OrderStatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ShipViaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="FOB" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Column Name="WarehouseCodeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ConfirmTo" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Comment" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="TermsCodeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="UserID" Type="System.String" DbType="NVarChar(3)" CanBeNull="true" />
+      <Column Name="TaxableAmount" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
+      <Column Name="NonTaxableAmount" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
+      <Column Name="SalesTaxAmount" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
+      <Column Name="FreightAmount" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
+      <Column Name="Container_No" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="ContainerTypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Date_Lc_Opened" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Eta" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Etd" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Filler_Size" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Po_Placed_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="BLNumber" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="BLDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CarrierID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Vessel" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="SealNo" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="Weight" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Pieces" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AssignTo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LastModifiedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LastModifiedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="BrandID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="POHeader_POComment" Member="POComments" ThisKey="ID" OtherKey="POID" Type="POComment" />
+      <Association Name="POHeader_PODetail" Member="PODetails" ThisKey="ID" OtherKey="POID" Type="PODetail" />
+      <Association Name="POHeader_POFile" Member="POFiles" ThisKey="ID" OtherKey="POID" Type="POFile" />
+      <Association Name="POHeader_POStatusHistory" Member="POStatusHistories" ThisKey="ID" OtherKey="POID" Type="POStatusHistory" />
+      <Association Name="MasterCarrier_POHeader" Member="MasterCarrier" ThisKey="CarrierID" OtherKey="ID" Type="MasterCarrier" IsForeignKey="true" />
+      <Association Name="MasterContainerType_POHeader" Member="MasterContainerType" ThisKey="ContainerTypeId" OtherKey="ID" Type="MasterContainerType" IsForeignKey="true" />
+      <Association Name="MasterOrderType_POHeader" Member="MasterOrderType" ThisKey="OrderTypeID" OtherKey="ID" Type="MasterOrderType" IsForeignKey="true" />
+      <Association Name="MasterShipVia_POHeader" Member="MasterShipVia" ThisKey="ShipViaID" OtherKey="ID" Type="MasterShipVia" IsForeignKey="true" />
+      <Association Name="MasterStatus_POHeader" Member="MasterStatus" ThisKey="OrderStatusID" OtherKey="ID" Type="MasterStatus" IsForeignKey="true" />
+      <Association Name="MasterTerm_POHeader" Member="MasterTerm" ThisKey="TermsCodeID" OtherKey="ID" Type="MasterTerm" IsForeignKey="true" />
+      <Association Name="MasterWarehouse_POHeader" Member="MasterWarehouse" ThisKey="WarehouseCodeId" OtherKey="ID" Type="MasterWarehouse" IsForeignKey="true" />
+      <Association Name="Users_POHeader" Member="Users" ThisKey="AssignTo" OtherKey="ID" Type="Users" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.POStatusHistory" Member="POStatusHistories">
+    <Type Name="POStatusHistory">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="POID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OldStatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NewStatusID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LastModifiedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LastModifiedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="MasterStatus_POStatusHistory" Member="MasterStatus" ThisKey="NewStatusID" OtherKey="ID" Type="MasterStatus" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="MasterStatus_POStatusHistory1" Member="MasterStatus1" ThisKey="OldStatusID" OtherKey="ID" Type="MasterStatus" IsForeignKey="true" />
+      <Association Name="POHeader_POStatusHistory" Member="POHeader" ThisKey="POID" OtherKey="ID" Type="POHeader" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
 </Database>

@@ -84,9 +84,6 @@ namespace POT.DAL
     partial void InsertPOFile(POFile instance);
     partial void UpdatePOFile(POFile instance);
     partial void DeletePOFile(POFile instance);
-    partial void InsertPOStatusHistory(POStatusHistory instance);
-    partial void UpdatePOStatusHistory(POStatusHistory instance);
-    partial void DeletePOStatusHistory(POStatusHistory instance);
     partial void InsertSetting(Setting instance);
     partial void UpdateSetting(Setting instance);
     partial void DeleteSetting(Setting instance);
@@ -99,6 +96,9 @@ namespace POT.DAL
     partial void InsertPOHeader(POHeader instance);
     partial void UpdatePOHeader(POHeader instance);
     partial void DeletePOHeader(POHeader instance);
+    partial void InsertPOStatusHistory(POStatusHistory instance);
+    partial void UpdatePOStatusHistory(POStatusHistory instance);
+    partial void DeletePOStatusHistory(POStatusHistory instance);
     #endregion
 		
 		public POTmodel() : 
@@ -275,14 +275,6 @@ namespace POT.DAL
 			}
 		}
 		
-		public System.Data.Linq.Table<POStatusHistory> POStatusHistories
-		{
-			get
-			{
-				return this.GetTable<POStatusHistory>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Setting> Settings
 		{
 			get
@@ -379,14 +371,6 @@ namespace POT.DAL
 			}
 		}
 		
-		public System.Data.Linq.Table<POHeader> POHeaders
-		{
-			get
-			{
-				return this.GetTable<POHeader>();
-			}
-		}
-		
 		public System.Data.Linq.Table<vw_POHeader> vw_POHeaders
 		{
 			get
@@ -400,6 +384,22 @@ namespace POT.DAL
 			get
 			{
 				return this.GetTable<vw_PO_Dashboard>();
+			}
+		}
+		
+		public System.Data.Linq.Table<POHeader> POHeaders
+		{
+			get
+			{
+				return this.GetTable<POHeader>();
+			}
+		}
+		
+		public System.Data.Linq.Table<POStatusHistory> POStatusHistories
+		{
+			get
+			{
+				return this.GetTable<POStatusHistory>();
 			}
 		}
 	}
@@ -2862,11 +2862,11 @@ namespace POT.DAL
 		
 		private bool _CanDelete;
 		
+		private EntitySet<POHeader> _POHeaders;
+		
 		private EntitySet<POStatusHistory> _POStatusHistories;
 		
 		private EntitySet<POStatusHistory> _POStatusHistories1;
-		
-		private EntitySet<POHeader> _POHeaders;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2890,9 +2890,9 @@ namespace POT.DAL
 		
 		public MasterStatus()
 		{
+			this._POHeaders = new EntitySet<POHeader>(new Action<POHeader>(this.attach_POHeaders), new Action<POHeader>(this.detach_POHeaders));
 			this._POStatusHistories = new EntitySet<POStatusHistory>(new Action<POStatusHistory>(this.attach_POStatusHistories), new Action<POStatusHistory>(this.detach_POStatusHistories));
 			this._POStatusHistories1 = new EntitySet<POStatusHistory>(new Action<POStatusHistory>(this.attach_POStatusHistories1), new Action<POStatusHistory>(this.detach_POStatusHistories1));
-			this._POHeaders = new EntitySet<POHeader>(new Action<POHeader>(this.attach_POHeaders), new Action<POHeader>(this.detach_POHeaders));
 			OnCreated();
 		}
 		
@@ -3036,6 +3036,19 @@ namespace POT.DAL
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POHeader", Storage="_POHeaders", ThisKey="ID", OtherKey="OrderStatusID")]
+		public EntitySet<POHeader> POHeaders
+		{
+			get
+			{
+				return this._POHeaders;
+			}
+			set
+			{
+				this._POHeaders.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POStatusHistory", Storage="_POStatusHistories", ThisKey="ID", OtherKey="NewStatusID")]
 		public EntitySet<POStatusHistory> POStatusHistories
 		{
@@ -3062,19 +3075,6 @@ namespace POT.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POHeader", Storage="_POHeaders", ThisKey="ID", OtherKey="OrderStatusID")]
-		public EntitySet<POHeader> POHeaders
-		{
-			get
-			{
-				return this._POHeaders;
-			}
-			set
-			{
-				this._POHeaders.Assign(value);
-			}
-		}
-		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -3093,6 +3093,18 @@ namespace POT.DAL
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_POHeaders(POHeader entity)
+		{
+			this.SendPropertyChanging();
+			entity.MasterStatus = this;
+		}
+		
+		private void detach_POHeaders(POHeader entity)
+		{
+			this.SendPropertyChanging();
+			entity.MasterStatus = null;
 		}
 		
 		private void attach_POStatusHistories(POStatusHistory entity)
@@ -3117,18 +3129,6 @@ namespace POT.DAL
 		{
 			this.SendPropertyChanging();
 			entity.MasterStatus1 = null;
-		}
-		
-		private void attach_POHeaders(POHeader entity)
-		{
-			this.SendPropertyChanging();
-			entity.MasterStatus = this;
-		}
-		
-		private void detach_POHeaders(POHeader entity)
-		{
-			this.SendPropertyChanging();
-			entity.MasterStatus = null;
 		}
 	}
 	
@@ -5381,376 +5381,6 @@ namespace POT.DAL
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.POStatusHistory")]
-	public partial class POStatusHistory : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private int _POID;
-		
-		private int _UserID;
-		
-		private System.Nullable<int> _OldStatusID;
-		
-		private int _NewStatusID;
-		
-		private int _LastModifiedBy;
-		
-		private System.DateTime _LastModifiedDate;
-		
-		private EntityRef<MasterStatus> _MasterStatus;
-		
-		private EntityRef<MasterStatus> _MasterStatus1;
-		
-		private EntityRef<Users> _Users;
-		
-		private EntityRef<POHeader> _POHeader;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnPOIDChanging(int value);
-    partial void OnPOIDChanged();
-    partial void OnUserIDChanging(int value);
-    partial void OnUserIDChanged();
-    partial void OnOldStatusIDChanging(System.Nullable<int> value);
-    partial void OnOldStatusIDChanged();
-    partial void OnNewStatusIDChanging(int value);
-    partial void OnNewStatusIDChanged();
-    partial void OnLastModifiedByChanging(int value);
-    partial void OnLastModifiedByChanged();
-    partial void OnLastModifiedDateChanging(System.DateTime value);
-    partial void OnLastModifiedDateChanged();
-    #endregion
-		
-		public POStatusHistory()
-		{
-			this._MasterStatus = default(EntityRef<MasterStatus>);
-			this._MasterStatus1 = default(EntityRef<MasterStatus>);
-			this._Users = default(EntityRef<Users>);
-			this._POHeader = default(EntityRef<POHeader>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POID", DbType="Int NOT NULL")]
-		public int POID
-		{
-			get
-			{
-				return this._POID;
-			}
-			set
-			{
-				if ((this._POID != value))
-				{
-					if (this._POHeader.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnPOIDChanging(value);
-					this.SendPropertyChanging();
-					this._POID = value;
-					this.SendPropertyChanged("POID");
-					this.OnPOIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserID", DbType="Int NOT NULL")]
-		public int UserID
-		{
-			get
-			{
-				return this._UserID;
-			}
-			set
-			{
-				if ((this._UserID != value))
-				{
-					if (this._Users.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnUserIDChanging(value);
-					this.SendPropertyChanging();
-					this._UserID = value;
-					this.SendPropertyChanged("UserID");
-					this.OnUserIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OldStatusID", DbType="Int")]
-		public System.Nullable<int> OldStatusID
-		{
-			get
-			{
-				return this._OldStatusID;
-			}
-			set
-			{
-				if ((this._OldStatusID != value))
-				{
-					if (this._MasterStatus1.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnOldStatusIDChanging(value);
-					this.SendPropertyChanging();
-					this._OldStatusID = value;
-					this.SendPropertyChanged("OldStatusID");
-					this.OnOldStatusIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NewStatusID", DbType="Int NOT NULL")]
-		public int NewStatusID
-		{
-			get
-			{
-				return this._NewStatusID;
-			}
-			set
-			{
-				if ((this._NewStatusID != value))
-				{
-					if (this._MasterStatus.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnNewStatusIDChanging(value);
-					this.SendPropertyChanging();
-					this._NewStatusID = value;
-					this.SendPropertyChanged("NewStatusID");
-					this.OnNewStatusIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModifiedBy", DbType="Int NOT NULL")]
-		public int LastModifiedBy
-		{
-			get
-			{
-				return this._LastModifiedBy;
-			}
-			set
-			{
-				if ((this._LastModifiedBy != value))
-				{
-					this.OnLastModifiedByChanging(value);
-					this.SendPropertyChanging();
-					this._LastModifiedBy = value;
-					this.SendPropertyChanged("LastModifiedBy");
-					this.OnLastModifiedByChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModifiedDate", DbType="DateTime NOT NULL")]
-		public System.DateTime LastModifiedDate
-		{
-			get
-			{
-				return this._LastModifiedDate;
-			}
-			set
-			{
-				if ((this._LastModifiedDate != value))
-				{
-					this.OnLastModifiedDateChanging(value);
-					this.SendPropertyChanging();
-					this._LastModifiedDate = value;
-					this.SendPropertyChanged("LastModifiedDate");
-					this.OnLastModifiedDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POStatusHistory", Storage="_MasterStatus", ThisKey="NewStatusID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public MasterStatus MasterStatus
-		{
-			get
-			{
-				return this._MasterStatus.Entity;
-			}
-			set
-			{
-				MasterStatus previousValue = this._MasterStatus.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterStatus.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterStatus.Entity = null;
-						previousValue.POStatusHistories.Remove(this);
-					}
-					this._MasterStatus.Entity = value;
-					if ((value != null))
-					{
-						value.POStatusHistories.Add(this);
-						this._NewStatusID = value.ID;
-					}
-					else
-					{
-						this._NewStatusID = default(int);
-					}
-					this.SendPropertyChanged("MasterStatus");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POStatusHistory1", Storage="_MasterStatus1", ThisKey="OldStatusID", OtherKey="ID", IsForeignKey=true)]
-		public MasterStatus MasterStatus1
-		{
-			get
-			{
-				return this._MasterStatus1.Entity;
-			}
-			set
-			{
-				MasterStatus previousValue = this._MasterStatus1.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterStatus1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterStatus1.Entity = null;
-						previousValue.POStatusHistories1.Remove(this);
-					}
-					this._MasterStatus1.Entity = value;
-					if ((value != null))
-					{
-						value.POStatusHistories1.Add(this);
-						this._OldStatusID = value.ID;
-					}
-					else
-					{
-						this._OldStatusID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("MasterStatus1");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_POStatusHistory", Storage="_Users", ThisKey="UserID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public Users Users
-		{
-			get
-			{
-				return this._Users.Entity;
-			}
-			set
-			{
-				Users previousValue = this._Users.Entity;
-				if (((previousValue != value) 
-							|| (this._Users.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Users.Entity = null;
-						previousValue.POStatusHistories.Remove(this);
-					}
-					this._Users.Entity = value;
-					if ((value != null))
-					{
-						value.POStatusHistories.Add(this);
-						this._UserID = value.ID;
-					}
-					else
-					{
-						this._UserID = default(int);
-					}
-					this.SendPropertyChanged("Users");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_POStatusHistory", Storage="_POHeader", ThisKey="POID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public POHeader POHeader
-		{
-			get
-			{
-				return this._POHeader.Entity;
-			}
-			set
-			{
-				POHeader previousValue = this._POHeader.Entity;
-				if (((previousValue != value) 
-							|| (this._POHeader.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._POHeader.Entity = null;
-						previousValue.POStatusHistories.Remove(this);
-					}
-					this._POHeader.Entity = value;
-					if ((value != null))
-					{
-						value.POStatusHistories.Add(this);
-						this._POID = value.ID;
-					}
-					else
-					{
-						this._POID = default(int);
-					}
-					this.SendPropertyChanged("POHeader");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Setting")]
 	public partial class Setting : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -6402,8 +6032,6 @@ namespace POT.DAL
 		
 		private EntitySet<POComment> _POComments;
 		
-		private EntitySet<POStatusHistory> _POStatusHistories;
-		
 		private EntitySet<POHeader> _POHeaders;
 		
 		private EntityRef<UserRole> _UserRole;
@@ -6435,7 +6063,6 @@ namespace POT.DAL
 		public Users()
 		{
 			this._POComments = new EntitySet<POComment>(new Action<POComment>(this.attach_POComments), new Action<POComment>(this.detach_POComments));
-			this._POStatusHistories = new EntitySet<POStatusHistory>(new Action<POStatusHistory>(this.attach_POStatusHistories), new Action<POStatusHistory>(this.detach_POStatusHistories));
 			this._POHeaders = new EntitySet<POHeader>(new Action<POHeader>(this.attach_POHeaders), new Action<POHeader>(this.detach_POHeaders));
 			this._UserRole = default(EntityRef<UserRole>);
 			OnCreated();
@@ -6638,19 +6265,6 @@ namespace POT.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_POStatusHistory", Storage="_POStatusHistories", ThisKey="ID", OtherKey="UserID")]
-		public EntitySet<POStatusHistory> POStatusHistories
-		{
-			get
-			{
-				return this._POStatusHistories;
-			}
-			set
-			{
-				this._POStatusHistories.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_POHeader", Storage="_POHeaders", ThisKey="ID", OtherKey="AssignTo")]
 		public EntitySet<POHeader> POHeaders
 		{
@@ -6725,18 +6339,6 @@ namespace POT.DAL
 		}
 		
 		private void detach_POComments(POComment entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users = null;
-		}
-		
-		private void attach_POStatusHistories(POStatusHistory entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users = this;
-		}
-		
-		private void detach_POStatusHistories(POStatusHistory entity)
 		{
 			this.SendPropertyChanging();
 			entity.Users = null;
@@ -8348,1612 +7950,6 @@ namespace POT.DAL
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.POHeader")]
-	public partial class POHeader : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private string _PONumber;
-		
-		private System.Nullable<System.DateTime> _PODate;
-		
-		private System.Nullable<int> _OrderTypeID;
-		
-		private string _Division;
-		
-		private System.Nullable<int> _VendorID;
-		
-		private System.Nullable<int> _POShipToCodeIfDropShip;
-		
-		private string _ShipToName;
-		
-		private string _ShipToAddress1;
-		
-		private string _ShipToAddress2;
-		
-		private string _ShipToAddress3;
-		
-		private string _ShipToCity;
-		
-		private string _ShipToState;
-		
-		private string _ShipToZipCode;
-		
-		private System.Nullable<int> _ShipToCountryCodeId;
-		
-		private string _ShipToCountryCode;
-		
-		private System.Nullable<int> _OrderStatusID;
-		
-		private System.Nullable<int> _ShipViaID;
-		
-		private string _FOB;
-		
-		private System.Nullable<int> _WarehouseCodeId;
-		
-		private string _ConfirmTo;
-		
-		private string _Comment;
-		
-		private System.Nullable<int> _TermsCodeID;
-		
-		private string _UserID;
-		
-		private System.Nullable<decimal> _TaxableAmount;
-		
-		private System.Nullable<decimal> _NonTaxableAmount;
-		
-		private System.Nullable<decimal> _SalesTaxAmount;
-		
-		private System.Nullable<decimal> _FreightAmount;
-		
-		private string _Ace_Po;
-		
-		private string _Container_No;
-		
-		private System.Nullable<int> _ContainerTypeId;
-		
-		private System.Nullable<System.DateTime> _Date_Lc_Opened;
-		
-		private System.Nullable<System.DateTime> _Eta;
-		
-		private System.Nullable<System.DateTime> _Etd;
-		
-		private string _Filler_Size;
-		
-		private System.Nullable<System.DateTime> _Po_Placed_Date;
-		
-		private string _BLNumber;
-		
-		private System.Nullable<System.DateTime> _BLDate;
-		
-		private System.Nullable<int> _CarrierID;
-		
-		private string _Vessel;
-		
-		private string _SealNo;
-		
-		private System.Nullable<int> _Weight;
-		
-		private System.Nullable<int> _Pieces;
-		
-		private System.Nullable<int> _AssignTo;
-		
-		private int _LastModifiedBy;
-		
-		private System.DateTime _LastModifiedDate;
-		
-		private System.Nullable<int> _BrandID;
-		
-		private EntitySet<POComment> _POComments;
-		
-		private EntitySet<PODetail> _PODetails;
-		
-		private EntitySet<POFile> _POFiles;
-		
-		private EntitySet<POStatusHistory> _POStatusHistories;
-		
-		private EntityRef<MasterCarrier> _MasterCarrier;
-		
-		private EntityRef<MasterContainerType> _MasterContainerType;
-		
-		private EntityRef<MasterOrderType> _MasterOrderType;
-		
-		private EntityRef<MasterShipVia> _MasterShipVia;
-		
-		private EntityRef<MasterStatus> _MasterStatus;
-		
-		private EntityRef<MasterTerm> _MasterTerm;
-		
-		private EntityRef<MasterWarehouse> _MasterWarehouse;
-		
-		private EntityRef<Users> _Users;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnPONumberChanging(string value);
-    partial void OnPONumberChanged();
-    partial void OnPODateChanging(System.Nullable<System.DateTime> value);
-    partial void OnPODateChanged();
-    partial void OnOrderTypeIDChanging(System.Nullable<int> value);
-    partial void OnOrderTypeIDChanged();
-    partial void OnDivisionChanging(string value);
-    partial void OnDivisionChanged();
-    partial void OnVendorIDChanging(System.Nullable<int> value);
-    partial void OnVendorIDChanged();
-    partial void OnPOShipToCodeIfDropShipChanging(System.Nullable<int> value);
-    partial void OnPOShipToCodeIfDropShipChanged();
-    partial void OnShipToNameChanging(string value);
-    partial void OnShipToNameChanged();
-    partial void OnShipToAddress1Changing(string value);
-    partial void OnShipToAddress1Changed();
-    partial void OnShipToAddress2Changing(string value);
-    partial void OnShipToAddress2Changed();
-    partial void OnShipToAddress3Changing(string value);
-    partial void OnShipToAddress3Changed();
-    partial void OnShipToCityChanging(string value);
-    partial void OnShipToCityChanged();
-    partial void OnShipToStateChanging(string value);
-    partial void OnShipToStateChanged();
-    partial void OnShipToZipCodeChanging(string value);
-    partial void OnShipToZipCodeChanged();
-    partial void OnShipToCountryCodeIdChanging(System.Nullable<int> value);
-    partial void OnShipToCountryCodeIdChanged();
-    partial void OnShipToCountryCodeChanging(string value);
-    partial void OnShipToCountryCodeChanged();
-    partial void OnOrderStatusIDChanging(System.Nullable<int> value);
-    partial void OnOrderStatusIDChanged();
-    partial void OnShipViaIDChanging(System.Nullable<int> value);
-    partial void OnShipViaIDChanged();
-    partial void OnFOBChanging(string value);
-    partial void OnFOBChanged();
-    partial void OnWarehouseCodeIdChanging(System.Nullable<int> value);
-    partial void OnWarehouseCodeIdChanged();
-    partial void OnConfirmToChanging(string value);
-    partial void OnConfirmToChanged();
-    partial void OnCommentChanging(string value);
-    partial void OnCommentChanged();
-    partial void OnTermsCodeIDChanging(System.Nullable<int> value);
-    partial void OnTermsCodeIDChanged();
-    partial void OnUserIDChanging(string value);
-    partial void OnUserIDChanged();
-    partial void OnTaxableAmountChanging(System.Nullable<decimal> value);
-    partial void OnTaxableAmountChanged();
-    partial void OnNonTaxableAmountChanging(System.Nullable<decimal> value);
-    partial void OnNonTaxableAmountChanged();
-    partial void OnSalesTaxAmountChanging(System.Nullable<decimal> value);
-    partial void OnSalesTaxAmountChanged();
-    partial void OnFreightAmountChanging(System.Nullable<decimal> value);
-    partial void OnFreightAmountChanged();
-    partial void OnAce_PoChanging(string value);
-    partial void OnAce_PoChanged();
-    partial void OnContainer_NoChanging(string value);
-    partial void OnContainer_NoChanged();
-    partial void OnContainerTypeIdChanging(System.Nullable<int> value);
-    partial void OnContainerTypeIdChanged();
-    partial void OnDate_Lc_OpenedChanging(System.Nullable<System.DateTime> value);
-    partial void OnDate_Lc_OpenedChanged();
-    partial void OnEtaChanging(System.Nullable<System.DateTime> value);
-    partial void OnEtaChanged();
-    partial void OnEtdChanging(System.Nullable<System.DateTime> value);
-    partial void OnEtdChanged();
-    partial void OnFiller_SizeChanging(string value);
-    partial void OnFiller_SizeChanged();
-    partial void OnPo_Placed_DateChanging(System.Nullable<System.DateTime> value);
-    partial void OnPo_Placed_DateChanged();
-    partial void OnBLNumberChanging(string value);
-    partial void OnBLNumberChanged();
-    partial void OnBLDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnBLDateChanged();
-    partial void OnCarrierIDChanging(System.Nullable<int> value);
-    partial void OnCarrierIDChanged();
-    partial void OnVesselChanging(string value);
-    partial void OnVesselChanged();
-    partial void OnSealNoChanging(string value);
-    partial void OnSealNoChanged();
-    partial void OnWeightChanging(System.Nullable<int> value);
-    partial void OnWeightChanged();
-    partial void OnPiecesChanging(System.Nullable<int> value);
-    partial void OnPiecesChanged();
-    partial void OnAssignToChanging(System.Nullable<int> value);
-    partial void OnAssignToChanged();
-    partial void OnLastModifiedByChanging(int value);
-    partial void OnLastModifiedByChanged();
-    partial void OnLastModifiedDateChanging(System.DateTime value);
-    partial void OnLastModifiedDateChanged();
-    partial void OnBrandIDChanging(System.Nullable<int> value);
-    partial void OnBrandIDChanged();
-    #endregion
-		
-		public POHeader()
-		{
-			this._POComments = new EntitySet<POComment>(new Action<POComment>(this.attach_POComments), new Action<POComment>(this.detach_POComments));
-			this._PODetails = new EntitySet<PODetail>(new Action<PODetail>(this.attach_PODetails), new Action<PODetail>(this.detach_PODetails));
-			this._POFiles = new EntitySet<POFile>(new Action<POFile>(this.attach_POFiles), new Action<POFile>(this.detach_POFiles));
-			this._POStatusHistories = new EntitySet<POStatusHistory>(new Action<POStatusHistory>(this.attach_POStatusHistories), new Action<POStatusHistory>(this.detach_POStatusHistories));
-			this._MasterCarrier = default(EntityRef<MasterCarrier>);
-			this._MasterContainerType = default(EntityRef<MasterContainerType>);
-			this._MasterOrderType = default(EntityRef<MasterOrderType>);
-			this._MasterShipVia = default(EntityRef<MasterShipVia>);
-			this._MasterStatus = default(EntityRef<MasterStatus>);
-			this._MasterTerm = default(EntityRef<MasterTerm>);
-			this._MasterWarehouse = default(EntityRef<MasterWarehouse>);
-			this._Users = default(EntityRef<Users>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PONumber", DbType="NVarChar(7)")]
-		public string PONumber
-		{
-			get
-			{
-				return this._PONumber;
-			}
-			set
-			{
-				if ((this._PONumber != value))
-				{
-					this.OnPONumberChanging(value);
-					this.SendPropertyChanging();
-					this._PONumber = value;
-					this.SendPropertyChanged("PONumber");
-					this.OnPONumberChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PODate", DbType="DateTime")]
-		public System.Nullable<System.DateTime> PODate
-		{
-			get
-			{
-				return this._PODate;
-			}
-			set
-			{
-				if ((this._PODate != value))
-				{
-					this.OnPODateChanging(value);
-					this.SendPropertyChanging();
-					this._PODate = value;
-					this.SendPropertyChanged("PODate");
-					this.OnPODateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderTypeID", DbType="Int")]
-		public System.Nullable<int> OrderTypeID
-		{
-			get
-			{
-				return this._OrderTypeID;
-			}
-			set
-			{
-				if ((this._OrderTypeID != value))
-				{
-					if (this._MasterOrderType.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnOrderTypeIDChanging(value);
-					this.SendPropertyChanging();
-					this._OrderTypeID = value;
-					this.SendPropertyChanged("OrderTypeID");
-					this.OnOrderTypeIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Division", DbType="NVarChar(2)")]
-		public string Division
-		{
-			get
-			{
-				return this._Division;
-			}
-			set
-			{
-				if ((this._Division != value))
-				{
-					this.OnDivisionChanging(value);
-					this.SendPropertyChanging();
-					this._Division = value;
-					this.SendPropertyChanged("Division");
-					this.OnDivisionChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VendorID", DbType="Int")]
-		public System.Nullable<int> VendorID
-		{
-			get
-			{
-				return this._VendorID;
-			}
-			set
-			{
-				if ((this._VendorID != value))
-				{
-					this.OnVendorIDChanging(value);
-					this.SendPropertyChanging();
-					this._VendorID = value;
-					this.SendPropertyChanged("VendorID");
-					this.OnVendorIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POShipToCodeIfDropShip", DbType="Int")]
-		public System.Nullable<int> POShipToCodeIfDropShip
-		{
-			get
-			{
-				return this._POShipToCodeIfDropShip;
-			}
-			set
-			{
-				if ((this._POShipToCodeIfDropShip != value))
-				{
-					this.OnPOShipToCodeIfDropShipChanging(value);
-					this.SendPropertyChanging();
-					this._POShipToCodeIfDropShip = value;
-					this.SendPropertyChanged("POShipToCodeIfDropShip");
-					this.OnPOShipToCodeIfDropShipChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToName", DbType="NVarChar(30)")]
-		public string ShipToName
-		{
-			get
-			{
-				return this._ShipToName;
-			}
-			set
-			{
-				if ((this._ShipToName != value))
-				{
-					this.OnShipToNameChanging(value);
-					this.SendPropertyChanging();
-					this._ShipToName = value;
-					this.SendPropertyChanged("ShipToName");
-					this.OnShipToNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToAddress1", DbType="NVarChar(30)")]
-		public string ShipToAddress1
-		{
-			get
-			{
-				return this._ShipToAddress1;
-			}
-			set
-			{
-				if ((this._ShipToAddress1 != value))
-				{
-					this.OnShipToAddress1Changing(value);
-					this.SendPropertyChanging();
-					this._ShipToAddress1 = value;
-					this.SendPropertyChanged("ShipToAddress1");
-					this.OnShipToAddress1Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToAddress2", DbType="NVarChar(30)")]
-		public string ShipToAddress2
-		{
-			get
-			{
-				return this._ShipToAddress2;
-			}
-			set
-			{
-				if ((this._ShipToAddress2 != value))
-				{
-					this.OnShipToAddress2Changing(value);
-					this.SendPropertyChanging();
-					this._ShipToAddress2 = value;
-					this.SendPropertyChanged("ShipToAddress2");
-					this.OnShipToAddress2Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToAddress3", DbType="NVarChar(30)")]
-		public string ShipToAddress3
-		{
-			get
-			{
-				return this._ShipToAddress3;
-			}
-			set
-			{
-				if ((this._ShipToAddress3 != value))
-				{
-					this.OnShipToAddress3Changing(value);
-					this.SendPropertyChanging();
-					this._ShipToAddress3 = value;
-					this.SendPropertyChanged("ShipToAddress3");
-					this.OnShipToAddress3Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToCity", DbType="NVarChar(20)")]
-		public string ShipToCity
-		{
-			get
-			{
-				return this._ShipToCity;
-			}
-			set
-			{
-				if ((this._ShipToCity != value))
-				{
-					this.OnShipToCityChanging(value);
-					this.SendPropertyChanging();
-					this._ShipToCity = value;
-					this.SendPropertyChanged("ShipToCity");
-					this.OnShipToCityChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToState", DbType="NVarChar(2)")]
-		public string ShipToState
-		{
-			get
-			{
-				return this._ShipToState;
-			}
-			set
-			{
-				if ((this._ShipToState != value))
-				{
-					this.OnShipToStateChanging(value);
-					this.SendPropertyChanging();
-					this._ShipToState = value;
-					this.SendPropertyChanged("ShipToState");
-					this.OnShipToStateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToZipCode", DbType="NVarChar(10)")]
-		public string ShipToZipCode
-		{
-			get
-			{
-				return this._ShipToZipCode;
-			}
-			set
-			{
-				if ((this._ShipToZipCode != value))
-				{
-					this.OnShipToZipCodeChanging(value);
-					this.SendPropertyChanging();
-					this._ShipToZipCode = value;
-					this.SendPropertyChanged("ShipToZipCode");
-					this.OnShipToZipCodeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToCountryCodeId", DbType="Int")]
-		public System.Nullable<int> ShipToCountryCodeId
-		{
-			get
-			{
-				return this._ShipToCountryCodeId;
-			}
-			set
-			{
-				if ((this._ShipToCountryCodeId != value))
-				{
-					this.OnShipToCountryCodeIdChanging(value);
-					this.SendPropertyChanging();
-					this._ShipToCountryCodeId = value;
-					this.SendPropertyChanged("ShipToCountryCodeId");
-					this.OnShipToCountryCodeIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToCountryCode", DbType="NVarChar(3)")]
-		public string ShipToCountryCode
-		{
-			get
-			{
-				return this._ShipToCountryCode;
-			}
-			set
-			{
-				if ((this._ShipToCountryCode != value))
-				{
-					this.OnShipToCountryCodeChanging(value);
-					this.SendPropertyChanging();
-					this._ShipToCountryCode = value;
-					this.SendPropertyChanged("ShipToCountryCode");
-					this.OnShipToCountryCodeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderStatusID", DbType="Int")]
-		public System.Nullable<int> OrderStatusID
-		{
-			get
-			{
-				return this._OrderStatusID;
-			}
-			set
-			{
-				if ((this._OrderStatusID != value))
-				{
-					if (this._MasterStatus.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnOrderStatusIDChanging(value);
-					this.SendPropertyChanging();
-					this._OrderStatusID = value;
-					this.SendPropertyChanged("OrderStatusID");
-					this.OnOrderStatusIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipViaID", DbType="Int")]
-		public System.Nullable<int> ShipViaID
-		{
-			get
-			{
-				return this._ShipViaID;
-			}
-			set
-			{
-				if ((this._ShipViaID != value))
-				{
-					if (this._MasterShipVia.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnShipViaIDChanging(value);
-					this.SendPropertyChanging();
-					this._ShipViaID = value;
-					this.SendPropertyChanged("ShipViaID");
-					this.OnShipViaIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOB", DbType="NVarChar(15)")]
-		public string FOB
-		{
-			get
-			{
-				return this._FOB;
-			}
-			set
-			{
-				if ((this._FOB != value))
-				{
-					this.OnFOBChanging(value);
-					this.SendPropertyChanging();
-					this._FOB = value;
-					this.SendPropertyChanged("FOB");
-					this.OnFOBChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WarehouseCodeId", DbType="Int")]
-		public System.Nullable<int> WarehouseCodeId
-		{
-			get
-			{
-				return this._WarehouseCodeId;
-			}
-			set
-			{
-				if ((this._WarehouseCodeId != value))
-				{
-					if (this._MasterWarehouse.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnWarehouseCodeIdChanging(value);
-					this.SendPropertyChanging();
-					this._WarehouseCodeId = value;
-					this.SendPropertyChanged("WarehouseCodeId");
-					this.OnWarehouseCodeIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ConfirmTo", DbType="NVarChar(30)")]
-		public string ConfirmTo
-		{
-			get
-			{
-				return this._ConfirmTo;
-			}
-			set
-			{
-				if ((this._ConfirmTo != value))
-				{
-					this.OnConfirmToChanging(value);
-					this.SendPropertyChanging();
-					this._ConfirmTo = value;
-					this.SendPropertyChanged("ConfirmTo");
-					this.OnConfirmToChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Comment", DbType="NVarChar(30)")]
-		public string Comment
-		{
-			get
-			{
-				return this._Comment;
-			}
-			set
-			{
-				if ((this._Comment != value))
-				{
-					this.OnCommentChanging(value);
-					this.SendPropertyChanging();
-					this._Comment = value;
-					this.SendPropertyChanged("Comment");
-					this.OnCommentChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TermsCodeID", DbType="Int")]
-		public System.Nullable<int> TermsCodeID
-		{
-			get
-			{
-				return this._TermsCodeID;
-			}
-			set
-			{
-				if ((this._TermsCodeID != value))
-				{
-					if (this._MasterTerm.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnTermsCodeIDChanging(value);
-					this.SendPropertyChanging();
-					this._TermsCodeID = value;
-					this.SendPropertyChanged("TermsCodeID");
-					this.OnTermsCodeIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserID", DbType="NVarChar(3)")]
-		public string UserID
-		{
-			get
-			{
-				return this._UserID;
-			}
-			set
-			{
-				if ((this._UserID != value))
-				{
-					this.OnUserIDChanging(value);
-					this.SendPropertyChanging();
-					this._UserID = value;
-					this.SendPropertyChanged("UserID");
-					this.OnUserIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaxableAmount", DbType="Decimal(15,4)")]
-		public System.Nullable<decimal> TaxableAmount
-		{
-			get
-			{
-				return this._TaxableAmount;
-			}
-			set
-			{
-				if ((this._TaxableAmount != value))
-				{
-					this.OnTaxableAmountChanging(value);
-					this.SendPropertyChanging();
-					this._TaxableAmount = value;
-					this.SendPropertyChanged("TaxableAmount");
-					this.OnTaxableAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NonTaxableAmount", DbType="Decimal(15,4)")]
-		public System.Nullable<decimal> NonTaxableAmount
-		{
-			get
-			{
-				return this._NonTaxableAmount;
-			}
-			set
-			{
-				if ((this._NonTaxableAmount != value))
-				{
-					this.OnNonTaxableAmountChanging(value);
-					this.SendPropertyChanging();
-					this._NonTaxableAmount = value;
-					this.SendPropertyChanged("NonTaxableAmount");
-					this.OnNonTaxableAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SalesTaxAmount", DbType="Decimal(15,4)")]
-		public System.Nullable<decimal> SalesTaxAmount
-		{
-			get
-			{
-				return this._SalesTaxAmount;
-			}
-			set
-			{
-				if ((this._SalesTaxAmount != value))
-				{
-					this.OnSalesTaxAmountChanging(value);
-					this.SendPropertyChanging();
-					this._SalesTaxAmount = value;
-					this.SendPropertyChanged("SalesTaxAmount");
-					this.OnSalesTaxAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FreightAmount", DbType="Decimal(15,4)")]
-		public System.Nullable<decimal> FreightAmount
-		{
-			get
-			{
-				return this._FreightAmount;
-			}
-			set
-			{
-				if ((this._FreightAmount != value))
-				{
-					this.OnFreightAmountChanging(value);
-					this.SendPropertyChanging();
-					this._FreightAmount = value;
-					this.SendPropertyChanged("FreightAmount");
-					this.OnFreightAmountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ace_Po", DbType="NVarChar(50)")]
-		public string Ace_Po
-		{
-			get
-			{
-				return this._Ace_Po;
-			}
-			set
-			{
-				if ((this._Ace_Po != value))
-				{
-					this.OnAce_PoChanging(value);
-					this.SendPropertyChanging();
-					this._Ace_Po = value;
-					this.SendPropertyChanged("Ace_Po");
-					this.OnAce_PoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Container_No", DbType="NVarChar(50)")]
-		public string Container_No
-		{
-			get
-			{
-				return this._Container_No;
-			}
-			set
-			{
-				if ((this._Container_No != value))
-				{
-					this.OnContainer_NoChanging(value);
-					this.SendPropertyChanging();
-					this._Container_No = value;
-					this.SendPropertyChanged("Container_No");
-					this.OnContainer_NoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ContainerTypeId", DbType="Int")]
-		public System.Nullable<int> ContainerTypeId
-		{
-			get
-			{
-				return this._ContainerTypeId;
-			}
-			set
-			{
-				if ((this._ContainerTypeId != value))
-				{
-					if (this._MasterContainerType.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnContainerTypeIdChanging(value);
-					this.SendPropertyChanging();
-					this._ContainerTypeId = value;
-					this.SendPropertyChanged("ContainerTypeId");
-					this.OnContainerTypeIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date_Lc_Opened", DbType="DateTime")]
-		public System.Nullable<System.DateTime> Date_Lc_Opened
-		{
-			get
-			{
-				return this._Date_Lc_Opened;
-			}
-			set
-			{
-				if ((this._Date_Lc_Opened != value))
-				{
-					this.OnDate_Lc_OpenedChanging(value);
-					this.SendPropertyChanging();
-					this._Date_Lc_Opened = value;
-					this.SendPropertyChanged("Date_Lc_Opened");
-					this.OnDate_Lc_OpenedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Eta", DbType="DateTime")]
-		public System.Nullable<System.DateTime> Eta
-		{
-			get
-			{
-				return this._Eta;
-			}
-			set
-			{
-				if ((this._Eta != value))
-				{
-					this.OnEtaChanging(value);
-					this.SendPropertyChanging();
-					this._Eta = value;
-					this.SendPropertyChanged("Eta");
-					this.OnEtaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Etd", DbType="DateTime")]
-		public System.Nullable<System.DateTime> Etd
-		{
-			get
-			{
-				return this._Etd;
-			}
-			set
-			{
-				if ((this._Etd != value))
-				{
-					this.OnEtdChanging(value);
-					this.SendPropertyChanging();
-					this._Etd = value;
-					this.SendPropertyChanged("Etd");
-					this.OnEtdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Filler_Size", DbType="NVarChar(50)")]
-		public string Filler_Size
-		{
-			get
-			{
-				return this._Filler_Size;
-			}
-			set
-			{
-				if ((this._Filler_Size != value))
-				{
-					this.OnFiller_SizeChanging(value);
-					this.SendPropertyChanging();
-					this._Filler_Size = value;
-					this.SendPropertyChanged("Filler_Size");
-					this.OnFiller_SizeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Po_Placed_Date", DbType="DateTime")]
-		public System.Nullable<System.DateTime> Po_Placed_Date
-		{
-			get
-			{
-				return this._Po_Placed_Date;
-			}
-			set
-			{
-				if ((this._Po_Placed_Date != value))
-				{
-					this.OnPo_Placed_DateChanging(value);
-					this.SendPropertyChanging();
-					this._Po_Placed_Date = value;
-					this.SendPropertyChanged("Po_Placed_Date");
-					this.OnPo_Placed_DateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BLNumber", DbType="NVarChar(25)")]
-		public string BLNumber
-		{
-			get
-			{
-				return this._BLNumber;
-			}
-			set
-			{
-				if ((this._BLNumber != value))
-				{
-					this.OnBLNumberChanging(value);
-					this.SendPropertyChanging();
-					this._BLNumber = value;
-					this.SendPropertyChanged("BLNumber");
-					this.OnBLNumberChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BLDate", DbType="DateTime")]
-		public System.Nullable<System.DateTime> BLDate
-		{
-			get
-			{
-				return this._BLDate;
-			}
-			set
-			{
-				if ((this._BLDate != value))
-				{
-					this.OnBLDateChanging(value);
-					this.SendPropertyChanging();
-					this._BLDate = value;
-					this.SendPropertyChanged("BLDate");
-					this.OnBLDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CarrierID", DbType="Int")]
-		public System.Nullable<int> CarrierID
-		{
-			get
-			{
-				return this._CarrierID;
-			}
-			set
-			{
-				if ((this._CarrierID != value))
-				{
-					if (this._MasterCarrier.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCarrierIDChanging(value);
-					this.SendPropertyChanging();
-					this._CarrierID = value;
-					this.SendPropertyChanged("CarrierID");
-					this.OnCarrierIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Vessel", DbType="NVarChar(25)")]
-		public string Vessel
-		{
-			get
-			{
-				return this._Vessel;
-			}
-			set
-			{
-				if ((this._Vessel != value))
-				{
-					this.OnVesselChanging(value);
-					this.SendPropertyChanging();
-					this._Vessel = value;
-					this.SendPropertyChanged("Vessel");
-					this.OnVesselChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SealNo", DbType="NVarChar(25)")]
-		public string SealNo
-		{
-			get
-			{
-				return this._SealNo;
-			}
-			set
-			{
-				if ((this._SealNo != value))
-				{
-					this.OnSealNoChanging(value);
-					this.SendPropertyChanging();
-					this._SealNo = value;
-					this.SendPropertyChanged("SealNo");
-					this.OnSealNoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Weight", DbType="Int")]
-		public System.Nullable<int> Weight
-		{
-			get
-			{
-				return this._Weight;
-			}
-			set
-			{
-				if ((this._Weight != value))
-				{
-					this.OnWeightChanging(value);
-					this.SendPropertyChanging();
-					this._Weight = value;
-					this.SendPropertyChanged("Weight");
-					this.OnWeightChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Pieces", DbType="Int")]
-		public System.Nullable<int> Pieces
-		{
-			get
-			{
-				return this._Pieces;
-			}
-			set
-			{
-				if ((this._Pieces != value))
-				{
-					this.OnPiecesChanging(value);
-					this.SendPropertyChanging();
-					this._Pieces = value;
-					this.SendPropertyChanged("Pieces");
-					this.OnPiecesChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AssignTo", DbType="Int")]
-		public System.Nullable<int> AssignTo
-		{
-			get
-			{
-				return this._AssignTo;
-			}
-			set
-			{
-				if ((this._AssignTo != value))
-				{
-					if (this._Users.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAssignToChanging(value);
-					this.SendPropertyChanging();
-					this._AssignTo = value;
-					this.SendPropertyChanged("AssignTo");
-					this.OnAssignToChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModifiedBy", DbType="Int NOT NULL")]
-		public int LastModifiedBy
-		{
-			get
-			{
-				return this._LastModifiedBy;
-			}
-			set
-			{
-				if ((this._LastModifiedBy != value))
-				{
-					this.OnLastModifiedByChanging(value);
-					this.SendPropertyChanging();
-					this._LastModifiedBy = value;
-					this.SendPropertyChanged("LastModifiedBy");
-					this.OnLastModifiedByChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModifiedDate", DbType="DateTime NOT NULL")]
-		public System.DateTime LastModifiedDate
-		{
-			get
-			{
-				return this._LastModifiedDate;
-			}
-			set
-			{
-				if ((this._LastModifiedDate != value))
-				{
-					this.OnLastModifiedDateChanging(value);
-					this.SendPropertyChanging();
-					this._LastModifiedDate = value;
-					this.SendPropertyChanged("LastModifiedDate");
-					this.OnLastModifiedDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BrandID", DbType="Int")]
-		public System.Nullable<int> BrandID
-		{
-			get
-			{
-				return this._BrandID;
-			}
-			set
-			{
-				if ((this._BrandID != value))
-				{
-					this.OnBrandIDChanging(value);
-					this.SendPropertyChanging();
-					this._BrandID = value;
-					this.SendPropertyChanged("BrandID");
-					this.OnBrandIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_POComment", Storage="_POComments", ThisKey="ID", OtherKey="POID")]
-		public EntitySet<POComment> POComments
-		{
-			get
-			{
-				return this._POComments;
-			}
-			set
-			{
-				this._POComments.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_PODetail", Storage="_PODetails", ThisKey="ID", OtherKey="POID")]
-		public EntitySet<PODetail> PODetails
-		{
-			get
-			{
-				return this._PODetails;
-			}
-			set
-			{
-				this._PODetails.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_POFile", Storage="_POFiles", ThisKey="ID", OtherKey="POID")]
-		public EntitySet<POFile> POFiles
-		{
-			get
-			{
-				return this._POFiles;
-			}
-			set
-			{
-				this._POFiles.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_POStatusHistory", Storage="_POStatusHistories", ThisKey="ID", OtherKey="POID")]
-		public EntitySet<POStatusHistory> POStatusHistories
-		{
-			get
-			{
-				return this._POStatusHistories;
-			}
-			set
-			{
-				this._POStatusHistories.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterCarrier_POHeader", Storage="_MasterCarrier", ThisKey="CarrierID", OtherKey="ID", IsForeignKey=true)]
-		public MasterCarrier MasterCarrier
-		{
-			get
-			{
-				return this._MasterCarrier.Entity;
-			}
-			set
-			{
-				MasterCarrier previousValue = this._MasterCarrier.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterCarrier.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterCarrier.Entity = null;
-						previousValue.POHeaders.Remove(this);
-					}
-					this._MasterCarrier.Entity = value;
-					if ((value != null))
-					{
-						value.POHeaders.Add(this);
-						this._CarrierID = value.ID;
-					}
-					else
-					{
-						this._CarrierID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("MasterCarrier");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterContainerType_POHeader", Storage="_MasterContainerType", ThisKey="ContainerTypeId", OtherKey="ID", IsForeignKey=true)]
-		public MasterContainerType MasterContainerType
-		{
-			get
-			{
-				return this._MasterContainerType.Entity;
-			}
-			set
-			{
-				MasterContainerType previousValue = this._MasterContainerType.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterContainerType.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterContainerType.Entity = null;
-						previousValue.POHeaders.Remove(this);
-					}
-					this._MasterContainerType.Entity = value;
-					if ((value != null))
-					{
-						value.POHeaders.Add(this);
-						this._ContainerTypeId = value.ID;
-					}
-					else
-					{
-						this._ContainerTypeId = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("MasterContainerType");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterOrderType_POHeader", Storage="_MasterOrderType", ThisKey="OrderTypeID", OtherKey="ID", IsForeignKey=true)]
-		public MasterOrderType MasterOrderType
-		{
-			get
-			{
-				return this._MasterOrderType.Entity;
-			}
-			set
-			{
-				MasterOrderType previousValue = this._MasterOrderType.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterOrderType.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterOrderType.Entity = null;
-						previousValue.POHeaders.Remove(this);
-					}
-					this._MasterOrderType.Entity = value;
-					if ((value != null))
-					{
-						value.POHeaders.Add(this);
-						this._OrderTypeID = value.ID;
-					}
-					else
-					{
-						this._OrderTypeID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("MasterOrderType");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterShipVia_POHeader", Storage="_MasterShipVia", ThisKey="ShipViaID", OtherKey="ID", IsForeignKey=true)]
-		public MasterShipVia MasterShipVia
-		{
-			get
-			{
-				return this._MasterShipVia.Entity;
-			}
-			set
-			{
-				MasterShipVia previousValue = this._MasterShipVia.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterShipVia.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterShipVia.Entity = null;
-						previousValue.POHeaders.Remove(this);
-					}
-					this._MasterShipVia.Entity = value;
-					if ((value != null))
-					{
-						value.POHeaders.Add(this);
-						this._ShipViaID = value.ID;
-					}
-					else
-					{
-						this._ShipViaID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("MasterShipVia");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POHeader", Storage="_MasterStatus", ThisKey="OrderStatusID", OtherKey="ID", IsForeignKey=true)]
-		public MasterStatus MasterStatus
-		{
-			get
-			{
-				return this._MasterStatus.Entity;
-			}
-			set
-			{
-				MasterStatus previousValue = this._MasterStatus.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterStatus.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterStatus.Entity = null;
-						previousValue.POHeaders.Remove(this);
-					}
-					this._MasterStatus.Entity = value;
-					if ((value != null))
-					{
-						value.POHeaders.Add(this);
-						this._OrderStatusID = value.ID;
-					}
-					else
-					{
-						this._OrderStatusID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("MasterStatus");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterTerm_POHeader", Storage="_MasterTerm", ThisKey="TermsCodeID", OtherKey="ID", IsForeignKey=true)]
-		public MasterTerm MasterTerm
-		{
-			get
-			{
-				return this._MasterTerm.Entity;
-			}
-			set
-			{
-				MasterTerm previousValue = this._MasterTerm.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterTerm.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterTerm.Entity = null;
-						previousValue.POHeaders.Remove(this);
-					}
-					this._MasterTerm.Entity = value;
-					if ((value != null))
-					{
-						value.POHeaders.Add(this);
-						this._TermsCodeID = value.ID;
-					}
-					else
-					{
-						this._TermsCodeID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("MasterTerm");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterWarehouse_POHeader", Storage="_MasterWarehouse", ThisKey="WarehouseCodeId", OtherKey="ID", IsForeignKey=true)]
-		public MasterWarehouse MasterWarehouse
-		{
-			get
-			{
-				return this._MasterWarehouse.Entity;
-			}
-			set
-			{
-				MasterWarehouse previousValue = this._MasterWarehouse.Entity;
-				if (((previousValue != value) 
-							|| (this._MasterWarehouse.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._MasterWarehouse.Entity = null;
-						previousValue.POHeaders.Remove(this);
-					}
-					this._MasterWarehouse.Entity = value;
-					if ((value != null))
-					{
-						value.POHeaders.Add(this);
-						this._WarehouseCodeId = value.ID;
-					}
-					else
-					{
-						this._WarehouseCodeId = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("MasterWarehouse");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_POHeader", Storage="_Users", ThisKey="AssignTo", OtherKey="ID", IsForeignKey=true)]
-		public Users Users
-		{
-			get
-			{
-				return this._Users.Entity;
-			}
-			set
-			{
-				Users previousValue = this._Users.Entity;
-				if (((previousValue != value) 
-							|| (this._Users.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Users.Entity = null;
-						previousValue.POHeaders.Remove(this);
-					}
-					this._Users.Entity = value;
-					if ((value != null))
-					{
-						value.POHeaders.Add(this);
-						this._AssignTo = value.ID;
-					}
-					else
-					{
-						this._AssignTo = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Users");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_POComments(POComment entity)
-		{
-			this.SendPropertyChanging();
-			entity.POHeader = this;
-		}
-		
-		private void detach_POComments(POComment entity)
-		{
-			this.SendPropertyChanging();
-			entity.POHeader = null;
-		}
-		
-		private void attach_PODetails(PODetail entity)
-		{
-			this.SendPropertyChanging();
-			entity.POHeader = this;
-		}
-		
-		private void detach_PODetails(PODetail entity)
-		{
-			this.SendPropertyChanging();
-			entity.POHeader = null;
-		}
-		
-		private void attach_POFiles(POFile entity)
-		{
-			this.SendPropertyChanging();
-			entity.POHeader = this;
-		}
-		
-		private void detach_POFiles(POFile entity)
-		{
-			this.SendPropertyChanging();
-			entity.POHeader = null;
-		}
-		
-		private void attach_POStatusHistories(POStatusHistory entity)
-		{
-			this.SendPropertyChanging();
-			entity.POHeader = this;
-		}
-		
-		private void detach_POStatusHistories(POStatusHistory entity)
-		{
-			this.SendPropertyChanging();
-			entity.POHeader = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vw_POHeader")]
 	public partial class vw_POHeader
 	{
@@ -10724,6 +8720,1893 @@ namespace POT.DAL
 				{
 					this._BrandName = value;
 				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.POHeader")]
+	public partial class POHeader : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _PONumber;
+		
+		private System.Nullable<System.DateTime> _PODate;
+		
+		private System.Nullable<int> _OrderTypeID;
+		
+		private string _Division;
+		
+		private System.Nullable<int> _VendorID;
+		
+		private System.Nullable<int> _POShipToCodeIfDropShip;
+		
+		private string _ShipToName;
+		
+		private string _ShipToAddress1;
+		
+		private string _ShipToAddress2;
+		
+		private string _ShipToAddress3;
+		
+		private string _ShipToCity;
+		
+		private string _ShipToState;
+		
+		private string _ShipToZipCode;
+		
+		private System.Nullable<int> _ShipToCountryCodeId;
+		
+		private string _ShipToCountryCode;
+		
+		private System.Nullable<int> _OrderStatusID;
+		
+		private System.Nullable<int> _ShipViaID;
+		
+		private string _FOB;
+		
+		private System.Nullable<int> _WarehouseCodeId;
+		
+		private string _ConfirmTo;
+		
+		private string _Comment;
+		
+		private System.Nullable<int> _TermsCodeID;
+		
+		private string _UserID;
+		
+		private System.Nullable<decimal> _TaxableAmount;
+		
+		private System.Nullable<decimal> _NonTaxableAmount;
+		
+		private System.Nullable<decimal> _SalesTaxAmount;
+		
+		private System.Nullable<decimal> _FreightAmount;
+		
+		private string _Container_No;
+		
+		private System.Nullable<int> _ContainerTypeId;
+		
+		private System.Nullable<System.DateTime> _Date_Lc_Opened;
+		
+		private System.Nullable<System.DateTime> _Eta;
+		
+		private System.Nullable<System.DateTime> _Etd;
+		
+		private string _Filler_Size;
+		
+		private System.Nullable<System.DateTime> _Po_Placed_Date;
+		
+		private string _BLNumber;
+		
+		private System.Nullable<System.DateTime> _BLDate;
+		
+		private System.Nullable<int> _CarrierID;
+		
+		private string _Vessel;
+		
+		private string _SealNo;
+		
+		private System.Nullable<int> _Weight;
+		
+		private System.Nullable<int> _Pieces;
+		
+		private System.Nullable<int> _AssignTo;
+		
+		private int _LastModifiedBy;
+		
+		private System.DateTime _LastModifiedDate;
+		
+		private System.Nullable<int> _BrandID;
+		
+		private EntitySet<POComment> _POComments;
+		
+		private EntitySet<PODetail> _PODetails;
+		
+		private EntitySet<POFile> _POFiles;
+		
+		private EntitySet<POStatusHistory> _POStatusHistories;
+		
+		private EntityRef<MasterCarrier> _MasterCarrier;
+		
+		private EntityRef<MasterContainerType> _MasterContainerType;
+		
+		private EntityRef<MasterOrderType> _MasterOrderType;
+		
+		private EntityRef<MasterShipVia> _MasterShipVia;
+		
+		private EntityRef<MasterStatus> _MasterStatus;
+		
+		private EntityRef<MasterTerm> _MasterTerm;
+		
+		private EntityRef<MasterWarehouse> _MasterWarehouse;
+		
+		private EntityRef<Users> _Users;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnPONumberChanging(string value);
+    partial void OnPONumberChanged();
+    partial void OnPODateChanging(System.Nullable<System.DateTime> value);
+    partial void OnPODateChanged();
+    partial void OnOrderTypeIDChanging(System.Nullable<int> value);
+    partial void OnOrderTypeIDChanged();
+    partial void OnDivisionChanging(string value);
+    partial void OnDivisionChanged();
+    partial void OnVendorIDChanging(System.Nullable<int> value);
+    partial void OnVendorIDChanged();
+    partial void OnPOShipToCodeIfDropShipChanging(System.Nullable<int> value);
+    partial void OnPOShipToCodeIfDropShipChanged();
+    partial void OnShipToNameChanging(string value);
+    partial void OnShipToNameChanged();
+    partial void OnShipToAddress1Changing(string value);
+    partial void OnShipToAddress1Changed();
+    partial void OnShipToAddress2Changing(string value);
+    partial void OnShipToAddress2Changed();
+    partial void OnShipToAddress3Changing(string value);
+    partial void OnShipToAddress3Changed();
+    partial void OnShipToCityChanging(string value);
+    partial void OnShipToCityChanged();
+    partial void OnShipToStateChanging(string value);
+    partial void OnShipToStateChanged();
+    partial void OnShipToZipCodeChanging(string value);
+    partial void OnShipToZipCodeChanged();
+    partial void OnShipToCountryCodeIdChanging(System.Nullable<int> value);
+    partial void OnShipToCountryCodeIdChanged();
+    partial void OnShipToCountryCodeChanging(string value);
+    partial void OnShipToCountryCodeChanged();
+    partial void OnOrderStatusIDChanging(System.Nullable<int> value);
+    partial void OnOrderStatusIDChanged();
+    partial void OnShipViaIDChanging(System.Nullable<int> value);
+    partial void OnShipViaIDChanged();
+    partial void OnFOBChanging(string value);
+    partial void OnFOBChanged();
+    partial void OnWarehouseCodeIdChanging(System.Nullable<int> value);
+    partial void OnWarehouseCodeIdChanged();
+    partial void OnConfirmToChanging(string value);
+    partial void OnConfirmToChanged();
+    partial void OnCommentChanging(string value);
+    partial void OnCommentChanged();
+    partial void OnTermsCodeIDChanging(System.Nullable<int> value);
+    partial void OnTermsCodeIDChanged();
+    partial void OnUserIDChanging(string value);
+    partial void OnUserIDChanged();
+    partial void OnTaxableAmountChanging(System.Nullable<decimal> value);
+    partial void OnTaxableAmountChanged();
+    partial void OnNonTaxableAmountChanging(System.Nullable<decimal> value);
+    partial void OnNonTaxableAmountChanged();
+    partial void OnSalesTaxAmountChanging(System.Nullable<decimal> value);
+    partial void OnSalesTaxAmountChanged();
+    partial void OnFreightAmountChanging(System.Nullable<decimal> value);
+    partial void OnFreightAmountChanged();
+    partial void OnContainer_NoChanging(string value);
+    partial void OnContainer_NoChanged();
+    partial void OnContainerTypeIdChanging(System.Nullable<int> value);
+    partial void OnContainerTypeIdChanged();
+    partial void OnDate_Lc_OpenedChanging(System.Nullable<System.DateTime> value);
+    partial void OnDate_Lc_OpenedChanged();
+    partial void OnEtaChanging(System.Nullable<System.DateTime> value);
+    partial void OnEtaChanged();
+    partial void OnEtdChanging(System.Nullable<System.DateTime> value);
+    partial void OnEtdChanged();
+    partial void OnFiller_SizeChanging(string value);
+    partial void OnFiller_SizeChanged();
+    partial void OnPo_Placed_DateChanging(System.Nullable<System.DateTime> value);
+    partial void OnPo_Placed_DateChanged();
+    partial void OnBLNumberChanging(string value);
+    partial void OnBLNumberChanged();
+    partial void OnBLDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnBLDateChanged();
+    partial void OnCarrierIDChanging(System.Nullable<int> value);
+    partial void OnCarrierIDChanged();
+    partial void OnVesselChanging(string value);
+    partial void OnVesselChanged();
+    partial void OnSealNoChanging(string value);
+    partial void OnSealNoChanged();
+    partial void OnWeightChanging(System.Nullable<int> value);
+    partial void OnWeightChanged();
+    partial void OnPiecesChanging(System.Nullable<int> value);
+    partial void OnPiecesChanged();
+    partial void OnAssignToChanging(System.Nullable<int> value);
+    partial void OnAssignToChanged();
+    partial void OnLastModifiedByChanging(int value);
+    partial void OnLastModifiedByChanged();
+    partial void OnLastModifiedDateChanging(System.DateTime value);
+    partial void OnLastModifiedDateChanged();
+    partial void OnBrandIDChanging(System.Nullable<int> value);
+    partial void OnBrandIDChanged();
+    #endregion
+		
+		public POHeader()
+		{
+			this._POComments = new EntitySet<POComment>(new Action<POComment>(this.attach_POComments), new Action<POComment>(this.detach_POComments));
+			this._PODetails = new EntitySet<PODetail>(new Action<PODetail>(this.attach_PODetails), new Action<PODetail>(this.detach_PODetails));
+			this._POFiles = new EntitySet<POFile>(new Action<POFile>(this.attach_POFiles), new Action<POFile>(this.detach_POFiles));
+			this._POStatusHistories = new EntitySet<POStatusHistory>(new Action<POStatusHistory>(this.attach_POStatusHistories), new Action<POStatusHistory>(this.detach_POStatusHistories));
+			this._MasterCarrier = default(EntityRef<MasterCarrier>);
+			this._MasterContainerType = default(EntityRef<MasterContainerType>);
+			this._MasterOrderType = default(EntityRef<MasterOrderType>);
+			this._MasterShipVia = default(EntityRef<MasterShipVia>);
+			this._MasterStatus = default(EntityRef<MasterStatus>);
+			this._MasterTerm = default(EntityRef<MasterTerm>);
+			this._MasterWarehouse = default(EntityRef<MasterWarehouse>);
+			this._Users = default(EntityRef<Users>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PONumber", DbType="NVarChar(7)")]
+		public string PONumber
+		{
+			get
+			{
+				return this._PONumber;
+			}
+			set
+			{
+				if ((this._PONumber != value))
+				{
+					this.OnPONumberChanging(value);
+					this.SendPropertyChanging();
+					this._PONumber = value;
+					this.SendPropertyChanged("PONumber");
+					this.OnPONumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PODate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> PODate
+		{
+			get
+			{
+				return this._PODate;
+			}
+			set
+			{
+				if ((this._PODate != value))
+				{
+					this.OnPODateChanging(value);
+					this.SendPropertyChanging();
+					this._PODate = value;
+					this.SendPropertyChanged("PODate");
+					this.OnPODateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderTypeID", DbType="Int")]
+		public System.Nullable<int> OrderTypeID
+		{
+			get
+			{
+				return this._OrderTypeID;
+			}
+			set
+			{
+				if ((this._OrderTypeID != value))
+				{
+					if (this._MasterOrderType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnOrderTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._OrderTypeID = value;
+					this.SendPropertyChanged("OrderTypeID");
+					this.OnOrderTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Division", DbType="NVarChar(2)")]
+		public string Division
+		{
+			get
+			{
+				return this._Division;
+			}
+			set
+			{
+				if ((this._Division != value))
+				{
+					this.OnDivisionChanging(value);
+					this.SendPropertyChanging();
+					this._Division = value;
+					this.SendPropertyChanged("Division");
+					this.OnDivisionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VendorID", DbType="Int")]
+		public System.Nullable<int> VendorID
+		{
+			get
+			{
+				return this._VendorID;
+			}
+			set
+			{
+				if ((this._VendorID != value))
+				{
+					this.OnVendorIDChanging(value);
+					this.SendPropertyChanging();
+					this._VendorID = value;
+					this.SendPropertyChanged("VendorID");
+					this.OnVendorIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POShipToCodeIfDropShip", DbType="Int")]
+		public System.Nullable<int> POShipToCodeIfDropShip
+		{
+			get
+			{
+				return this._POShipToCodeIfDropShip;
+			}
+			set
+			{
+				if ((this._POShipToCodeIfDropShip != value))
+				{
+					this.OnPOShipToCodeIfDropShipChanging(value);
+					this.SendPropertyChanging();
+					this._POShipToCodeIfDropShip = value;
+					this.SendPropertyChanged("POShipToCodeIfDropShip");
+					this.OnPOShipToCodeIfDropShipChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToName", DbType="NVarChar(30)")]
+		public string ShipToName
+		{
+			get
+			{
+				return this._ShipToName;
+			}
+			set
+			{
+				if ((this._ShipToName != value))
+				{
+					this.OnShipToNameChanging(value);
+					this.SendPropertyChanging();
+					this._ShipToName = value;
+					this.SendPropertyChanged("ShipToName");
+					this.OnShipToNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToAddress1", DbType="NVarChar(30)")]
+		public string ShipToAddress1
+		{
+			get
+			{
+				return this._ShipToAddress1;
+			}
+			set
+			{
+				if ((this._ShipToAddress1 != value))
+				{
+					this.OnShipToAddress1Changing(value);
+					this.SendPropertyChanging();
+					this._ShipToAddress1 = value;
+					this.SendPropertyChanged("ShipToAddress1");
+					this.OnShipToAddress1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToAddress2", DbType="NVarChar(30)")]
+		public string ShipToAddress2
+		{
+			get
+			{
+				return this._ShipToAddress2;
+			}
+			set
+			{
+				if ((this._ShipToAddress2 != value))
+				{
+					this.OnShipToAddress2Changing(value);
+					this.SendPropertyChanging();
+					this._ShipToAddress2 = value;
+					this.SendPropertyChanged("ShipToAddress2");
+					this.OnShipToAddress2Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToAddress3", DbType="NVarChar(30)")]
+		public string ShipToAddress3
+		{
+			get
+			{
+				return this._ShipToAddress3;
+			}
+			set
+			{
+				if ((this._ShipToAddress3 != value))
+				{
+					this.OnShipToAddress3Changing(value);
+					this.SendPropertyChanging();
+					this._ShipToAddress3 = value;
+					this.SendPropertyChanged("ShipToAddress3");
+					this.OnShipToAddress3Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToCity", DbType="NVarChar(20)")]
+		public string ShipToCity
+		{
+			get
+			{
+				return this._ShipToCity;
+			}
+			set
+			{
+				if ((this._ShipToCity != value))
+				{
+					this.OnShipToCityChanging(value);
+					this.SendPropertyChanging();
+					this._ShipToCity = value;
+					this.SendPropertyChanged("ShipToCity");
+					this.OnShipToCityChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToState", DbType="NVarChar(2)")]
+		public string ShipToState
+		{
+			get
+			{
+				return this._ShipToState;
+			}
+			set
+			{
+				if ((this._ShipToState != value))
+				{
+					this.OnShipToStateChanging(value);
+					this.SendPropertyChanging();
+					this._ShipToState = value;
+					this.SendPropertyChanged("ShipToState");
+					this.OnShipToStateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToZipCode", DbType="NVarChar(10)")]
+		public string ShipToZipCode
+		{
+			get
+			{
+				return this._ShipToZipCode;
+			}
+			set
+			{
+				if ((this._ShipToZipCode != value))
+				{
+					this.OnShipToZipCodeChanging(value);
+					this.SendPropertyChanging();
+					this._ShipToZipCode = value;
+					this.SendPropertyChanged("ShipToZipCode");
+					this.OnShipToZipCodeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToCountryCodeId", DbType="Int")]
+		public System.Nullable<int> ShipToCountryCodeId
+		{
+			get
+			{
+				return this._ShipToCountryCodeId;
+			}
+			set
+			{
+				if ((this._ShipToCountryCodeId != value))
+				{
+					this.OnShipToCountryCodeIdChanging(value);
+					this.SendPropertyChanging();
+					this._ShipToCountryCodeId = value;
+					this.SendPropertyChanged("ShipToCountryCodeId");
+					this.OnShipToCountryCodeIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipToCountryCode", DbType="NVarChar(3)")]
+		public string ShipToCountryCode
+		{
+			get
+			{
+				return this._ShipToCountryCode;
+			}
+			set
+			{
+				if ((this._ShipToCountryCode != value))
+				{
+					this.OnShipToCountryCodeChanging(value);
+					this.SendPropertyChanging();
+					this._ShipToCountryCode = value;
+					this.SendPropertyChanged("ShipToCountryCode");
+					this.OnShipToCountryCodeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderStatusID", DbType="Int")]
+		public System.Nullable<int> OrderStatusID
+		{
+			get
+			{
+				return this._OrderStatusID;
+			}
+			set
+			{
+				if ((this._OrderStatusID != value))
+				{
+					if (this._MasterStatus.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnOrderStatusIDChanging(value);
+					this.SendPropertyChanging();
+					this._OrderStatusID = value;
+					this.SendPropertyChanged("OrderStatusID");
+					this.OnOrderStatusIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShipViaID", DbType="Int")]
+		public System.Nullable<int> ShipViaID
+		{
+			get
+			{
+				return this._ShipViaID;
+			}
+			set
+			{
+				if ((this._ShipViaID != value))
+				{
+					if (this._MasterShipVia.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnShipViaIDChanging(value);
+					this.SendPropertyChanging();
+					this._ShipViaID = value;
+					this.SendPropertyChanged("ShipViaID");
+					this.OnShipViaIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FOB", DbType="NVarChar(15)")]
+		public string FOB
+		{
+			get
+			{
+				return this._FOB;
+			}
+			set
+			{
+				if ((this._FOB != value))
+				{
+					this.OnFOBChanging(value);
+					this.SendPropertyChanging();
+					this._FOB = value;
+					this.SendPropertyChanged("FOB");
+					this.OnFOBChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WarehouseCodeId", DbType="Int")]
+		public System.Nullable<int> WarehouseCodeId
+		{
+			get
+			{
+				return this._WarehouseCodeId;
+			}
+			set
+			{
+				if ((this._WarehouseCodeId != value))
+				{
+					if (this._MasterWarehouse.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnWarehouseCodeIdChanging(value);
+					this.SendPropertyChanging();
+					this._WarehouseCodeId = value;
+					this.SendPropertyChanged("WarehouseCodeId");
+					this.OnWarehouseCodeIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ConfirmTo", DbType="NVarChar(30)")]
+		public string ConfirmTo
+		{
+			get
+			{
+				return this._ConfirmTo;
+			}
+			set
+			{
+				if ((this._ConfirmTo != value))
+				{
+					this.OnConfirmToChanging(value);
+					this.SendPropertyChanging();
+					this._ConfirmTo = value;
+					this.SendPropertyChanged("ConfirmTo");
+					this.OnConfirmToChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Comment", DbType="NVarChar(30)")]
+		public string Comment
+		{
+			get
+			{
+				return this._Comment;
+			}
+			set
+			{
+				if ((this._Comment != value))
+				{
+					this.OnCommentChanging(value);
+					this.SendPropertyChanging();
+					this._Comment = value;
+					this.SendPropertyChanged("Comment");
+					this.OnCommentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TermsCodeID", DbType="Int")]
+		public System.Nullable<int> TermsCodeID
+		{
+			get
+			{
+				return this._TermsCodeID;
+			}
+			set
+			{
+				if ((this._TermsCodeID != value))
+				{
+					if (this._MasterTerm.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnTermsCodeIDChanging(value);
+					this.SendPropertyChanging();
+					this._TermsCodeID = value;
+					this.SendPropertyChanged("TermsCodeID");
+					this.OnTermsCodeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserID", DbType="NVarChar(3)")]
+		public string UserID
+		{
+			get
+			{
+				return this._UserID;
+			}
+			set
+			{
+				if ((this._UserID != value))
+				{
+					this.OnUserIDChanging(value);
+					this.SendPropertyChanging();
+					this._UserID = value;
+					this.SendPropertyChanged("UserID");
+					this.OnUserIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaxableAmount", DbType="Decimal(15,4)")]
+		public System.Nullable<decimal> TaxableAmount
+		{
+			get
+			{
+				return this._TaxableAmount;
+			}
+			set
+			{
+				if ((this._TaxableAmount != value))
+				{
+					this.OnTaxableAmountChanging(value);
+					this.SendPropertyChanging();
+					this._TaxableAmount = value;
+					this.SendPropertyChanged("TaxableAmount");
+					this.OnTaxableAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NonTaxableAmount", DbType="Decimal(15,4)")]
+		public System.Nullable<decimal> NonTaxableAmount
+		{
+			get
+			{
+				return this._NonTaxableAmount;
+			}
+			set
+			{
+				if ((this._NonTaxableAmount != value))
+				{
+					this.OnNonTaxableAmountChanging(value);
+					this.SendPropertyChanging();
+					this._NonTaxableAmount = value;
+					this.SendPropertyChanged("NonTaxableAmount");
+					this.OnNonTaxableAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SalesTaxAmount", DbType="Decimal(15,4)")]
+		public System.Nullable<decimal> SalesTaxAmount
+		{
+			get
+			{
+				return this._SalesTaxAmount;
+			}
+			set
+			{
+				if ((this._SalesTaxAmount != value))
+				{
+					this.OnSalesTaxAmountChanging(value);
+					this.SendPropertyChanging();
+					this._SalesTaxAmount = value;
+					this.SendPropertyChanged("SalesTaxAmount");
+					this.OnSalesTaxAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FreightAmount", DbType="Decimal(15,4)")]
+		public System.Nullable<decimal> FreightAmount
+		{
+			get
+			{
+				return this._FreightAmount;
+			}
+			set
+			{
+				if ((this._FreightAmount != value))
+				{
+					this.OnFreightAmountChanging(value);
+					this.SendPropertyChanging();
+					this._FreightAmount = value;
+					this.SendPropertyChanged("FreightAmount");
+					this.OnFreightAmountChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Container_No", DbType="NVarChar(50)")]
+		public string Container_No
+		{
+			get
+			{
+				return this._Container_No;
+			}
+			set
+			{
+				if ((this._Container_No != value))
+				{
+					this.OnContainer_NoChanging(value);
+					this.SendPropertyChanging();
+					this._Container_No = value;
+					this.SendPropertyChanged("Container_No");
+					this.OnContainer_NoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ContainerTypeId", DbType="Int")]
+		public System.Nullable<int> ContainerTypeId
+		{
+			get
+			{
+				return this._ContainerTypeId;
+			}
+			set
+			{
+				if ((this._ContainerTypeId != value))
+				{
+					if (this._MasterContainerType.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnContainerTypeIdChanging(value);
+					this.SendPropertyChanging();
+					this._ContainerTypeId = value;
+					this.SendPropertyChanged("ContainerTypeId");
+					this.OnContainerTypeIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date_Lc_Opened", DbType="DateTime")]
+		public System.Nullable<System.DateTime> Date_Lc_Opened
+		{
+			get
+			{
+				return this._Date_Lc_Opened;
+			}
+			set
+			{
+				if ((this._Date_Lc_Opened != value))
+				{
+					this.OnDate_Lc_OpenedChanging(value);
+					this.SendPropertyChanging();
+					this._Date_Lc_Opened = value;
+					this.SendPropertyChanged("Date_Lc_Opened");
+					this.OnDate_Lc_OpenedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Eta", DbType="DateTime")]
+		public System.Nullable<System.DateTime> Eta
+		{
+			get
+			{
+				return this._Eta;
+			}
+			set
+			{
+				if ((this._Eta != value))
+				{
+					this.OnEtaChanging(value);
+					this.SendPropertyChanging();
+					this._Eta = value;
+					this.SendPropertyChanged("Eta");
+					this.OnEtaChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Etd", DbType="DateTime")]
+		public System.Nullable<System.DateTime> Etd
+		{
+			get
+			{
+				return this._Etd;
+			}
+			set
+			{
+				if ((this._Etd != value))
+				{
+					this.OnEtdChanging(value);
+					this.SendPropertyChanging();
+					this._Etd = value;
+					this.SendPropertyChanged("Etd");
+					this.OnEtdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Filler_Size", DbType="NVarChar(50)")]
+		public string Filler_Size
+		{
+			get
+			{
+				return this._Filler_Size;
+			}
+			set
+			{
+				if ((this._Filler_Size != value))
+				{
+					this.OnFiller_SizeChanging(value);
+					this.SendPropertyChanging();
+					this._Filler_Size = value;
+					this.SendPropertyChanged("Filler_Size");
+					this.OnFiller_SizeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Po_Placed_Date", DbType="DateTime")]
+		public System.Nullable<System.DateTime> Po_Placed_Date
+		{
+			get
+			{
+				return this._Po_Placed_Date;
+			}
+			set
+			{
+				if ((this._Po_Placed_Date != value))
+				{
+					this.OnPo_Placed_DateChanging(value);
+					this.SendPropertyChanging();
+					this._Po_Placed_Date = value;
+					this.SendPropertyChanged("Po_Placed_Date");
+					this.OnPo_Placed_DateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BLNumber", DbType="NVarChar(25)")]
+		public string BLNumber
+		{
+			get
+			{
+				return this._BLNumber;
+			}
+			set
+			{
+				if ((this._BLNumber != value))
+				{
+					this.OnBLNumberChanging(value);
+					this.SendPropertyChanging();
+					this._BLNumber = value;
+					this.SendPropertyChanged("BLNumber");
+					this.OnBLNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BLDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> BLDate
+		{
+			get
+			{
+				return this._BLDate;
+			}
+			set
+			{
+				if ((this._BLDate != value))
+				{
+					this.OnBLDateChanging(value);
+					this.SendPropertyChanging();
+					this._BLDate = value;
+					this.SendPropertyChanged("BLDate");
+					this.OnBLDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CarrierID", DbType="Int")]
+		public System.Nullable<int> CarrierID
+		{
+			get
+			{
+				return this._CarrierID;
+			}
+			set
+			{
+				if ((this._CarrierID != value))
+				{
+					if (this._MasterCarrier.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCarrierIDChanging(value);
+					this.SendPropertyChanging();
+					this._CarrierID = value;
+					this.SendPropertyChanged("CarrierID");
+					this.OnCarrierIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Vessel", DbType="NVarChar(25)")]
+		public string Vessel
+		{
+			get
+			{
+				return this._Vessel;
+			}
+			set
+			{
+				if ((this._Vessel != value))
+				{
+					this.OnVesselChanging(value);
+					this.SendPropertyChanging();
+					this._Vessel = value;
+					this.SendPropertyChanged("Vessel");
+					this.OnVesselChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SealNo", DbType="NVarChar(25)")]
+		public string SealNo
+		{
+			get
+			{
+				return this._SealNo;
+			}
+			set
+			{
+				if ((this._SealNo != value))
+				{
+					this.OnSealNoChanging(value);
+					this.SendPropertyChanging();
+					this._SealNo = value;
+					this.SendPropertyChanged("SealNo");
+					this.OnSealNoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Weight", DbType="Int")]
+		public System.Nullable<int> Weight
+		{
+			get
+			{
+				return this._Weight;
+			}
+			set
+			{
+				if ((this._Weight != value))
+				{
+					this.OnWeightChanging(value);
+					this.SendPropertyChanging();
+					this._Weight = value;
+					this.SendPropertyChanged("Weight");
+					this.OnWeightChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Pieces", DbType="Int")]
+		public System.Nullable<int> Pieces
+		{
+			get
+			{
+				return this._Pieces;
+			}
+			set
+			{
+				if ((this._Pieces != value))
+				{
+					this.OnPiecesChanging(value);
+					this.SendPropertyChanging();
+					this._Pieces = value;
+					this.SendPropertyChanged("Pieces");
+					this.OnPiecesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AssignTo", DbType="Int")]
+		public System.Nullable<int> AssignTo
+		{
+			get
+			{
+				return this._AssignTo;
+			}
+			set
+			{
+				if ((this._AssignTo != value))
+				{
+					if (this._Users.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAssignToChanging(value);
+					this.SendPropertyChanging();
+					this._AssignTo = value;
+					this.SendPropertyChanged("AssignTo");
+					this.OnAssignToChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModifiedBy", DbType="Int NOT NULL")]
+		public int LastModifiedBy
+		{
+			get
+			{
+				return this._LastModifiedBy;
+			}
+			set
+			{
+				if ((this._LastModifiedBy != value))
+				{
+					this.OnLastModifiedByChanging(value);
+					this.SendPropertyChanging();
+					this._LastModifiedBy = value;
+					this.SendPropertyChanged("LastModifiedBy");
+					this.OnLastModifiedByChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModifiedDate", DbType="DateTime NOT NULL")]
+		public System.DateTime LastModifiedDate
+		{
+			get
+			{
+				return this._LastModifiedDate;
+			}
+			set
+			{
+				if ((this._LastModifiedDate != value))
+				{
+					this.OnLastModifiedDateChanging(value);
+					this.SendPropertyChanging();
+					this._LastModifiedDate = value;
+					this.SendPropertyChanged("LastModifiedDate");
+					this.OnLastModifiedDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BrandID", DbType="Int")]
+		public System.Nullable<int> BrandID
+		{
+			get
+			{
+				return this._BrandID;
+			}
+			set
+			{
+				if ((this._BrandID != value))
+				{
+					this.OnBrandIDChanging(value);
+					this.SendPropertyChanging();
+					this._BrandID = value;
+					this.SendPropertyChanged("BrandID");
+					this.OnBrandIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_POComment", Storage="_POComments", ThisKey="ID", OtherKey="POID")]
+		public EntitySet<POComment> POComments
+		{
+			get
+			{
+				return this._POComments;
+			}
+			set
+			{
+				this._POComments.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_PODetail", Storage="_PODetails", ThisKey="ID", OtherKey="POID")]
+		public EntitySet<PODetail> PODetails
+		{
+			get
+			{
+				return this._PODetails;
+			}
+			set
+			{
+				this._PODetails.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_POFile", Storage="_POFiles", ThisKey="ID", OtherKey="POID")]
+		public EntitySet<POFile> POFiles
+		{
+			get
+			{
+				return this._POFiles;
+			}
+			set
+			{
+				this._POFiles.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_POStatusHistory", Storage="_POStatusHistories", ThisKey="ID", OtherKey="POID")]
+		public EntitySet<POStatusHistory> POStatusHistories
+		{
+			get
+			{
+				return this._POStatusHistories;
+			}
+			set
+			{
+				this._POStatusHistories.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterCarrier_POHeader", Storage="_MasterCarrier", ThisKey="CarrierID", OtherKey="ID", IsForeignKey=true)]
+		public MasterCarrier MasterCarrier
+		{
+			get
+			{
+				return this._MasterCarrier.Entity;
+			}
+			set
+			{
+				MasterCarrier previousValue = this._MasterCarrier.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterCarrier.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterCarrier.Entity = null;
+						previousValue.POHeaders.Remove(this);
+					}
+					this._MasterCarrier.Entity = value;
+					if ((value != null))
+					{
+						value.POHeaders.Add(this);
+						this._CarrierID = value.ID;
+					}
+					else
+					{
+						this._CarrierID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MasterCarrier");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterContainerType_POHeader", Storage="_MasterContainerType", ThisKey="ContainerTypeId", OtherKey="ID", IsForeignKey=true)]
+		public MasterContainerType MasterContainerType
+		{
+			get
+			{
+				return this._MasterContainerType.Entity;
+			}
+			set
+			{
+				MasterContainerType previousValue = this._MasterContainerType.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterContainerType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterContainerType.Entity = null;
+						previousValue.POHeaders.Remove(this);
+					}
+					this._MasterContainerType.Entity = value;
+					if ((value != null))
+					{
+						value.POHeaders.Add(this);
+						this._ContainerTypeId = value.ID;
+					}
+					else
+					{
+						this._ContainerTypeId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MasterContainerType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterOrderType_POHeader", Storage="_MasterOrderType", ThisKey="OrderTypeID", OtherKey="ID", IsForeignKey=true)]
+		public MasterOrderType MasterOrderType
+		{
+			get
+			{
+				return this._MasterOrderType.Entity;
+			}
+			set
+			{
+				MasterOrderType previousValue = this._MasterOrderType.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterOrderType.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterOrderType.Entity = null;
+						previousValue.POHeaders.Remove(this);
+					}
+					this._MasterOrderType.Entity = value;
+					if ((value != null))
+					{
+						value.POHeaders.Add(this);
+						this._OrderTypeID = value.ID;
+					}
+					else
+					{
+						this._OrderTypeID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MasterOrderType");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterShipVia_POHeader", Storage="_MasterShipVia", ThisKey="ShipViaID", OtherKey="ID", IsForeignKey=true)]
+		public MasterShipVia MasterShipVia
+		{
+			get
+			{
+				return this._MasterShipVia.Entity;
+			}
+			set
+			{
+				MasterShipVia previousValue = this._MasterShipVia.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterShipVia.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterShipVia.Entity = null;
+						previousValue.POHeaders.Remove(this);
+					}
+					this._MasterShipVia.Entity = value;
+					if ((value != null))
+					{
+						value.POHeaders.Add(this);
+						this._ShipViaID = value.ID;
+					}
+					else
+					{
+						this._ShipViaID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MasterShipVia");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POHeader", Storage="_MasterStatus", ThisKey="OrderStatusID", OtherKey="ID", IsForeignKey=true)]
+		public MasterStatus MasterStatus
+		{
+			get
+			{
+				return this._MasterStatus.Entity;
+			}
+			set
+			{
+				MasterStatus previousValue = this._MasterStatus.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterStatus.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterStatus.Entity = null;
+						previousValue.POHeaders.Remove(this);
+					}
+					this._MasterStatus.Entity = value;
+					if ((value != null))
+					{
+						value.POHeaders.Add(this);
+						this._OrderStatusID = value.ID;
+					}
+					else
+					{
+						this._OrderStatusID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MasterStatus");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterTerm_POHeader", Storage="_MasterTerm", ThisKey="TermsCodeID", OtherKey="ID", IsForeignKey=true)]
+		public MasterTerm MasterTerm
+		{
+			get
+			{
+				return this._MasterTerm.Entity;
+			}
+			set
+			{
+				MasterTerm previousValue = this._MasterTerm.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterTerm.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterTerm.Entity = null;
+						previousValue.POHeaders.Remove(this);
+					}
+					this._MasterTerm.Entity = value;
+					if ((value != null))
+					{
+						value.POHeaders.Add(this);
+						this._TermsCodeID = value.ID;
+					}
+					else
+					{
+						this._TermsCodeID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MasterTerm");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterWarehouse_POHeader", Storage="_MasterWarehouse", ThisKey="WarehouseCodeId", OtherKey="ID", IsForeignKey=true)]
+		public MasterWarehouse MasterWarehouse
+		{
+			get
+			{
+				return this._MasterWarehouse.Entity;
+			}
+			set
+			{
+				MasterWarehouse previousValue = this._MasterWarehouse.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterWarehouse.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterWarehouse.Entity = null;
+						previousValue.POHeaders.Remove(this);
+					}
+					this._MasterWarehouse.Entity = value;
+					if ((value != null))
+					{
+						value.POHeaders.Add(this);
+						this._WarehouseCodeId = value.ID;
+					}
+					else
+					{
+						this._WarehouseCodeId = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MasterWarehouse");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_POHeader", Storage="_Users", ThisKey="AssignTo", OtherKey="ID", IsForeignKey=true)]
+		public Users Users
+		{
+			get
+			{
+				return this._Users.Entity;
+			}
+			set
+			{
+				Users previousValue = this._Users.Entity;
+				if (((previousValue != value) 
+							|| (this._Users.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Users.Entity = null;
+						previousValue.POHeaders.Remove(this);
+					}
+					this._Users.Entity = value;
+					if ((value != null))
+					{
+						value.POHeaders.Add(this);
+						this._AssignTo = value.ID;
+					}
+					else
+					{
+						this._AssignTo = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Users");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_POComments(POComment entity)
+		{
+			this.SendPropertyChanging();
+			entity.POHeader = this;
+		}
+		
+		private void detach_POComments(POComment entity)
+		{
+			this.SendPropertyChanging();
+			entity.POHeader = null;
+		}
+		
+		private void attach_PODetails(PODetail entity)
+		{
+			this.SendPropertyChanging();
+			entity.POHeader = this;
+		}
+		
+		private void detach_PODetails(PODetail entity)
+		{
+			this.SendPropertyChanging();
+			entity.POHeader = null;
+		}
+		
+		private void attach_POFiles(POFile entity)
+		{
+			this.SendPropertyChanging();
+			entity.POHeader = this;
+		}
+		
+		private void detach_POFiles(POFile entity)
+		{
+			this.SendPropertyChanging();
+			entity.POHeader = null;
+		}
+		
+		private void attach_POStatusHistories(POStatusHistory entity)
+		{
+			this.SendPropertyChanging();
+			entity.POHeader = this;
+		}
+		
+		private void detach_POStatusHistories(POStatusHistory entity)
+		{
+			this.SendPropertyChanging();
+			entity.POHeader = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.POStatusHistory")]
+	public partial class POStatusHistory : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _POID;
+		
+		private System.Nullable<int> _OldStatusID;
+		
+		private int _NewStatusID;
+		
+		private int _LastModifiedBy;
+		
+		private System.DateTime _LastModifiedDate;
+		
+		private EntityRef<MasterStatus> _MasterStatus;
+		
+		private EntityRef<MasterStatus> _MasterStatus1;
+		
+		private EntityRef<POHeader> _POHeader;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnPOIDChanging(int value);
+    partial void OnPOIDChanged();
+    partial void OnOldStatusIDChanging(System.Nullable<int> value);
+    partial void OnOldStatusIDChanged();
+    partial void OnNewStatusIDChanging(int value);
+    partial void OnNewStatusIDChanged();
+    partial void OnLastModifiedByChanging(int value);
+    partial void OnLastModifiedByChanged();
+    partial void OnLastModifiedDateChanging(System.DateTime value);
+    partial void OnLastModifiedDateChanged();
+    #endregion
+		
+		public POStatusHistory()
+		{
+			this._MasterStatus = default(EntityRef<MasterStatus>);
+			this._MasterStatus1 = default(EntityRef<MasterStatus>);
+			this._POHeader = default(EntityRef<POHeader>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_POID", DbType="Int NOT NULL")]
+		public int POID
+		{
+			get
+			{
+				return this._POID;
+			}
+			set
+			{
+				if ((this._POID != value))
+				{
+					if (this._POHeader.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnPOIDChanging(value);
+					this.SendPropertyChanging();
+					this._POID = value;
+					this.SendPropertyChanged("POID");
+					this.OnPOIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OldStatusID", DbType="Int")]
+		public System.Nullable<int> OldStatusID
+		{
+			get
+			{
+				return this._OldStatusID;
+			}
+			set
+			{
+				if ((this._OldStatusID != value))
+				{
+					if (this._MasterStatus1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnOldStatusIDChanging(value);
+					this.SendPropertyChanging();
+					this._OldStatusID = value;
+					this.SendPropertyChanged("OldStatusID");
+					this.OnOldStatusIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NewStatusID", DbType="Int NOT NULL")]
+		public int NewStatusID
+		{
+			get
+			{
+				return this._NewStatusID;
+			}
+			set
+			{
+				if ((this._NewStatusID != value))
+				{
+					if (this._MasterStatus.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnNewStatusIDChanging(value);
+					this.SendPropertyChanging();
+					this._NewStatusID = value;
+					this.SendPropertyChanged("NewStatusID");
+					this.OnNewStatusIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModifiedBy", DbType="Int NOT NULL")]
+		public int LastModifiedBy
+		{
+			get
+			{
+				return this._LastModifiedBy;
+			}
+			set
+			{
+				if ((this._LastModifiedBy != value))
+				{
+					this.OnLastModifiedByChanging(value);
+					this.SendPropertyChanging();
+					this._LastModifiedBy = value;
+					this.SendPropertyChanged("LastModifiedBy");
+					this.OnLastModifiedByChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModifiedDate", DbType="DateTime NOT NULL")]
+		public System.DateTime LastModifiedDate
+		{
+			get
+			{
+				return this._LastModifiedDate;
+			}
+			set
+			{
+				if ((this._LastModifiedDate != value))
+				{
+					this.OnLastModifiedDateChanging(value);
+					this.SendPropertyChanging();
+					this._LastModifiedDate = value;
+					this.SendPropertyChanged("LastModifiedDate");
+					this.OnLastModifiedDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POStatusHistory", Storage="_MasterStatus", ThisKey="NewStatusID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public MasterStatus MasterStatus
+		{
+			get
+			{
+				return this._MasterStatus.Entity;
+			}
+			set
+			{
+				MasterStatus previousValue = this._MasterStatus.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterStatus.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterStatus.Entity = null;
+						previousValue.POStatusHistories.Remove(this);
+					}
+					this._MasterStatus.Entity = value;
+					if ((value != null))
+					{
+						value.POStatusHistories.Add(this);
+						this._NewStatusID = value.ID;
+					}
+					else
+					{
+						this._NewStatusID = default(int);
+					}
+					this.SendPropertyChanged("MasterStatus");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MasterStatus_POStatusHistory1", Storage="_MasterStatus1", ThisKey="OldStatusID", OtherKey="ID", IsForeignKey=true)]
+		public MasterStatus MasterStatus1
+		{
+			get
+			{
+				return this._MasterStatus1.Entity;
+			}
+			set
+			{
+				MasterStatus previousValue = this._MasterStatus1.Entity;
+				if (((previousValue != value) 
+							|| (this._MasterStatus1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MasterStatus1.Entity = null;
+						previousValue.POStatusHistories1.Remove(this);
+					}
+					this._MasterStatus1.Entity = value;
+					if ((value != null))
+					{
+						value.POStatusHistories1.Add(this);
+						this._OldStatusID = value.ID;
+					}
+					else
+					{
+						this._OldStatusID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("MasterStatus1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="POHeader_POStatusHistory", Storage="_POHeader", ThisKey="POID", OtherKey="ID", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public POHeader POHeader
+		{
+			get
+			{
+				return this._POHeader.Entity;
+			}
+			set
+			{
+				POHeader previousValue = this._POHeader.Entity;
+				if (((previousValue != value) 
+							|| (this._POHeader.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._POHeader.Entity = null;
+						previousValue.POStatusHistories.Remove(this);
+					}
+					this._POHeader.Entity = value;
+					if ((value != null))
+					{
+						value.POStatusHistories.Add(this);
+						this._POID = value.ID;
+					}
+					else
+					{
+						this._POID = default(int);
+					}
+					this.SendPropertyChanged("POHeader");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
