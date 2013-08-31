@@ -70,6 +70,111 @@ namespace POT.Services
 
         #endregion
                 
+        //#region Add / Edit / Delete & Bulk
+
+        public int Add(POFile fileHeaderObj, bool doSubmit)
+        {
+            //Set lastmodified fields
+            fileHeaderObj.LastModifiedBy = _SessionUsr.ID;
+            fileHeaderObj.LastModifiedDate = DateTime.Now;
+            
+            dbc.POFiles.InsertOnSubmit(fileHeaderObj);
+            if (doSubmit) dbc.SubmitChanges();
+
+            return fileHeaderObj.ID; // Return the 'newly inserted id'
+        }
+                
+        /*public int AddEdit(POFile fileHeaderObj, bool doSubmit)
+        {
+            fileHeaderObj.UploadedOn = Defaults.getValidDate(fileHeaderObj.UploadedOn); // special case to ensure valid SQLDate
+            if (fileHeaderObj.ID <= Defaults.Integer) // Insert
+                return Add(fileHeaderObj, doSubmit);
+
+            else
+            {
+                #region Update
+                //Set lastmodified fields
+                fileHeaderObj.LastModifiedBy = _SessionUsr.ID;                
+                fileHeaderObj.LastModifiedDate = DateTime.Now;
+                
+                dbc.POFiles.Attach(fileHeaderObj);//attach the object as modified
+                dbc.Refresh(System.Data.Linq.RefreshMode.KeepCurrentValues, fileHeaderObj);//Optimistic-concurrency (simplest solution)
+                #endregion
+
+                if (doSubmit) //Make a FINAL submit instead of periodic updates
+                   dbc.SubmitChanges();
+            }
+
+            return fileHeaderObj.ID;
+        }
+                
+        public void Delete(POFile fileHeaderObj, bool doSubmit)
+        {
+            dbc.POFiles.DeleteOnSubmit(dbc.POFiles.Single(f => f.ID == fileHeaderObj.ID));
+            if (doSubmit) dbc.SubmitChanges();
+        }
         
+        public void BulkAddEditDel(List<POFile> records, PO poObj, bool doSubmit, POTmodel dbcContext)
+        {
+            //OLD: if (poID <= Defaults.Integer) return; //Can't move forward if its a new PO entry
+            #region NOTE
+            // Perform Bulk Add, Edit & Del based on Object properties set in VIEW
+            // MEANT ONLY FOR ASYNC BULK OPERATIONS
+            // Handle transaction, error and final commit in Caller
+            #endregion
+
+            //using{dbc}, try-catch and transaction must be handled in callee function
+            foreach (POFile item in records)
+            {
+                #region Perform Db operations
+                item.POID = poObj.ID;
+                item.LastModifiedBy = _SessionUsr.ID;
+                item.LastModifiedDate = DateTime.Now;
+                item.UploadedOn = DateTime.Now; // double ensure dates are not null !
+
+                //Special case handling for IE with KO - null becomes "null"
+                if (item.Comment == "null") item.Comment = "";
+
+                if (item._Deleted)
+                    Delete(item, false);
+                else if (item._Edited)//Make sure Delete is LAST
+                    AddEdit(item, false);
+                else if (item._Added)
+                    Add(item, false);
+                #endregion
+
+                #region Log Activity (finally when the uploaded file data is entered in the DB
+                if (item._Added || item._Edited)
+                {
+                    //Special case: Call the econd overload which has "doSubmit" parameter
+                    new ActivityLogService(ActivityLogService.Activity.POFileUpload, dbcContext).Add(
+                    new ActivityHistory() { FileName = item.FileName, POID = poObj.ID, PONumber = poObj.PONumber.ToString() },
+                    doSubmit);
+                }
+                #endregion
+            }
+            if (doSubmit) dbc.SubmitChanges();//Make a FINAL submit instead of periodic updates
+            //Move header files
+            ProcessFiles(records, poObj.ID, poObj.POGUID);
+        }
+
+        #endregion
+
+        #region Extra functions
+
+        void ProcessFiles(List<POFile> records, int poID, string POGUID)
+        {
+            if (records == null || records.Count < 1) return;
+
+            foreach (POFile item in records)
+                if (item._Deleted)//Delete will always be for existing not Async (so use POID)
+                    FileIO.DeletePOFile(item.FileName, item.POID, null, FileIO.mode.header);
+
+            if(records.Count > 0) //finally copy all the files from H_Temp to H
+            FileIO.MoveAsyncPOFiles(poID, POGUID, null, null, true);
+        }
+
+        #endregion
+        */
     }
 }

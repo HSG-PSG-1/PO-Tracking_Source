@@ -106,11 +106,11 @@ namespace POT.Services
                 else
                     dasQ = dasQ.Where(o => das.PONos.Contains(o.PONumber));
             }
-            /*
+            
             if (das.BrandID > 0) dasQ = dasQ.Where(o => o.BrandID == das.BrandID);
             else if (!string.IsNullOrEmpty(das.BrandName))
                 dasQ = dasQ.Where(o => SqlMethods.Like(o.BrandName.ToLower(), "%" + das.BrandName.ToLower() + "%"));
-            */
+            
             if (das.OrderStatusID > 0) dasQ = dasQ.Where(o => o.OrderStatusID == das.OrderStatusID);
             else if (!string.IsNullOrEmpty(das.Status))
                 dasQ = dasQ.Where(o => SqlMethods.Like(o.Status.ToLower(), das.Status.ToLower()));

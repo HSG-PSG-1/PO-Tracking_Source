@@ -44,7 +44,7 @@ namespace POT.Services
             {
                 roleRights = dbc.UserRoles.SingleOrDefault(r => r.ID == RoleID);
                 //(from r in dbc.UserRoles where r.ID == RoleID select r).SingleOrDefault();
-                roleRights.OrgType = null;
+                //roleRights.OrgType = null;
                 roleRights.Users = null;//to avoid issues with XMLSerializer
             }
             return roleRights;

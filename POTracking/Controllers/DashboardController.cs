@@ -59,7 +59,7 @@ namespace CPM.Controllers
                              AssignTo = vw_u.AssignTo,
                              VendorID = vw_u.VendorID,
                              VendorName = vw_u.VendorName,
-                             //BrandName = vw_u.BrandName,
+                             BrandName = vw_u.BrandName,
                              Status = vw_u.Status,
                              CommentsExist = vw_u.CommentsExist,
                              FilesHExist = vw_u.FilesHExist,

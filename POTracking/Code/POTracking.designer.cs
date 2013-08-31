@@ -3841,8 +3841,6 @@ namespace POT.DAL
 		
 		private EntitySet<Organization> _Organizations;
 		
-		private EntitySet<UserRole> _UserRoles;
-		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -3862,7 +3860,6 @@ namespace POT.DAL
 		public OrgType()
 		{
 			this._Organizations = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations), new Action<Organization>(this.detach_Organizations));
-			this._UserRoles = new EntitySet<UserRole>(new Action<UserRole>(this.attach_UserRoles), new Action<UserRole>(this.detach_UserRoles));
 			OnCreated();
 		}
 		
@@ -3979,19 +3976,6 @@ namespace POT.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="OrgType_UserRole", Storage="_UserRoles", ThisKey="ID", OtherKey="OrgTypeId")]
-		public EntitySet<UserRole> UserRoles
-		{
-			get
-			{
-				return this._UserRoles;
-			}
-			set
-			{
-				this._UserRoles.Assign(value);
-			}
-		}
-		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -4019,18 +4003,6 @@ namespace POT.DAL
 		}
 		
 		private void detach_Organizations(Organization entity)
-		{
-			this.SendPropertyChanging();
-			entity.OrgType = null;
-		}
-		
-		private void attach_UserRoles(UserRole entity)
-		{
-			this.SendPropertyChanging();
-			entity.OrgType = this;
-		}
-		
-		private void detach_UserRoles(UserRole entity)
 		{
 			this.SendPropertyChanging();
 			entity.OrgType = null;
@@ -5621,8 +5593,6 @@ namespace POT.DAL
 		
 		private EntitySet<Users> _Users;
 		
-		private EntityRef<OrgType> _OrgType;
-		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -5658,7 +5628,6 @@ namespace POT.DAL
 		public UserRole()
 		{
 			this._Users = new EntitySet<Users>(new Action<Users>(this.attach_Users), new Action<Users>(this.detach_Users));
-			this._OrgType = default(EntityRef<OrgType>);
 			OnCreated();
 		}
 		
@@ -5713,10 +5682,6 @@ namespace POT.DAL
 			{
 				if ((this._OrgTypeId != value))
 				{
-					if (this._OrgType.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OnOrgTypeIdChanging(value);
 					this.SendPropertyChanging();
 					this._OrgTypeId = value;
@@ -5936,40 +5901,6 @@ namespace POT.DAL
 			set
 			{
 				this._Users.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="OrgType_UserRole", Storage="_OrgType", ThisKey="OrgTypeId", OtherKey="ID", IsForeignKey=true)]
-		public OrgType OrgType
-		{
-			get
-			{
-				return this._OrgType.Entity;
-			}
-			set
-			{
-				OrgType previousValue = this._OrgType.Entity;
-				if (((previousValue != value) 
-							|| (this._OrgType.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._OrgType.Entity = null;
-						previousValue.UserRoles.Remove(this);
-					}
-					this._OrgType.Entity = value;
-					if ((value != null))
-					{
-						value.UserRoles.Add(this);
-						this._OrgTypeId = value.ID;
-					}
-					else
-					{
-						this._OrgTypeId = default(int);
-					}
-					this.SendPropertyChanged("OrgType");
-				}
 			}
 		}
 		

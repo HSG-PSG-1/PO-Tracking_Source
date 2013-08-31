@@ -59,5 +59,82 @@ namespace POT.Services
         }*/
 
         #endregion
+
+        #region Add / Edit / Delete & Bulk
+
+        public int Add(POComment commentObj, bool doSubmit)
+        {
+            //triple ensure that the latest POComment.PostedOn date is NOT null
+            //commentObj.PostedOn = DateTime.Now;
+            //Set lastmodified fields
+            commentObj.LastModifiedBy = _SessionUsr.ID;
+            commentObj.LastModifiedDate = DateTime.Now;
+
+            dbc.POComments.InsertOnSubmit(commentObj);
+            if (doSubmit) dbc.SubmitChanges();
+
+            return commentObj.ID; // Return the 'newly inserted id'
+        }
+                
+        public int AddEdit(POComment commentObj, bool doSubmit)
+        {
+            if (commentObj.ID <= Defaults.Integer) // Insert
+                return Add(commentObj, doSubmit);
+
+            else // Update
+            {
+                //Set lastmodified fields
+                commentObj.LastModifiedBy = _SessionUsr.ID;
+                commentObj.LastModifiedDate = DateTime.Now;
+
+                dbc.POComments.Attach(commentObj);//attach the object as modified
+                dbc.Refresh(System.Data.Linq.RefreshMode.KeepCurrentValues, commentObj);//Optimistic-concurrency (simplest solution)
+                if (doSubmit) dbc.SubmitChanges();
+            }
+
+            return commentObj.ID;
+        }
+                
+        public void Delete(POComment commentObj, bool doSubmit)
+        {
+            dbc.POComments.DeleteOnSubmit(dbc.POComments.Single(c => c.ID == commentObj.ID && c.POID== commentObj.POID));
+            if (doSubmit) dbc.SubmitChanges();
+        }
+        
+        public void BulkAddEditDel(List<POComment> records, int CliamID, bool doSubmit)
+        {
+            #region NOTE
+            /* Perform Bulk Add, Edit & Del based on Object properties set in VIEW
+             MEANT ONLY FOR ASYNC BULK OPERATIONS
+             Handle transaction, error and final commit in Callee 
+                        
+            //using{dbc}, try-catch and transaction must be handled in callee function
+            //Also handle the final commit as follows:
+            //dbc.SubmitChanges();//Make a FINAL submit instead of periodic updates
+            //txn.Commit();//Commit
+            */
+            #endregion
+
+            foreach (POComment item in records)
+            {
+                #region Perform Db operations
+                item.POID = CliamID; //Required when adding new PO
+                item.LastModifiedBy = _SessionUsr.ID;
+                item.LastModifiedDate = DateTime.Now;
+                item.PostedOn = DateTime.Now;// double ensure dates are not null !
+
+                if (item._Deleted)
+                    Delete(item, false);
+                else if (item._Edited)//Make sure Delete is FIRST
+                    AddEdit(item, false);
+                else if (item._Added)
+                    Add(item, false);
+                #endregion
+            }
+            if (doSubmit) dbc.SubmitChanges();//Make a FINAL submit instead of periodic updates
+            //txn.Commit();//Commit - Handled in parent caller routine
+        }
+
+        #endregion
     }
 }

@@ -95,6 +95,12 @@ a:link{    color: #505050;    text-decoration: underline;}
 a:visited{    color: #505050;}
 a:hover{    color: #505050;    text-decoration: none;}
 a:active{    color: #505050;}
+
+.white { color:#ffffff; }
+.white a:link{    color: #ffffff;    text-decoration: underline;}
+.white a:visited{    color: #ffffff;}
+.white a:hover{    color: #ffffff;    text-decoration: none;}
+.white a:active{    color: #ffffff;}
 /* MISC  
 ----------------------------------------------------------*/
 .clear{    clear: both;}

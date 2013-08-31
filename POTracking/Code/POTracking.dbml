@@ -180,7 +180,6 @@
       <Column Name="LastModifiedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="LastModifiedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="OrgType_Organization" Member="Organizations" ThisKey="ID" OtherKey="OrgTypeId" Type="Organization" />
-      <Association Name="OrgType_UserRole" Member="UserRoles" ThisKey="ID" OtherKey="OrgTypeId" Type="UserRole" />
     </Type>
   </Table>
   <Table Name="dbo.POComment" Member="POComments">
@@ -269,7 +268,6 @@
       <Column Name="LastModifiedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="CanDelete" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="UserRole_Users" Member="Users" ThisKey="ID" OtherKey="RoleID" Type="Users" />
-      <Association Name="OrgType_UserRole" Member="OrgType" ThisKey="OrgTypeId" OtherKey="ID" Type="OrgType" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Users" Member="Users">

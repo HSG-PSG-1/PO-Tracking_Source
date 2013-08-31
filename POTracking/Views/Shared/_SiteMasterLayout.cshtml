@@ -7,7 +7,7 @@
     <title>@ViewBag.Title</title>
     <script type="text/javascript" language="javascript">
         /* ===== Variables used in diff pages ===== */
-        
+
         var loginURL = '@HSG.Helper.Defaults.commonRoot/Login'; //Make sure Login page has table with id=tblLogin001
         //@* ===== Menu images ===== *@
         var menuDownGifURL = '@Url.Content("~/Content/Menu/down.gif")'; //Make sure this is set for menu        
@@ -43,15 +43,13 @@
     
     <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js" type="text/javascript"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js" type="text/javascript"></script>
-     *@
-    @* Local includes *@
+     *@ @* Local includes *@
     <link href="@Url.Content("~/Content/jQUI/smoothness/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Content/jQUI/min/jquery-1.9.1.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Content/jQUI/min/jquery-migrate-1.1.1.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Content/jQUI/min/jquery-ui.1.10.2.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Content/Scripts/jquery.validate.1.11.0.min.js")" type="text/javascript"></script>
-        
-        <style type="text/css">
+    <style type="text/css">
 		    body {overflow:scroll;background-color:Transparent;height:100%}
 		    /* for tablesorter plugin */
 		    table.tablesorter thead tr .header {
@@ -66,7 +64,7 @@
 	            background-image: url('@Url.Content("~/Content/Images/asc.gif")');	            
             }
 	    </style>
-        @*<style type="text/css">
+    @*<style type="text/css">
         #menu1 .ui-menu {z-index: 1000; overflow: hidden;}
         #menu1 .ui-menu .ui-menu { overflow: visible !important;}
         #menu1 .ui-menu > li { float: left; display: block; width: auto !important;}
@@ -75,79 +73,107 @@
         #menu1 .ui-menu .ui-menu-icon { margin-top: 0.1em !important;}
         #menu1 .ui-menu .ui-menu .ui-menu li { float: left; display: block;}
         </style>*@
-         <style type="text/css">
-            .ui-menu{
-               z-index: 1000;
-            }           
-
-            #menu1 li { display:inline-block; width: auto; }
-            #menu1 li.sub { display:block; width: auto;}
-            .ui-menu .ui-menu-icon{ display: none; }
-            </style>
-        <!--[if IE 7]>
+    <style type="text/css">
+        .ui-menu
+        {
+            z-index: 1000;
+        }
+        
+        #menu1 li
+        {
+            display: inline-block;
+            width: auto;
+        }
+        #menu1 li.sub
+        {
+            display: block;
+            width: auto;
+        }
+        .ui-menu .ui-menu-icon
+        {
+            display: none;
+        }
+    </style>
+    <!--[if IE 7]>
 	    <style type="text/css">
 		    body {overflow:auto;}
 		    /* Special case handing for IE 7 which showed double scrollbar */
 	    </style>
     <![endif]-->
-    <!--[if IE 8]><style type="text/css">body {overflow:auto;}</style><![endif]-->    
-    <!--[if IE 9]><style type="text/css">body {overflow:auto;}</style><![endif]-->    
-    <!--[if IE 10]><style type="text/css">body {overflow:auto;}</style><![endif]-->    
+    <!--[if IE 8]><style type="text/css">body {overflow:auto;}</style><![endif]-->
+    <!--[if IE 9]><style type="text/css">body {overflow:auto;}</style><![endif]-->
+    <!--[if IE 10]><style type="text/css">body {overflow:auto;}</style><![endif]-->
     @RenderSection("HeadContent", required: false)
     @*MiniProfiler.RenderIncludes()*@
 </head>
 <body>
     <table cellpadding="3" width="100%" cellspacing="3" border="0" align="center">
-        <tr>
+        @*<tr style="background:#333333;">
             <td id="header">                
-                    &nbsp;&nbsp;<img src='@Url.Content("~/Content/Images/AOT Logo.jpg")' alt="AOT" border="0" style="display:inline"/>
+                    &nbsp;&nbsp;<img src='@Url.Content("~/Content/Images/AOT-Header.png")' alt="AOT" border="0" style="display:inline"/>
             </td>
             <td id="logindisplay" align="right" valign="bottom" nowrap="nowrap">
             @{Html.RenderPartial("LogOnUserControl");}
             </td>
-        </tr>
+        </tr>*@
         <tr>
-            <td colspan="2" align="center" style="padding: 4px 4px 4px 4px">
-            @*MENU (ddsmoothmenu) : START *@
-                <div id="smoothmenu" class="ddsmoothmenu" style="text-align:left;" >
-                    <ul id="menu1">
-                        <li>
-                            @Html.ActionLink("Dashboard", "List", "Dashboard")                            
-                        </li>
-                        @if (_Session.RoleRights.ManageMaster || _Session.RoleRights.ManageUser || _Session.RoleRights.ManageRole)
-                        { 
-                        <li><a href="#">Manage</a>
-                            <ul>
-                                @if (_Session.RoleRights.ManageUser)
-                                {<li>@Html.ActionLink("Users", "List", "User")</li>} 
-                                @if (_Session.RoleRights.ManageRole)
-                                {<li>@Html.ActionLink("Roles", "Manage", "Role")</li>}
-                                @if (_Session.RoleRights.ManageMaster)
-                                {<li>@Html.ActionLink("Master", "Status", "Manage")
-                                <ul>
-                                    <li>@Html.ActionLink("Carrier", "Carrier", "Manage")</li>
-                                    <li>@Html.ActionLink("Container Type", "Container_Type", "Manage")</li>
-                                    <li>@Html.ActionLink("File Type", "File_Type", "Manage")</li>
-                                    <li>@Html.ActionLink("Status", "Status", "Manage")</li>
-                                </ul>
-                                </li>                                
-                                }  
-                                
-                                @if (_Session.RoleRights.ManageSetting)
-                                { 
-                                <li>@Html.ActionLink("Setting", "Manage", "Setting")</li>}
-                            </ul>
-                        </li>
-                        }                   
-                        @if (_Session.RoleRights.ViewActivity)
-                        { <li>@Html.ActionLink("Activity", "Log", "Activity")</li>}                                                              </ul>                    
-                    <br style="clear: left" />
-                </div>
-            @*MENU (ddsmoothmenu) : END*@
+            <td id="header" colspan="2">
+                <table cellspacing="0" width="99%" align="center" style="background: #333333;">
+                    <tr>
+                        <td id="header">
+                            &nbsp;&nbsp;<img src='@Url.Content("~/Content/Images/AOT-Header.png")' alt="AOT" border="0" style="display:inline;"/>
+                        </td>
+                        <td id="logindisplay" align="right" valign="bottom" nowrap="nowrap" class="white" style="background-position:right; background-repeat:no-repeat; background-image:url('@Url.Content("~/Content/Images/tires_banner.gif")');">
+                            @*<div style="height:85px;"></div>*@
+                            @{Html.RenderPartial("LogOnUserControl");} 
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
         <tr>
-            <td id="main" colspan="2" align="left" valign="top">@RenderBody()</td>
+            <td colspan="2" align="center" style="padding: 4px 4px 4px 4px">
+                @*MENU (ddsmoothmenu) : START *@
+                <div id="smoothmenu" class="ddsmoothmenu" style="text-align: left;">
+                    <ul id="menu1">
+                        <li>
+                            @Html.ActionLink("Dashboard", "List", "Dashboard")
+                        </li>
+                        @if (_Session.RoleRights.ManageMaster || _Session.RoleRights.ManageUser || _Session.RoleRights.ManageRole)
+                        { 
+                            <li><a href="#">Manage</a>
+                                <ul>
+                                    @if (_Session.RoleRights.ManageUser)
+                                    {<li>@Html.ActionLink("Users", "List", "User")</li>}
+                                    @if (_Session.RoleRights.ManageRole)
+                                    {<li>@Html.ActionLink("Roles", "Manage", "Role")</li>}
+                                    @if (_Session.RoleRights.ManageMaster)
+                                    {<li>@Html.ActionLink("Master", "Status", "Manage")
+                                    <ul>
+                                        <li>@Html.ActionLink("Carrier", "Carrier", "Manage")</li>
+                                        <li>@Html.ActionLink("Container Type", "Container_Type", "Manage")</li>
+                                        <li>@Html.ActionLink("File Type", "File_Type", "Manage")</li>
+                                        <li>@Html.ActionLink("Status", "Status", "Manage")</li>
+                                    </ul>
+                                </li>                                
+                                    }
+                                    @if (_Session.RoleRights.ManageSetting)
+                                    { 
+                                        <li>@Html.ActionLink("Setting", "Manage", "Setting")</li>}
+                                </ul>
+                            </li>
+                        }
+                        @*if (_Session.RoleRights.ViewActivity)
+                        { <li>@Html.ActionLink("Activity", "Log", "Activity")</li>}*@
+                    </ul>
+                    <br style="clear: left" />
+                </div>
+                @*MENU (ddsmoothmenu) : END*@
+            </td>
+        </tr>
+        <tr>
+            <td id="main" colspan="2" align="left" valign="top">@RenderBody()
+            </td>
         </tr>
         <tr>
             <td id="footer" colspan="2" align="left" class="small">
@@ -157,14 +183,15 @@
                 <img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="800px" />
             </td>
         </tr>
-    </table>    
-@RenderSection("FootContent", required: false)
-<div id="divdlg" style="text-align:center;display:none;height:70px;width:61px;"><img src=" @Url.Content("~/Content/Images/loading.gif")" title="" alt="Loading" style="text-align:center" /></div>
+    </table>
+    @RenderSection("FootContent", required: false)
+    <div id="divdlg" style="text-align: center; display: none; height: 70px; width: 61px;">
+        <img src=" @Url.Content("~/Content/Images/loading.gif")" title="" alt="Loading" style="text-align:center" /></div>
 </body>
-    @*<script type="text/javascript" src="@Url.Content("~/Content/Menu/ddsmoothmenu2.js")"></script>    *@
-    <script language="javascript" src="@Url.Content("~/Content/Scripts/common.js")" type="text/javascript"></script>
-    <script language="javascript" src="@Url.Content("~/Content/Scripts/jquery.form.js")" type="text/javascript"></script>
-    <script type="text/javascript" language="javascript" defer="defer">
+@*<script type="text/javascript" src="@Url.Content("~/Content/Menu/ddsmoothmenu2.js")"></script>    *@
+<script language="javascript" src="@Url.Content("~/Content/Scripts/common.js")" type="text/javascript"></script>
+<script language="javascript" src="@Url.Content("~/Content/Scripts/jquery.form.js")" type="text/javascript"></script>
+<script type="text/javascript" language="javascript" defer="defer">
         $().ready(function () {
         $("#menu1").menu({position:{at:"left bottom"}});
            @* ddsmoothmenu.init({
@@ -184,7 +211,7 @@
             });
             //$.validator.onkeyup = false; // http://forum.jquery.com/topic/jquery-validation-plug-in-setdefaults-not-working
         });
-    </script>
+</script>
 <!--[if lt IE 8]>
 <script src="@Url.Content("~/Content/Scripts/json2.js")" type="text/javascript" ></script>
 <![endif]-->

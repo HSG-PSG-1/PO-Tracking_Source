@@ -10,6 +10,7 @@ function openPrintDialog(POId)
 } 
 function gotoPO(POId)
 {
+    alert("Go to PO Id : " + POId + " (under development)"); return;
     window.location.href = 
     "@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new { POId = -99 }))".replace('-99',POId);
 }

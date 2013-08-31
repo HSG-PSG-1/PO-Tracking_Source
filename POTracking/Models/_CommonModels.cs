@@ -86,6 +86,6 @@ namespace POT.DAL
 
     [Serializable]
     public partial class vw_Users_Role_Org { }
-    [Serializable]
-    public partial class UserRole { }
+    /*[Serializable]
+    public partial class UserRole { }*/
 }

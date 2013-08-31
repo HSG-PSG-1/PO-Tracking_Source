@@ -168,6 +168,7 @@
     <Content Include="Content\Images\cancel.png" />
     <Content Include="Content\Images\reset.png" />
     <Content Include="Content\Images\search.gif" />
+    <Content Include="Content\Images\tires_banner.gif" />
     <Content Include="Content\jQUI\min\jquery-1.9.1.min.js" />
     <Content Include="Content\jQUI\min\jquery-migrate-1.1.0.min.js" />
     <Content Include="Content\jQUI\min\jquery-migrate-1.1.1.min.js" />

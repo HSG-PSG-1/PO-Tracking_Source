@@ -163,7 +163,7 @@ function checksession() {
 function clearForm(oForm) {
     var elements = oForm.elements;
     oForm.reset();
-
+    try{
     for (i = 0; i < elements.length; i++) {
 
 		if (!elements[i].type) continue;//HT: To avoid unwanted elements
@@ -193,6 +193,7 @@ function clearForm(oForm) {
             default: break;
         }
     }
+    }catch(e){}
 }
 
 //minSQLDate & maxSQLDate are declared in Master page

@@ -21,25 +21,25 @@ namespace POT.DAL
 
         public const string sep = ";";
 
-        public bool _Added { get; set;}
+        public bool _Added { get; set; }
         public bool _Edited { get; set; }
         public bool _Deleted { get; set; }
         // common property required for all the PO and its child objects
         public string POGUID { get; set; }
-        
+
         #endregion
 
         // Set some required fields to proceed (mostly overridded in child class)
         public void setOpr(int ID)
         {// Default settings
             this._Added = (ID <= Defaults.Integer) && !(this._Deleted);
-            this._Edited = (!this._Added) && !(this._Deleted);            
-        }        
+            this._Edited = (!this._Added) && !(this._Deleted);
+        }
     }
 
     #region PO Model (& vw_PO_Master_User_Loc)
 
-    [Serializable, System.Xml.Serialization.XmlRoot(ElementName = "PO",IsNullable=true)]    
+    [Serializable, System.Xml.Serialization.XmlRoot(ElementName = "PO", IsNullable = true)]
     public partial class PO : POHeader
     {
         #region Extra Variables & Properties
@@ -53,10 +53,10 @@ namespace POT.DAL
         public string AssignToComment { get; set; }
 
         public string POGUID { get; set; } // common property required for all the PO and its child objects
-        
+
         #endregion
     }
-    
+
     [MetadataType(typeof(vw_PO_Master_User_LocMetadata))]
     public partial class vw_PO_Master_User_Loc
     {
@@ -66,7 +66,7 @@ namespace POT.DAL
         public int StatusIDold { get; set; }
         public string POGUID { get; set; }
         //public string LocationAndCode { get { return Common.getLocationAndCode(this.Location, this.LocationCode); } }
-        
+
         #endregion
     }
 
@@ -100,9 +100,9 @@ namespace POT.DAL
 
         [DisplayName("Location")]
         [Required(ErrorMessage = "Location" + Defaults.RequiredMsgAppend)]
-        public int ShipToLocationID { get; set; }        
+        public int ShipToLocationID { get; set; }
     }
-    
+
     #endregion
 
     #region PODetail Model
@@ -113,18 +113,18 @@ namespace POT.DAL
         #region Extra Variables & Properties
 
         public string ItemCode { get; set; }
-        
-        public string UnitCostStr { get { return (UnitCost.HasValue?UnitCost.Value:0.0m).ToString("#0.00"); } }
+
+        public string UnitCostStr { get { return (UnitCost.HasValue ? UnitCost.Value : 0.0m).ToString("#0.00"); } }
         public string OrderExtensionStr { get { return (OrderExtension.HasValue ? OrderExtension.Value : 0.0m).ToString("#0.00"); } }
 
         #endregion
     }
-    
+
     #endregion
 
     #region Comment Model
-    
-    [MetadataType(typeof(CommentMetadata))]    
+
+    [MetadataType(typeof(CommentMetadata))]
     public partial class POComment : Opr
     {
         #region Extra Variables & Properties
@@ -214,11 +214,11 @@ namespace POT.DAL
         [DisplayName("Comment By")]
         public string CommentBy { get; set; }
     }
-    
+
     #endregion
 
     #region POFile Model
-    
+
     [MetadataType(typeof(POFileMetadata))]
     public partial class POFile : Opr
     {
@@ -247,10 +247,13 @@ namespace POT.DAL
                     return HttpUtility.UrlEncode(HSG.Helper.Crypto.EncodeStr(FileName + sep + POGUID.ToString() + sep + IsAsync, true));
             }
         } // Can't use HttpUtility.UrlDecode - because it'll create issues with string.format and js function calls so handle in GetFile
-        
-        public string FilePath { //HT: Usage: <a href='<%= Url.Content("~/" + item.FilePath) %>' target="_blank">
-            get { return FileIO.GetPOFilePath
-                (POGUID, null, (IsAsync ? FileIO.mode.asyncHeader : FileIO.mode.header), FileName, true); 
+
+        public string FilePath
+        { //HT: Usage: <a href='<%= Url.Content("~/" + item.FilePath) %>' target="_blank">
+            get
+            {
+                return FileIO.GetPOFilePath
+                    (POGUID, null, (IsAsync ? FileIO.mode.asyncHeader : FileIO.mode.header), FileName, true);
             }
         }
 
@@ -264,7 +267,7 @@ namespace POT.DAL
          [Required(ErrorMessage = "Select a file to be uploaded")] */
         public string FileName { get; set; }
 
-        [DisplayName("Uploaded By")]        
+        [DisplayName("Uploaded By")]
         public string UploadedBy { get; set; }
 
         [DisplayName("Type")]
@@ -276,6 +279,6 @@ namespace POT.DAL
         [StringLength(250, ErrorMessage = Defaults.MaxLengthMsg)]
         public string Comment { get; set; }
     }
-    
+
     #endregion
 }
