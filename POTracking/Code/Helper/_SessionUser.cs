@@ -43,12 +43,7 @@ namespace HSG.Helper
             set{HttpContext.Current.Session["UsrOrgID"] = value;}
         }		
 		
-        public static string SalespersonCode
-        { get {  return (HttpContext.Current.Session["UsrSalespersonCode"]??"").ToString(); }
-          set {  HttpContext.Current.Session["UsrSalespersonCode"] = value;}
-        }
-
-		public static string UserName
+        public static string UserName
         { get {  return (HttpContext.Current.Session["UsrUserName"]??"").ToString(); }
           set {  HttpContext.Current.Session["UsrUserName"] = value;}
         }

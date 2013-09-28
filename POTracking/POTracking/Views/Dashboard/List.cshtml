@@ -18,8 +18,8 @@
        Dictionary<string, object> txtAttr = new Dictionary<string, object>();
        txtAttr.Add("class", "hdrTxt textBox");
        txtAttr.Add("onchange", "setFiltered(1,this);");
-       bool isCustomer = _Session.IsOnlyCustomer, isSales = _Session.IsOnlySales;
-       string userType = isCustomer ? "Customer" : "Internal";       
+       bool isVendor = _Session.IsOnlyVendor;
+       string userType = isVendor ? "Vendor" : "Internal";       
    }
     <form action="@Url.Content("~/Dashboard/Excel")" method="post" id="frmExcel" style="display:none" ><input type="submit" value="Export to Excel" class="button" id="btnExcel" onclick="return excelPostback(event);" /></form>       
     <table width="100%">
@@ -40,9 +40,9 @@
                     <tr>
                         <td nowrap="nowrap" width="5%">PO #</td>
                         <td>
-                            @*<%= Html.TextBox("PONumber1", dSearch.PONo1)%>*@
-                            @Html.TextBox("PONos", dSearch.PONos, new{title1="Enter single or comma separated multiple values",
-                                                                            data_bind = "value:search.PONos"
+                            @*<%= Html.TextBox("PONumber1", dSearch.PONumber1)%>*@
+                            @Html.TextBox("PONumbers", dSearch.PONumbers, new{title1="Enter single or comma separated multiple values",
+                                                                            data_bind = "value:search.PONumbers"
                        })
                         </td>
                         <td nowrap="nowrap" width="5%">Status</td>
@@ -121,9 +121,9 @@
         <tr>
             <td colspan="3">  
             <div id="tdGrid">
-                @*@Html.RenderPartial("./KO/ListCustomer", Model); *@
+                @*@Html.RenderPartial("./KO/ListVendor", Model); *@
                         @{ Html.RenderPartial("KO/" +
-                               (_Session.IsOnlyCustomer ? "ListCustomer" : "ListInternal"),
+                               (_Session.IsOnlyVendor ? "ListVendor" : "ListInternal"),
                                new ViewDataDictionary { { "gridPageSize", ViewData["gridPageSize"] } }); }
              </div>
             </td>
@@ -140,7 +140,7 @@
         }
 
     $().ready(function() {
-    setFocus("PONos");
+    setFocus("PONumbers");
     doCollapse(); //If url has collapse
         
         //AJAXify form
@@ -236,14 +236,15 @@
     $(document).ready(function () {
         createKO();
         @*//bind event to check po commit*@
-        window.onbeforeunload = function(e){            
+        window.onbeforeunload = function(e){  
+        var orderBy = (vm_D.sortField() != null)? (vm_D.sortField() + " " + (vm_D.sortOrderNxtAsc()?"Desc":"Asc")) : "";
            if(skipCommitChk){skipCommitChk = false; return;}
             $.ajax({
             type: "POST",
             //contentType: "application/json; charset=utf-8",
             //dataType: "json",
             data: $("#frm").serialize(),
-            url: ListURL
+            url: ListURL + ((orderBy!="")?("&orderBy=" + orderBy) : "")
             ,async : false // SO: 14645011 (for FF to ensure the postback is not
             @*,success: function (data) {
                 if (data != null) {
@@ -267,7 +268,7 @@
         resetDatepicker('#PODateFrom1, #PODateTo1');
 
         //trigger changePOStatusPost for KO binding notification
-        vm_D.search.PONos(null);
+        vm_D.search.PONumbers(null);
         vm_D.search.OrderStatusID(0);
         vm_D.search.AssignTo(0);
         vm_D.search.VendorName(null);

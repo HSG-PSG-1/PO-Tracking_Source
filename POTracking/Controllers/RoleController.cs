@@ -7,7 +7,7 @@ using POT.Services;
 using POT.Models;
 using HSG.Helper;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     public partial class RoleController : BaseController
     {

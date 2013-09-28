@@ -7,7 +7,7 @@ using POT.DAL;
 using POT.Services;
 using HSG.Helper;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     [IsAuthorize(IsAuthorizeAttribute.Rights.ManageUser)]
     public partial class UserController : BaseController
@@ -31,7 +31,7 @@ namespace CPM.Controllers
         #region Will need GET (for AJAX) & Post
 
         [CacheControl(HttpCacheability.NoCache)]
-        public JsonResult UserList()
+        public JsonResult POUserList()
         {
             //Make sure searchOpts is assigned to set ViewState
             vw_Users_Role_Org oldSearchOpts = (vw_Users_Role_Org)searchOpts;
@@ -57,7 +57,7 @@ namespace CPM.Controllers
 
         [HttpPost]
         [SkipModelValidation]//HT: Use with CAUTION only meant for POSTBACK search Action        
-        public JsonResult UserList(vw_Users_Role_Org searchObj, string doReset)
+        public JsonResult POUserList(vw_Users_Role_Org searchObj, string doReset)
         {
             searchOpts = (doReset == "on") ? new vw_Users_Role_Org() : searchObj; // Set or Reset Search-options
             populateData(false);// Populate ddl Viewdata

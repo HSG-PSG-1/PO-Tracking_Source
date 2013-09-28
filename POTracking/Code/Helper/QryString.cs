@@ -63,9 +63,9 @@ namespace HSG.Helper
         }        
         /*
          How to access controller to make the session data controller / page specific
-         htmlHelper.ViewContext.Controller.ToString() = CPM.Controllers.DashboardController
+         htmlHelper.ViewContext.Controller.ToString() = POT.Controllers.DashboardController
          htmlHelper.ViewContext.Controller.ControllerContext.RouteData.Values["controller"] = Dashboard
-         new CPM.Controllers.DashboardController().ToString() = CPM.Controllers.DashboardController
+         new POT.Controllers.DashboardController().ToString() = POT.Controllers.DashboardController
         */        
     }
 }

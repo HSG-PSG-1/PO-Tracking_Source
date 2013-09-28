@@ -39,68 +39,94 @@ namespace POT.DAL
 
     #region PO Model (& vw_PO_Master_User_Loc)
 
-    [Serializable, System.Xml.Serialization.XmlRoot(ElementName = "PO", IsNullable = true)]
-    public partial class PO : POHeader
+    [Serializable, System.Xml.Serialization.XmlRoot(ElementName = "POHeader", IsNullable = true)]
+    [MetadataType(typeof(POHeaderMetadata))]
+    public partial class POHeader
     {
         #region Extra Variables & Properties
 
         public List<POComment> aComments { get; set; }
-        public List<PODetail> aItems { get; set; }
+        public List<PODetail> aLines { get; set; }
         public List<POFile> aFiles { get; set; }
 
         public bool AssignToChanged { get; set; }
         public string AssignToVal { get; set; }
         public string AssignToComment { get; set; }
 
+        public string PODateStr { get { return Defaults.formattedDate(PODate); } }
+        public string DateLcOpenedStr { get { return Defaults.formattedDate(DateLcOpened); } }
+        public string EtaStr { get { return Defaults.formattedDate(Eta); } }
+        public string EtdStr { get { return Defaults.formattedDate(Etd); } }
+        public string PoPlacedDateStr { get { return Defaults.formattedDate(PoPlacedDate); } }
+        public string BLDateStr { get { return Defaults.formattedDate(BLDate); } }        
+
+        public int? OrderStatusIDold { get; set; }
+        
         public string POGUID { get; set; } // common property required for all the PO and its child objects
 
         #endregion
-    }
-
-    [MetadataType(typeof(vw_PO_Master_User_LocMetadata))]
-    public partial class vw_PO_Master_User_Loc
+    }    
+    public partial class vw_POHeader
     {
         #region Extra Variables & Properties
 
-        public int AssignedToOld { get; set; }
-        public int StatusIDold { get; set; }
-        public string POGUID { get; set; }
-        //public string LocationAndCode { get { return Common.getLocationAndCode(this.Location, this.LocationCode); } }
+        public string VendorAddress
+        {
+            get {
+                return
+                    (string.IsNullOrEmpty(VendorAddress1) ? "" : VendorAddress1+ ",<br/>")  +
+                    (string.IsNullOrEmpty(VendorAddress2) ? "" : VendorAddress2 + ",<br/>") +
+                    (string.IsNullOrEmpty(VendorAddress3) ? "" : VendorAddress3 + ",<br/>") +
+                    (string.IsNullOrEmpty(VendorCity) ? "" : VendorCity + ",") +
+                    (string.IsNullOrEmpty(VendorState) ? "" : VendorState + ",<br/>") +
+                    (string.IsNullOrEmpty(VendorCountryName) ? "" : VendorCountryName);
+            }
+        }
 
+        public string ShipToAddress
+        {
+            get
+            {
+                return
+                    (string.IsNullOrEmpty(ShipToAddress1) ? "" : ShipToAddress1 + ",<br/>") +
+                    (string.IsNullOrEmpty(ShipToAddress2) ? "" : ShipToAddress2 + ",<br/>") +
+                    (string.IsNullOrEmpty(ShipToAddress3) ? "" : ShipToAddress3 + ",<br/>") +
+                    (string.IsNullOrEmpty(ShipToCity) ? "" : ShipToCity + ",") +
+                    (string.IsNullOrEmpty(ShipToState) ? "" : ShipToState + ",<br/>") +
+                    (string.IsNullOrEmpty(ShipToCountryCode) ? "" : ShipToCountryCode);
+            }
+        }
+
+        public int AssignToOld { get; set; }
+        public int OrderStatusIDold { get; set; }
+        public string POGUID { get; set; }
+        
         #endregion
     }
 
-    public class vw_PO_Master_User_LocMetadata
+    public class POHeaderMetadata
     {
         [DisplayName("PO #")]
         [Required(ErrorMessage = "PO #" + Defaults.RequiredMsgAppend)]
-        public int PONumber { get; set; }
+        public string PONumber { get; set; }
 
-        [DisplayName("Status")]
-        [Required(ErrorMessage = "Status" + Defaults.RequiredMsgAppend)]
+        [DisplayName("Order Status")]
+        [Required(ErrorMessage = "Order Status" + Defaults.RequiredMsgAppend)]
         public int OrderStatusID { get; set; }
 
-        [DisplayName("Customer")]
-        [Required(ErrorMessage = "Customer" + Defaults.RequiredMsgAppend)]
-        public int CustID { get; set; }
+        [DisplayName("Vendor")]
+        [Required(ErrorMessage = "Vendor" + Defaults.RequiredMsgAppend)]
+        public int VendorID { get; set; }
 
-        [DisplayName("Brand")]
-        [Required(ErrorMessage = "Brand" + Defaults.RequiredMsgAppend)]
-        public int BrandID { get; set; }
+        [DisplayName("User")]
+        [Required(ErrorMessage = "User" + Defaults.RequiredMsgAppend)]
+        public int UserID { get; set; }
 
         [DisplayName("PO Date")]
         [Required(ErrorMessage = "PO Date" + Defaults.RequiredMsgAppend)]
         //[Range(typeof(DateTime), System.Data.SqlTypes.SqlDateTime.MinValue.ToString(), System.Data.SqlTypes.SqlDateTime.MaxValue.ToString())]//SO: 1406046
         [Range(typeof(DateTime), "1-Jan-1753", "31-Dec-9999")]
-        public int PODate { get; set; }
-
-        [DisplayName("Vendor")]
-        [StringLength(30, ErrorMessage = Defaults.MaxLengthMsg)]
-        public int VendorName { get; set; }
-
-        [DisplayName("Location")]
-        [Required(ErrorMessage = "Location" + Defaults.RequiredMsgAppend)]
-        public int ShipToLocationID { get; set; }
+        public int PODate { get; set; }        
     }
 
     #endregion
@@ -129,6 +155,7 @@ namespace POT.DAL
     {
         #region Extra Variables & Properties
         public string CommentBy { get; set; }
+        //public string Comment1 { get; set; }
         #endregion
 
         /* Set some required fields to proceed
@@ -225,6 +252,7 @@ namespace POT.DAL
         #region Extra Variables & Properties
 
         public bool IsAsync { get; set; }
+        
         string _POGUID;
         public string POGUID
         {
@@ -253,7 +281,7 @@ namespace POT.DAL
             get
             {
                 return FileIO.GetPOFilePath
-                    (POGUID, null, (IsAsync ? FileIO.mode.asyncHeader : FileIO.mode.header), FileName, true);
+                    (POGUID, (IsAsync ? FileIO.mode.asyncHeader : FileIO.mode.header), FileName, true);
             }
         }
 

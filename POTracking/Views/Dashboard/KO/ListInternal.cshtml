@@ -3,7 +3,7 @@
 @using HSG.Helper
 @{  object routeValues = new { qData = Request["qData"] };
     string reload = "return false;";
-    bool isCustomer = _Session.IsOnlyCustomer;       }
+    bool isVendor = _Session.IsOnlyVendor;       }
 <div style="width:99%; text-align:center" data-bind="visible:filteredRecords().length < 1">No records found</div>
 <table width="100%" class="thinBorder" data-bind="visible:filteredRecords().length > 0">
     <thead class="header">
@@ -17,7 +17,7 @@
             <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'VendorName')}">
             @Html.Raw(HttpUtility.HtmlDecode(Html.SortableColumn("Vendor", "VendorName", reload, routeValues)))
             @* For future: reload(this.href,'','#main');*@</th>
-            @if (!isCustomer){ 
+            @if (!isVendor){ 
             <th nowrap="nowrap"data-bind="click: function(data,event){$root.sortData(data, event,'ShipToCity')}">
             @Html.Raw(Html.SortableColumn("Ship To City", "ShipToCity", reload, routeValues))</th>
             } 
@@ -28,7 +28,7 @@
 
             <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'Status')}">
             @Html.Raw(Html.SortableColumn("Status", "Status", reload, routeValues))</th>
-            @if (!isCustomer){ 
+            @if (!isVendor){ 
                 <th nowrap="nowrap"data-bind="click: function(data,event){$root.sortData(data, event,'CommentsExist')}">
                 @Html.Raw(Html.SortableColumn("Comment", "CommentsExist", reload, routeValues))</th>
             } 
@@ -44,7 +44,7 @@
                 click:function(data,event){ gotoPO($data.ID);return false;}"></div></u>            
         </td>
         <td align="center" data-bind="text:PODateOnly"></td>
-        @if (!isCustomer)
+        @if (!isVendor)
         {<td align="center" data-bind="text:VendorName"></td>}
          <td align="center" data-bind="text:ShipToCity"></td> 
         <td align="center" data-bind="text:ETDOnly"></td>
@@ -53,16 +53,18 @@
         <div data-bind="attr: {id : 'dialog' + $data.ID}"></div>
         <div class="noBorder dDialog uline" data-bind="click: function(data,event){showDialog('Status',$data.ID);poObj = this;},html:$data.Status, attr:{id:'statusDIV' + $data.ID}"></div>        
         </td>
-        @if (!isCustomer)
+        @if (!isVendor || true)
         { <td align="center">
         <!-- ko if: CommentsExist -->         
             <input type="image" src="@Url.Content("~/Content/Images/comments.gif")" alt="View Comments" title="View Comments"
-                data-bind="visible: CommentsExist,click: function(data,event){showDialog('Comments',$data.ID);return false;}" />
+                data-bind="visible: CommentsExist, click: function(data,event){showDialog('Comments',$data.ID);return false;}" />
         <!-- /ko -->
         </td>} 
         <td align="center">
+        <!-- ko if: FilesHExist -->         
         <input type="image" src="@Url.Content("~/Content/Images/files.gif")" alt="View Files" title="View Files"
-                data-bind="visible: FilesHExist,click: function(data,event){showDialog('Files',$data.ID);return false;}"/>
+                data-bind="visible: FilesHExist, click: function(data,event){showDialog('Files',$data.ID);return false;}"/>
+        <!-- /ko -->
         </td>
         @*<td align="center">
             <input type="image" src="@Url.Content("~/Content/Images/Print.png")" alt="Print PO" title="Print PO"

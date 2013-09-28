@@ -136,13 +136,6 @@ namespace HSG.Helper
         public static int CustCodeLenInLocCode
         { get { return int.Parse(ConfigurationManager.AppSettings.Get("custCodeLenInLocCode")); } }
 
-        /// Role Id for Sales person type
-        /// <summary>
-        /// Role Id for Sales person type
-        /// </summary>
-        public static int RoleIdSalesperson
-        { get { return int.Parse(ConfigurationManager.AppSettings.Get("roleIdSalesperson")); } }
-
         #endregion //Properties
 
         #region Settings fetched from DB

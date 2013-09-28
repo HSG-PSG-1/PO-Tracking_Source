@@ -26,8 +26,7 @@ namespace POT.Services
             //Try this while getting text if not possible in DB: 
             //http://stackoverflow.com/questions/272633/add-spaces-before-capital-letters
             Login=1,//Make sure the value matches with Activity Log
-            Logout,
-            POAdd,
+            Logout,            
             POEdit,
             PODelete,
             POFileUpload,
@@ -36,7 +35,8 @@ namespace POT.Services
             UserEdit,
             UserDelete,
             MasterManage,
-            RoleManage            
+            RoleManage,
+            SettingChange
         }
 
         public ActivityLogService(Activity activityToLog /*,vw_Users_Role_Org sessionUser*/)

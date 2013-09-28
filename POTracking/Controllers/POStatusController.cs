@@ -7,7 +7,7 @@ using POT.DAL;
 using POT.Services;
 using HSG.Helper;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     public partial class POController : BaseController
     {
@@ -33,10 +33,10 @@ namespace CPM.Controllers
 
         //[AccessPO("POID")]
         [CacheControl(HttpCacheability.NoCache), HttpGet]
-        public ActionResult Status(int POID)
+        public ActionResult Status(int POID, bool IsReadOnly = false)
         {
             //http://localhost:4915/PO/1/Status
-            ViewData["IsReadOnly"] = false;
+            ViewData["IsReadOnly"] = IsReadOnly;
             // NOT need because in MAnage po we show it as readonly || _Session.PO.Archived;
             return View(new StatusHistoryService().FetchAll(POID));
         }

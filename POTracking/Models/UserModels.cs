@@ -29,8 +29,7 @@ namespace POT.DAL
         public string OrgTypeName { get; set; }
         public int OrgType { get; set; }//HT:Careful!
         //public bool showLocations { get { return (OrgType == (int)OrgService.OrgType.Customer && OrgID > 0); } }
-        //public bool isSalesperson { get { return (OrgType == (int)SecurityService.Roles.Sales); } }
-
+        
         public const string chkDelRefMsg = "User cannot be deleted because he's linked with atleast one of the following:"+
             "<ul><li>A PO is assigned to this user.</li></ul>";
     }
@@ -75,9 +74,5 @@ namespace POT.DAL
 
         [DisplayName("Last Modified Date")]
         public DateTime LastModifiedDate { get; set; }
-
-        [StringLength(2500, ErrorMessage = Defaults.MaxLengthMsg)]
-        [DisplayName("Comment")]
-        public string Comment { get; set; }
     }
 }

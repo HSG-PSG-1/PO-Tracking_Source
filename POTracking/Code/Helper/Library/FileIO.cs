@@ -34,7 +34,8 @@ namespace HSG.Helper
            // asyncDetail
         }
 
-        static string GetHD(mode upMode) {
+        static string GetHD(mode upMode)
+        { //HT:FileH: NOT useful until we have two diff file uploads (like Header & Detail)
             switch (upMode)
             {
                 //case mode.detail: return "D";
@@ -53,7 +54,8 @@ namespace HSG.Helper
         {
             #region Init variables
             
-            string subsubDir = GetHD(upMode); bool hasDetail = (DetailId != null);
+            string subsubDir = GetHD(upMode); 
+            bool hasDetail = (DetailId != null);
             result resultIO = result.emptyNoFile;
 
             string ext = Path.GetExtension(upFile.FileName);//Get extension
@@ -152,17 +154,21 @@ namespace HSG.Helper
 
         #region PO File specific functions
 
-        public static string GetPOFilePath(string POGUID, int? PODetailID, mode upMode, string FileName, bool webURL)
+        public static string GetPOFilePath(string POGUID, mode upMode, string FileName, bool webURL)
         {
             if (string.IsNullOrEmpty(POGUID) || (string.IsNullOrEmpty(FileName) && webURL))
                 return "#"; 
 
             string basePath = webURL ? Config.DownloadUrl : Config.UploadPath;
             char sep = (webURL ? webPathSep : dirPathSep);
-            string dirPath = basePath + sep + POGUID + sep + GetHD(upMode); // might be web url or physical path so can't use Path.Combine
-            
-            if (PODetailID != null) //Special case for Details file
-                dirPath = dirPath + sep + PODetailID.Value.ToString();
+            //HT:FileH: string dirPath = basePath + sep + POGUID + sep + GetHD(upMode); // might be web url or physical path so can't use Path.Combine
+            string dirPath = basePath + sep + POGUID;
+            //HT:FileH: SPECIAL case ONLY for POT (filedirectly in the POID folder)
+            if (upMode == mode.asyncHeader)
+                dirPath = dirPath + sep + GetHD(upMode);
+
+            //if (PODetailID != null) //Special case for Details file
+            //    dirPath = dirPath + sep + PODetailID.Value.ToString();
 
             return string.IsNullOrEmpty(FileName) ? dirPath : dirPath + sep + FileName;
         }
@@ -186,28 +192,29 @@ namespace HSG.Helper
         public static string GetPOFilesTempFolder(string POGUID, bool IsHeader)
         {//Called from PO-delete or PODetail delete
             string poPath = Path.Combine(Config.UploadPath, POGUID.ToString());
-            return Path.Combine(poPath, GetHD(mode.asyncHeader));//IsHeader ? mode.asyncHeader : mode.asyncDetail));
+            //HT:FileH: return Path.Combine(poPath, GetHD(mode.asyncHeader));//IsHeader ? mode.asyncHeader : mode.asyncDetail));
+            return Path.Combine(poPath, GetHD(mode.asyncHeader));
         }
 
         public static bool DeletePOFile(string docName, int POID, int? PODetailId, FileIO.mode upMode)
         { return DeletePOFile(docName, POID.ToString(), PODetailId, upMode); }
         public static bool DeletePOFile(string docName, string POGUID, int? PODetailId, FileIO.mode upMode)
         {
-            return FileIO.DeleteFile(GetPOFilePath(POGUID, PODetailId, upMode, docName, false));            
+            return FileIO.DeleteFile(GetPOFilePath(POGUID, upMode, docName, false));            
         }
         
         #endregion
 
         #region Move / Get File download code
 
-        public static void MoveAsyncPOFiles(int poID,string POGUID, int? oldPODetailID, int? poDetailID)//, bool isHeader)
+        public static void MoveAsyncPOFiles(int poID,string POGUID)
         {// Move all Async uploaded files from H_Temp to H
 
             mode FMode = mode.header;// (isHeader ? mode.header : mode.detail);
             mode aFMode = mode.asyncHeader;// (isHeader ? mode.asyncHeader : mode.asyncDetail);
 
-            string sourcePath = GetPOFilePath(POGUID, oldPODetailID, aFMode, "", false);
-            string targetPath = GetPOFilePath(poID.ToString(), poDetailID, FMode, "", false);
+            string sourcePath = GetPOFilePath(POGUID, aFMode, "", false);
+            string targetPath = GetPOFilePath(poID.ToString(), FMode, "", false);
 
             if (!Directory.Exists(sourcePath))
                 return;//Means there were only delete records which are already deleted

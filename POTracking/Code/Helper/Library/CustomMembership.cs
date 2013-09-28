@@ -251,8 +251,7 @@ namespace HSG.Helper
                 switch (_Enums.ParseEnum<SecurityService.Roles>(roleName))
                 {
                     case SecurityService.Roles.Internal: return _Session.IsInternal;
-                    case SecurityService.Roles.Sales: return _Session.IsSales;
-                    case SecurityService.Roles.Admin: return _Session.IsAdmin;
+                    case SecurityService.Roles.Vendor: return _Session.IsVendor;
                     default: return false;
                 }
             }

@@ -3,7 +3,7 @@
 @using HSG.Helper
 @{  object routeValues = new { qData = Request["qData"] };
     string reload = "return false;";
-    bool isCustomer = _Session.IsOnlyCustomer;       }
+    /*bool isVendor = _Session.IsOnlyVendor;*/       }
 <div style="width:99%; text-align:center" data-bind="visible:filteredRecords().length < 1">No records found</div>
 <table width="100%" class="thinBorder" data-bind="visible:filteredRecords().length > 0">
     <thead class="header">
@@ -23,6 +23,8 @@
             @Html.Raw(Html.SortableColumn("ETA", "ETAOnly", reload, routeValues))</th>
 <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'Status')}">
             @Html.Raw(Html.SortableColumn("Status", "Status", reload, routeValues))</th>
+            <th nowrap="nowrap"data-bind="click: function(data,event){$root.sortData(data, event,'CommentsExist')}">
+                @Html.Raw(Html.SortableColumn("Comment", "CommentsExist", reload, routeValues))</th>
             <th nowrap="nowrap"data-bind="click: function(data,event){$root.sortData(data, event,'FilesHExist')}">
             @Html.Raw(Html.SortableColumn("File", "FilesHExist", reload, routeValues))</th>            
         </tr>
@@ -42,8 +44,16 @@
             <div class="dDialog uline" data-bind="click: function(data,event){showDialog('Status',$data.ID);poObj = this;},html:$data.Status, attr:{id:'statusDIV' + $data.ID}"></div>        
         </td>
         <td align="center">
+        <!-- ko if: CommentsExist -->         
+            <input type="image" src="@Url.Content("~/Content/Images/comments.gif")" alt="View Comments" title="View Comments"
+                data-bind="visible: CommentsExist, click: function(data,event){showDialog('Comments',$data.ID);return false;}" />
+        <!-- /ko -->
+        </td>
+        <td align="center">
+        <!-- ko if: FilesHExist -->         
         <input type="image" src="@Url.Content("~/Content/Images/files.gif")" alt="View Files" title="View Files"
                 data-bind="visible: FilesHExist,click: function(data,event){showDialog('Files',$data.ID);return false;}"/>
+        <!-- /ko -->
         </td>
         @*<td align="center">
             <input type="image" src="@Url.Content("~/Content/Images/Print.png")" alt="Print PO" title="Print PO"

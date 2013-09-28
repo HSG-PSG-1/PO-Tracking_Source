@@ -40,7 +40,7 @@ namespace POT.Services
 
         POComment Transform(POComment c, string commentBy, int poID)
         {
-            return c.Set(c1 => { c1.CommentBy = commentBy;                 
+            return c.Set(c1 => { c1.CommentBy = commentBy;
                 /* IMP: NOTE - The following is NOT needed because we've set the Association Access to Internal in the dbml
                  c1.PO = null; c1.POID1 = poID; */
             });

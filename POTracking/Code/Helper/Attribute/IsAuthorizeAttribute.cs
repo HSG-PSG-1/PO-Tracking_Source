@@ -70,7 +70,7 @@ namespace HSG.Helper
             {// Access Rights Violation
                 ViewDataDictionary viewData = new ViewDataDictionary();
                 viewData.Add("Message", "You do not have sufficient privileges for this operation.");
-                filterContext.Controller = new CPM.Controllers.CommonController();
+                filterContext.Controller = new POT.Controllers.CommonController();
                 filterContext.Result =  new ViewResult { ViewName = "NoAccess", ViewData = viewData };
             }
 

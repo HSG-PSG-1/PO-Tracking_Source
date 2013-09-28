@@ -17,8 +17,7 @@ namespace POT.Services
 
         public enum OrgType
         {//HT:CAUTION: Make sure this is NOT changes because its mapped to a VIEW
-            Customer = 1,
-            Internal,
+            Internal=1,
             Vendor
         }
 
@@ -35,14 +34,6 @@ namespace POT.Services
 
             switch (enumObj)
             {
-                case OrgType.Customer:
-                    return from o in dbc.Organizations
-                           where (o.OrgTypeId == (int)OrgType.Customer && 
-                                  o.Name.ToLower().Contains(term))
-                                orderby o.Name
-                   //HT: Kept for future
-                   //select new { id = o.ID.ToString(), value = o.Code + "(" + o.Name + ")", label = o.Code + "(" + o.Name + ")" }; 
-                           select new { id = o.ID, value = o.Name };                     
                 case OrgType.Internal:
                     return from o in dbc.Organizations
                            where (o.OrgTypeId == (int)OrgType.Internal && 

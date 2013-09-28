@@ -152,7 +152,13 @@ namespace HSG.Helper
             return htmlHelper.TextBoxFor(expression, GetMaxLenAndRequired(expression, htmlAttributes));            
         }
 
-        static IDictionary<string, object> GetMaxLenAndRequired(LambdaExpression expression, object htmlAttributes)
+        public static MvcHtmlString CustomTextBoxKOFor<TModel, TProperty>
+            (this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, object htmlAttributes)
+        {
+            return htmlHelper.TextBoxFor(expression, GetMaxLenAndRequired(expression, htmlAttributes, true));
+        }
+
+        static IDictionary<string, object> GetMaxLenAndRequired(LambdaExpression expression, object htmlAttributes, bool isKO = false)
         {
             bool IsRequired = false;
             int maxLen = 0;
@@ -192,6 +198,11 @@ namespace HSG.Helper
                 if(string.IsNullOrEmpty(classAttrVal))attributes.Add("class",requiredClass);
                 else if(!classAttrVal.Contains(requiredClass))
                     attributes["class"] = classAttrVal + " " + requiredClass;
+            }
+
+            if (isKO)
+            {
+                attributes["data-bind"] = "value:" + member.Member.Name;
             }
 
             #endregion

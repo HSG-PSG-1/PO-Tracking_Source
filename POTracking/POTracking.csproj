@@ -87,9 +87,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\POTracking.cs">
-      <DependentUpon>POTracking.dbml</DependentUpon>
-    </Compile>
     <Compile Include="Code\Helper\Attribute\JSONAttributes.cs" />
     <Compile Include="Code\Helper\ConfigSettings.cs" />
     <Compile Include="Code\Helper\_SessionLookup.cs" />
@@ -110,8 +107,10 @@
     <Compile Include="Code\Helper\_Session.cs" />
     <Compile Include="Code\Services\ActivityLogService.cs" />
     <Compile Include="Code\Services\CommentService.cs" />
+    <Compile Include="Code\Services\DetailService.cs" />
+    <Compile Include="Code\Services\POService.cs" />
     <Compile Include="Code\Services\StatusHistoryService.cs" />
-    <Compile Include="Code\Services\FileHeaderService.cs" />
+    <Compile Include="Code\Services\POFileService.cs" />
     <Compile Include="Code\Services\SettingService.cs" />
     <Compile Include="Code\Services\SecurityService.cs" />
     <Compile Include="Code\Services\DefaultDBService.cs" />
@@ -122,6 +121,9 @@
     <Compile Include="Code\Services\_ServiceBase.cs" />
     <Compile Include="Code\Services\UserService.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\POCommentController.cs" />
+    <Compile Include="Controllers\POFileController.cs" />
+    <Compile Include="Controllers\POController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\POStatusController.cs" />
@@ -140,6 +142,7 @@
     </Compile>
     <Compile Include="Models\ActivityHistoryModels.cs" />
     <Compile Include="Models\POModels.cs" />
+    <Compile Include="Models\PrintModels.cs" />
     <Compile Include="Models\SettingModels.cs" />
     <Compile Include="Models\DashboardModels.cs" />
     <Compile Include="Models\MasterModels.cs" />
@@ -237,6 +240,7 @@
     <Content Include="Content\Site.css" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Code\POTracking.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>POTracking.designer.cs</LastGenOutput>
@@ -247,7 +251,7 @@
     <Content Include="Views\Common\Login.cshtml" />
     <Content Include="Views\Common\NoAccess.cshtml" />
     <Content Include="Views\Dashboard\Comments.cshtml" />
-    <Content Include="Views\Dashboard\KO\ListCustomer.cshtml" />
+    <Content Include="Views\Dashboard\KO\ListVendor.cshtml" />
     <Content Include="Views\Dashboard\Excel.cshtml" />
     <Content Include="Views\Dashboard\Files.cshtml" />
     <Content Include="Views\Setting\EditorTemplates\SettingEdit.cshtml" />
@@ -278,6 +282,20 @@
     <Content Include="Views\Role\KO\RoleGrid.cshtml" />
     <Content Include="Views\Dashboard\Print.cshtml" />
     <Content Include="Views\PO\Status.cshtml" />
+    <Content Include="Views\PO\Manage.cshtml" />
+    <Content Include="Views\PO\KO\CommentsKOscript.cshtml" />
+    <Content Include="Views\PO\KO\FilesKOscript.cshtml" />
+    <Content Include="Views\PO\Info.cshtml" />
+    <Content Include="Views\PO\Comments.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\PO\Files.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\PO\GetFile.cshtml" />
+    <Content Include="Views\PO\Lines.cshtml" />
+    <Content Include="Views\PO\Print.cshtml" />
+    <Content Include="Views\PO\PrintInternal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
@@ -314,7 +332,7 @@
     <Content Include="Content\Scripts\jquery.tablesorter.min.js" />
     <Content Include="Content\Scripts\jquery.tablesorter.filter.js" />
     <Content Include="EmailTemplates\ApplicationError.xml" />
-    <Content Include="EmailTemplates\ClaimAssignTo.xml" />
+    <Content Include="EmailTemplates\POAssignTo.xml" />
     <Content Include="EmailTemplates\ForgotPwd.xml" />
     <Content Include="favicon.ico" />
     <Content Include="Content\Scripts\jquery.form.js" />

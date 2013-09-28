@@ -13,7 +13,7 @@ using POT.Services;
 using HSG.Helper;
 using POT.DAL;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     //[HandleError(View = "Error")] - handled in Application_Error
     public class CommonController : BaseController
@@ -165,26 +165,20 @@ namespace CPM.Controllers
 
             #region Check explicit Security (Only for Customer)
 
-            if (_Session.IsOnlyCustomer)
+            if (_Session.IsOnlyVendor)
             {//Exclusive checks for Customer user
                 switch (enumObj)
                 {//Because Customer does not have access to any of this
-                    case LookupService.Source.Customer:
                     case LookupService.Source.Internal:
                     case LookupService.Source.Vendor:
                         return Json(string.Empty, JsonRequestBehavior.AllowGet);
                     #region Folllowing cases are either accessible to ALL type of users or their access is NOT done via this JSON Lookup
                     /*
                 case LookupService.Source.Item:break;
-                case LookupService.Source.Item1:break;
                 case LookupService.Source.Brand:break;
                 case LookupService.Source.POFile:break;                
-                case LookupService.Source.Defect:break;
                 case LookupService.Source.Status: break;
-                case LookupService.Source.ShipLoc:break;
                 case LookupService.Source.User:break;
-                case LookupService.Source.SalespersonUser:break;
-                case LookupService.Source.CustomerUser:break;
                 case LookupService.Source.VendorUser:break;
                 default: return Json(string.Empty);
              */

@@ -8,7 +8,7 @@ namespace HSG.Helper
 {
     public class Defaults
     {
-        public const string baseNamespace = "CPM";
+        public const string baseNamespace = "POT";
         public static string commonRoot = VirtualPathUtility.ToAbsolute("~/Common");
         public static string contentRoot = VirtualPathUtility.ToAbsolute("~/Content");
         public static string masterLayout = "~/Views/Shared/_SiteMasterLayout.cshtml";
@@ -26,9 +26,9 @@ namespace HSG.Helper
         public static DateTime minSQLDate = new DateTime(1753, 1, 1);
         public static DateTime maxSQLDate = new DateTime(9999, 12, 31);
         public static DateTime nullDate = new DateTime(1, 1, 1);
-        public const string cookieName = "CPMcookie";
-        public const string emailCookie = "CPMCookieEmail";
-        public const string passwordCookie = "CPMCookiePWD";
+        public const string cookieName = "POTcookie";
+        public const string emailCookie = "POTCookieEmail";
+        public const string passwordCookie = "POTCookiePWD";
         //Validation i.e. Email, regex, etc...
         public const string EmailRegEx = @"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$";
         public const string ForgotPWDInvalidEmail = "Email address does not exist.";
@@ -49,11 +49,20 @@ namespace HSG.Helper
         public const string dtUniFormat2 = "MMMM dd,yyyy";
         public const string dtTFormat = "MM/dd/yyyy hh:mm:ss"; // Make sure you use "ci" with it or it'll become MM-dd-yyyy
         public static readonly System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo(String.Empty, false);
+
+        public const string bindKOdatepicker = "datepicker:{0}, datepickerOptions: {{ minDate: minSQLDate, maxDate: maxSQLDate }}";
+
         public static DateTime getValidDate(DateTime dt)
         {// Check and return a valid(within its range SQL date
             if (dt > maxSQLDate) return maxSQLDate;
             else if (dt < minSQLDate) return minSQLDate;
             else return dt;
+        }
+
+        public static string formattedDate(DateTime? dt)
+        {
+            if (dt != null) return dt.Value.ToString(Defaults.dtFormat, Defaults.ci);
+            else return "";
         }
 
         #endregion
@@ -218,7 +227,7 @@ namespace HSG.Helper
         public static IEnumerable<int> stringToIntList(string str)
         {
             //http://stackoverflow.com/questions/1763613/convert-comma-separated-string-of-ints-to-int-array
-            //Easy but crashable: int[] nos = (das.PONos ?? "").Split(',').Select<string, int>(int.Parse).ToArray();
+            //Easy but crashable: int[] nos = (das.PONumbers ?? "").Split(',').Select<string, int>(int.Parse).ToArray();
             
             if (String.IsNullOrEmpty(str))
                 yield break;

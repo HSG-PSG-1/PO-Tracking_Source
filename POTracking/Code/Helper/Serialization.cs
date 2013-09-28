@@ -33,7 +33,7 @@ namespace HSG.Helper
 
         /* CAUTION: IMP: Serialization will abort if there're self-referring child-parent relationships
              * To AVOID this 'circular-reference' make sure that the entity reference as the following
-             * In CPM.dbml set the Parent property (Access) to Internal for the parent-child Association
+             * In POT.dbml set the Parent property (Access) to Internal for the parent-child Association
              * This will make sure that circular entity references are NOT generated */
 
         public static string Serialize<T>(T serializee)

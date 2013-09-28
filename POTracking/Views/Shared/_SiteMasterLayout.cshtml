@@ -163,8 +163,8 @@
                                 </ul>
                             </li>
                         }
-                        @*if (_Session.RoleRights.ViewActivity)
-                        { <li>@Html.ActionLink("Activity", "Log", "Activity")</li>}*@
+                        @if (_Session.RoleRights.ViewActivity)
+                        { <li>@Html.ActionLink("Activity", "Log", "Activity")</li>}
                     </ul>
                     <br style="clear: left" />
                 </div>

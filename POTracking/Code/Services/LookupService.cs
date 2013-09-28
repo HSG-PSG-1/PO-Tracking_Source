@@ -17,16 +17,16 @@ namespace POT.Services
 
         public enum Source
         {
-            Customer = 1,
             Internal,
             Vendor,//Make sure Org sequence and value is same as OrgService.OrgType
             Brand,
             Item,
             Item1,
             Status,
-            ShipLoc,
+            Carrier,
+            ContainerType,
             User,
-            POFile,
+            POFileType,
             Org,
             OrgType,
             Error_Detail_Level
@@ -60,7 +60,6 @@ namespace POT.Services
                               orderby o.Code
                               select new { id = o.ID, value = o.Code };
                     break;
-                case Source.Customer:
                 case Source.Internal:
                 case Source.Vendor:
                     results = new OrgService().GetOrgs(src, term);
@@ -88,22 +87,7 @@ namespace POT.Services
                 #endregion
 
                 #region Master
-                //case Source.ShipLoc:
-                //    // Impose Cust Org specific location constraint
-                //    if(!_Session.SkipCustLocCheck)
-                //    results = from i in dbc.vw_CustLoc_User_UserLocs
-                //              where (noTerm || i.Name.ToLower().Contains(term)) && i.OrgID == int.Parse(extras)
-                //              && i.UserID == _Session.Usr.ID && (_Session.SkipCustLocCheck || i.UsrLocID != null)
-                //              orderby i.Name select new { id = i.ID, value = i.Name + " (" + 
-                //                  i.Code.Substring(Config.CustCodeLenInLocCode) + ")" };
-                //    else
-                //    results = from i in dbc.CustomerLocations 
-                //              where (noTerm || i.Name.ToLower().Contains(term)) &&  i.CustomerId == int.Parse(extras)
-                //              orderby i.Name
-                //              select new { id = i.ID, value = i.Name + " (" + 
-                //                  i.Code.Substring(Config.CustCodeLenInLocCode) + ")" };
-                //    break;
-                case Source.POFile:
+                case Source.POFileType:
                     results = from i in dbc.MasterFileTypes
                               where (noTerm || i.Code.ToLower().Contains(term))
                               orderby i.SortOrder
@@ -113,13 +97,24 @@ namespace POT.Services
                     results = from i in dbc.MasterStatus
                               where (noTerm || i.Description.ToLower().Contains(term))
                               orderby i.SortOrder
-                              select new { id = i.ID, value = i.Description };
-
+                              select new { id = i.ID, value = i.Description }; // Special case for Status (fetch description)
+                    break;
+                case Source.Carrier:
+                    results = from i in dbc.MasterCarriers
+                              where (noTerm || i.Code.ToLower().Contains(term))
+                              orderby i.SortOrder
+                              select new { id = i.ID, value = i.Code };
+                    break;
+                case Source.ContainerType:
+                    results = from i in dbc.MasterContainerTypes
+                              where (noTerm || i.Code.ToLower().Contains(term))
+                              orderby i.SortOrder
+                              select new { id = i.ID, value = i.Code };
                     break;
 
                 #endregion
 
-                #region Users & Salesperson
+                #region Users
                 case Source.User:
                     results = from i in dbc.Users
                               where (noTerm || i.Name.ToLower().Contains(term)) // i.Email.ToLower().Contains(term) ||

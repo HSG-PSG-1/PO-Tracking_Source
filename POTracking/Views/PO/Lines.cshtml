@@ -1,0 +1,70 @@
+﻿@model IEnumerable<POT.DAL.vw_POLine>
+@using HSG.Helper
+@{string showToInternal = !_Session.IsOnlyVendor ? "" : "style='display:none'";}
+<div id="divItems">
+    @* Lines : START *@
+    <table class="thinBorder" width="99%" id="tblItems">
+        <thead class="header">
+            <tr>
+                <th nowrap="nowrap">
+                    Item number
+                </th>
+                <th>
+                    Whse
+                </th>
+                <th>
+                    UOM
+                </th>
+                <th>
+                    Description
+                </th>
+                <th width="1%">
+                    Ordered
+                </th>
+                <th width="1%">
+                    Shipped
+                </th>
+                <th nowrap="nowrap" width="1%">
+                    Unit Cost
+                </th>
+                <th width="1%">
+                    Extension
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (POT.DAL.vw_POLine line in Model)
+            {
+                <tr>
+                    <td>@line.ItemCode
+                    </td>
+                    <td>@line.WarehouseCode
+                    </td>
+                    <td>@line.UnitOfMeasure
+                    </td>
+                    <td>@line.Description
+                    </td>
+                    <td align="right">@((line.QtyOrdered ?? 0.00M).ToString("#0.00"))
+                    </td>
+                    <td align="right">@((line.QtyReceived ?? 0.00M).ToString("#0.00"))
+                    </td>
+                    <td align="right">@((line.UnitCost ?? 0.00M).ToString("#0.00"))
+                    </td>
+                    <td align="right">@((line.OrderExtension ?? 0.00M).ToString("#0.00"))
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7" align="right">
+                    Total:
+                </td>
+                <td align="right">
+                    @Model.Sum(l => l.OrderExtension ?? 0.00M).ToString("#0.00")
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    @* Lines : END *@
+</div>

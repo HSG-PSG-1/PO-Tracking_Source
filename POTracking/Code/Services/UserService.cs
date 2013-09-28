@@ -45,7 +45,7 @@ namespace POT.Services
                 roleRights = dbc.UserRoles.SingleOrDefault(r => r.ID == RoleID);
                 //(from r in dbc.UserRoles where r.ID == RoleID select r).SingleOrDefault();
                 //roleRights.OrgType = null;
-                roleRights.Users = null;//to avoid issues with XMLSerializer
+                //roleRights.Users = null;//to avoid issues with XMLSerializer
             }
             return roleRights;
         }
@@ -142,7 +142,7 @@ namespace POT.Services
                          Name = vw_u.UserName,                         
                          RoleID = vw_u.RoleID,
                          OrgID = vw_u.OrgID,
-                         OrgType = vw_u.OrgTypeId.Value,
+                         OrgType = vw_u.OrgTypeId ?? -1,
                          Email = vw_u.Email,
                          LastModifiedBy = vw_u.LastModifiedBy,
                          Password = vw_u.Password,
@@ -151,8 +151,7 @@ namespace POT.Services
                          EmailOLD = vw_u.Email,
                          LastModifiedByVal = vw_u.LastModifiedByName,
                          OrgName = vw_u.OrgName,
-                         OrgTypeName = vw_u.OrgType,
-                         Comment = vw_u.Comment
+                         OrgTypeName = vw_u.OrgType
                      };
                 
                 usr.OriOrgId = usr.OrgID;//Required ahead

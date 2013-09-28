@@ -85,7 +85,32 @@ namespace HSG.Helper
         }
 
         #endregion
-       
+
+        //Function to send PO comment mail
+        /// <summary>
+        /// Function to send Assign To change PO email
+        /// </summary>
+        /// <param name="Comment">Po comment</param>
+        /// <param name="POId">Po Id</param>
+        /// <param name="AssignToEmail">Email of the user to whom the Claim has been Assigned</param>
+        /// <returns>True if sent</returns>
+        public static bool AssignToMail(string PONumber, string Comment, int POId, string AssignToEmail, string Assigner, bool FromComment)
+        {
+            MailTemplate template = new MailTemplate(MailTemplate.Templates.POAssignTo);
+            //fetch subject and contents
+            string Subject = template.Subject.Replace("[PO#]", PONumber);
+            System.Text.StringBuilder Body = new System.Text.StringBuilder(template.Body);
+            //set contents
+            string claimLink = //FromComment ? Defaults.trimLastURLSegment(HttpContext.Current.Request.Url.ToString()) : HttpContext.Current.Request.Url.ToString();
+            HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) +
+            new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext).Action("Manage?", "PO", new { POID = POId });
+
+            claimLink = System.Web.HttpUtility.UrlDecode(claimLink);//.TrimEnd(new char[] { '?' });//Need to add Manage? so that mvc doesn't remove default action, now trim it.
+
+            Body = Body.Replace("[PO#]", PONumber).Replace("[ASSIGNER]", Assigner).Replace("[COMMENT]", Comment).Replace("[LINK]", claimLink);
+            //send email            
+            return Send(ConfigureMailMessage(Config.ContactEmail, AssignToEmail, Body.ToString(), Subject, ""));
+        }
         //Function to send forget password mail
         /// <summary>
         /// Function for forget password mail

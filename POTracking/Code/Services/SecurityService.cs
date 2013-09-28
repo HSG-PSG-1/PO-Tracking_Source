@@ -19,10 +19,7 @@ namespace POT.Services
 
         public enum Roles
         {//HT:CAUTION: Must match with that of the existing DB
-            Internal = 1,
-            Customer,
-            Admin,
-            Sales,
+            Internal = 2,
             Vendor
         }
 

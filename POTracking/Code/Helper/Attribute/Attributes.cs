@@ -286,7 +286,7 @@ namespace HSG.Helper
     /// <summary>
     /// Check PO accessibility
     /// </summary>
-    /*public class AccessPOAttribute : ActionFilterAttribute
+    public class AccessPOAttribute : ActionFilterAttribute
     {
         static string AccessDeniedPath = Defaults.commonRoot + "/NoAccess";
         string POIdName = string.Empty;
@@ -319,14 +319,14 @@ namespace HSG.Helper
         }
 
         public bool IsPOAccessible(int POId)
-        {//Check only for Customers (for now)
+        {//Check only for Vendors (for now)
             if (POId > Defaults.Integer)
-                return (!_Session.IsOnlyCustomer || (POId <= HSG.Helper.Defaults.Integer) ||
+                return (!_Session.IsOnlyVendor || (POId <= HSG.Helper.Defaults.Integer) ||
                     new POService().IsPOAccessible(POId, _SessionUsr.ID, _SessionUsr.OrgID));
             else
                 return true;
         }
-    }*/
+    }
     /// <summary>
     /// Enable action / controller level compression
     /// </summary>
@@ -459,8 +459,7 @@ namespace HSG.Helper
             switch (role)
             {
                 case UserService.Roles.Internal: return _Session.IsInternal;
-                case UserService.Roles.InternalSales: return _Session.IsSales;
-                case UserService.Roles.InternalAdmin: return _Session.IsAdmin;
+                case UserService.Roles.Vendor: return _Session.IsVendor;
                 default: return true;
             }
             return false;

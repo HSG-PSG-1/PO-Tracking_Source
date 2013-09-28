@@ -83,7 +83,7 @@ var mailToCellTemplate =
 '<u><a data-bind="attr:{href:\'javascript:MailTo(\' + \'\\\'\' + $parent.entity[\'Email\'] + \'\\\'\' + \')\'}, text: $parent.entity[\'Email\']"></a></u>';
 </script>
 <script language="javascript" type="text/javascript" defer="defer">    setFocus("UserName");
-    var ListURL = '@Html.Raw(Url.Action("UserList", "User"))';
+    var ListURL = '@Html.Raw(Url.Action("POUserList", "User"))';
     function doAJAXSubmit(frm) {
         vm_U.invokeSearch(1);
         return false;

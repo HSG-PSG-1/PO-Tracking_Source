@@ -7,7 +7,7 @@ using System.Web.Routing;
 using System.Reflection;
 using HSG.Helper;
 //using StackExchange.Profiling;
-namespace CPM
+namespace POT
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
@@ -130,7 +130,7 @@ namespace CPM
                 }
             }            
 
-            var controller = new CPM.Controllers.ErrorController();
+            var controller = new POT.Controllers.ErrorController();
             var routeData = new RouteData();
             var action = "Error";
 

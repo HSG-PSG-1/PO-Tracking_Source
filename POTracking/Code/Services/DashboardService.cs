@@ -90,6 +90,20 @@ namespace POT.Services
                 #endregion
             }
         }
+
+        public List<int> SearchPOIDKO(vw_PO_Dashboard das, string orderBy)
+        {
+            orderBy = string.IsNullOrEmpty(orderBy) ? sortOn : orderBy;
+            using (dbc)
+            {
+                IQueryable<vw_PO_Dashboard> dasQ;
+                dasQ = (from vw_u in dbc.vw_PO_Dashboards select vw_u);
+                
+                //Get filters - if any
+                dasQ = PrepareQuery(dasQ, das);
+                return dasQ.OrderBy(orderBy).Select(r => r.ID).ToList();
+            }
+        }
         
         public static IQueryable<vw_PO_Dashboard> PrepareQuery(IQueryable<vw_PO_Dashboard> dasQ, vw_PO_Dashboard das)
         {
@@ -97,14 +111,14 @@ namespace POT.Services
 
             //dasQ = dasQ.Where(o => o.Archived == das.Archived);
 
-            if (!string.IsNullOrEmpty(das.PONos))// Filter for multiple PO No.s
+            if (!string.IsNullOrEmpty(das.PONumbers))// Filter for multiple PO No.s
             {
-                int SinglePONo = -1;
+                int SinglePONumber = -1;
 
-                if (int.TryParse(das.PONos, out SinglePONo))
-                    dasQ = dasQ.Where(o => SqlMethods.Like(o.PONumber.ToString(),"%" + SinglePONo.ToString() + "%"));                
+                if (int.TryParse(das.PONumbers, out SinglePONumber))
+                    dasQ = dasQ.Where(o => SqlMethods.Like(o.PONumber.ToString(),"%" + SinglePONumber.ToString() + "%"));                
                 else
-                    dasQ = dasQ.Where(o => das.PONos.Contains(o.PONumber));
+                    dasQ = dasQ.Where(o => das.PONumbers.Contains(o.PONumber));
             }
             
             if (das.BrandID > 0) dasQ = dasQ.Where(o => o.BrandID == das.BrandID);

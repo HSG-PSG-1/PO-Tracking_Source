@@ -10,7 +10,7 @@ function openPrintDialog(POId)
 } 
 function gotoPO(POId)
 {
-    alert("Go to PO Id : " + POId + " (under development)"); return;
+    //alert("Go to PO Id : " + POId + " (under development)"); return;
     window.location.href = 
     "@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new { POId = -99 }))".replace('-99',POId);
 }
@@ -70,7 +70,7 @@ var viewModel = function(){
             
             var s = self.search;
 
-            var PONos = (s.PONos != null && s.PONos() != null && s.PONos() != "")?s.PONos():null;
+            var PONumbers = (s.PONumbers != null && s.PONumbers() != null && s.PONumbers() != "")?s.PONumbers():null;
             var OrderStatusID = (s.OrderStatusID != null && s.OrderStatusID() != null && s.OrderStatusID() != "")?s.OrderStatusID():0;
             var AssignTo = (s.AssignTo != null && s.AssignTo() != null && s.AssignTo() != "")?s.AssignTo():0;
             var VendorName = (s.VendorName != null && s.VendorName() != null && s.VendorName() != "")?s.VendorName().toLowerCase():null;            
@@ -92,9 +92,9 @@ var viewModel = function(){
                         
             return ko.utils.arrayFilter(self.fields(), function(rec) {                                
                 return (
-                    (PONos == null || rec.PONumber.toString().indexOf(PONos) > -1) &&
+                    (PONumbers == null || rec.PONumber.toString().indexOf(PONumbers) > -1) &&
                     (OrderStatusID < 1 || rec.OrderStatusID == OrderStatusID) &&
-                    (AssignTo < 1 || rec.AssignTo == AssignTo) &&
+                    (AssignTo < 1 @*|| rec.AssignTo == null *@|| rec.AssignTo == AssignTo) &&
                     
                     (VendorName == null || (rec.VendorName != null && rec.VendorName.toLowerCase().indexOf(VendorName) > -1)) &&
                     

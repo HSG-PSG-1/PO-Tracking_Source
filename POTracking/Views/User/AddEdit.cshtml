@@ -129,15 +129,6 @@
                                 @Html.ValidationMessageFor(model => model.Password)
                             </td>
                         </tr>
-                        <tr>
-                            <td align="right">
-                                @Html.LabelFor(model => model.Comment)
-                            </td>
-                            <td>
-                                @Html.CustomTextBoxFor(model => model.Comment, new { })
-                                @Html.ValidationMessageFor(model => model.Comment)
-                            </td>
-                        </tr>
                         @if (IsEditMode)
                         { 
                             <tr>

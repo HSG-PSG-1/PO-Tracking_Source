@@ -453,3 +453,16 @@ function createToFromjQDTP(FromDtpID, ToDtpID) {
     $(ToDtpID1).datepicker("option", "altField", ToDtpID);
     $(ToDtpID1).datepicker("option", "altFormat", 'dd-M-yy');
 }
+
+function createjQDTP(DtpID) {
+    var DtpID1 = "#" + DtpID + "Str";
+    //NEW : http://jqueryui.com/datepicker/#date-range
+    $(DtpID1).datepicker({
+        minDate: minSQLDate,
+        maxDate: maxSQLDate,
+        changeMonth: true        
+    });
+    // Set format to be used by alt date field
+    $(DtpID1).datepicker("option", "altField", "#" + DtpID);
+    $(DtpID1).datepicker("option", "altFormat", 'dd-M-yy');
+}

@@ -9,7 +9,7 @@ using HSG.Helper;
 using POT.DAL;
 using System.Text.RegularExpressions;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     [IsAuthorize(IsAuthorizeAttribute.Rights.ManageSetting)]
     public partial class SettingController : BaseController
@@ -42,8 +42,8 @@ namespace CPM.Controllers
                 new SettingService().BulkUpdate(settings);//Performs Add, Edit & Delete by chacking each item
                 base.operationSuccess = true;
                 //Log Activity - for future
-                //new ActivityLogService(ActivityLogService.Activity.SettingManage).
-                //Add(new POT.DAL.ActivityHistory());
+                new ActivityLogService(ActivityLogService.Activity.SettingChange).
+                Add(new POT.DAL.ActivityHistory());
             }
             //return and refresh
             return RedirectToAction("Manage");

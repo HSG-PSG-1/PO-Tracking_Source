@@ -94,8 +94,8 @@ namespace POT.DAL
         public string ETDOnly { get { return Etd.HasValue ? Etd.Value.ToString(Defaults.dtFormat, Defaults.ci) : ""; } }
 
         #endregion
-        public int? PONo1 { get; set; }
-        public string PONos { get; set; }
+        public int? PONumber1 { get; set; }
+        public string PONumbers { get; set; }
                 
         //[Bindable(BindableSupport.No)]
         //public string ShipToLocAndCode { get { return Common.getLocationAndCode(this.ShipToLoc, this.ShipToCode); } }

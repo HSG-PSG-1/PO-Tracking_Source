@@ -8,13 +8,13 @@ using POT.Services;
 using HSG.Helper;
 //using StackExchange.Profiling;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     //[CompressFilter] - DON'T
     [IsAuthorize(IsAuthorizeAttribute.Rights.NONE)]//Special case for some dirty session-abandoned pages and hacks
     public partial class DashboardController : BaseController
     {
-        string view = _Session.IsOnlyCustomer ? "ListCustomer" : "ListInternal";
+        string view = _Session.IsOnlyVendor ? "ListVendor" : "ListInternal";
 
         public DashboardController() : //HT: Make sure this is initialized with default constructor values!
             base(Config.DashboardPageSize, DashboardService.sortOn, Filters.list.Dashboard) { ;}
@@ -50,7 +50,7 @@ namespace CPM.Controllers
             index = (index > 0) ? index + 1 : index; // paging starts with 2
 
             var result = from vw_u in new DashboardService().SearchKO(
-                sortExpr, index, gridPageSize * 2, (vw_PO_Dashboard)searchOpts, fetchAll ?? false, _Session.IsOnlyCustomer)
+                sortExpr, index, gridPageSize * 2, (vw_PO_Dashboard)searchOpts, fetchAll ?? false, _Session.IsOnlyVendor)
                          select new
                          {
                              ID = vw_u.ID,
@@ -68,16 +68,21 @@ namespace CPM.Controllers
                              ETDOnly = vw_u.ETDOnly,
                              ShipToCity = vw_u.ShipToCity
                          };
-
+             
             return Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         [SkipModelValidation]//HT: Use with CAUTION only meant for POSTBACK search Action
-        public ActionResult POListKO(vw_PO_Dashboard searchObj, string doReset, string qData, bool? fetchAll)
+        public ActionResult POListKO(vw_PO_Dashboard searchObj, string doReset, string orderBy, bool? fetchAll)
         {
             searchOpts = (doReset == "on") ? new vw_PO_Dashboard() : searchObj; // Set or Reset Search-options
             populateData(false);// Populate ddl Viewdata
+
+            //Ensure that Orderby has the correcy field (not the custom field so need to replace)
+            orderBy = orderBy.Replace("PODateOnly", "PODate").Replace("ETDOnly", "ETD").Replace("ETAOnly", "ETA");
+
+            _Session.POIDs = new DashboardService().SearchPOIDKO(searchObj, orderBy); 
 
             return Json(true);// WE just need to set it in the session
         }
@@ -113,7 +118,7 @@ namespace CPM.Controllers
             //this.Response.End();
 
             populateData(false);
-            var result = new DashboardService().Search(sortExpr, 1, gridPageSize, (vw_PO_Dashboard)searchOpts, true, _Session.IsOnlyCustomer);
+            var result = new DashboardService().Search(sortExpr, 1, gridPageSize, (vw_PO_Dashboard)searchOpts, true, _Session.IsOnlyVendor);
 
             searchOpts = new vw_PO_Dashboard();
             populateData(false);
@@ -124,7 +129,7 @@ namespace CPM.Controllers
         /*public ActionResult ExcelPDF()
         {   
             populateData(false);
-            List<vw_PO_Dashboard> printView = new DashboardService().Search(sortExpr, 1, gridPageSize, (vw_PO_Dashboard)searchOpts, true, _Session.IsOnlyCustomer);
+            List<vw_PO_Dashboard> printView = new DashboardService().Search(sortExpr, 1, gridPageSize, (vw_PO_Dashboard)searchOpts, true, _Session.IsOnlyVendor);
             
             string GUID = _SessionUsr.ID.ToString();
             return new ReportManagement.StandardPdfRenderer().BinaryPdfData(this, "Dashboard" + GUID, "Excel", printView);
@@ -161,7 +166,6 @@ namespace CPM.Controllers
             //using (MiniProfiler.Current.Step("Populate lookup Data"))
             {
                 vw_PO_Dashboard searchOptions = (vw_PO_Dashboard)(searchOpts);
-                //if (_Session.IsOnlyCustomer) searchOptions.CustID = _SessionUsr.OrgID;//Set the cust filter
                 if (_Session.IsOnlyVendor) searchOptions.VendorID = _SessionUsr.OrgID;//Set the Vendor filter
 
                 if (fetchOtherData)

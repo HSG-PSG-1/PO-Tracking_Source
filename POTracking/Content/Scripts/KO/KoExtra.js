@@ -51,7 +51,7 @@ function ParseJSONdate(jsonDate) {
     var value = new Date(); // today by default         
     //alert(value.toString());        
     if (jsonDate != null && jsonDate != Date111) {
-        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e); }
+        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e + ":" + jsonDate + "."); }
     }
     return value.getMonth() + 1 + "/" + value.getDate() + "/" + value.getFullYear();
 }
@@ -124,3 +124,60 @@ function doRequiredChk(ctrl)
 }
 
 /*<span data-bind="text:new Date(parseInt(PostedOn.toString().substr(6))).toLocaleFormat('%d/%m/%Y')"></span>*/
+
+ko.bindingHandlers.datepicker = {
+    init: function (element, valueAccessor, allBindingsAccessor) {
+        try{
+        //initialize datepicker with some optional options
+        var options = allBindingsAccessor().datepickerOptions || {};
+
+        var funcOnSelectdate = function () {
+            var observable = valueAccessor();
+            observable($(element).datepicker("getDate"));
+        }
+
+        options.onSelect = funcOnSelectdate;
+
+        $(element).datepicker(options);
+
+        //handle the field changing
+        ko.utils.registerEventHandler(element, "change", funcOnSelectdate);
+
+        //handle disposal (if KO removes by the template binding)
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+            $(element).datepicker("destroy");
+        });
+
+        } catch (ex) { alert(ex); }
+    },
+    update: function (element, valueAccessor) {
+    try{
+        var value = ko.utils.unwrapObservable(valueAccessor());
+
+        //handle date data coming via json from Microsoft
+        if (String(value).indexOf('/Date(') == 0) {
+            value = new Date(parseInt(value.replace(/\/Date\((.*?)\)\//gi, "$1")));
+        }
+
+        current = $(element).datepicker("getDate");
+
+        if (value - current !== 0) {
+            $(element).datepicker("setDate", value);
+        }
+
+        /* For string data passed as yy-mm-dd
+        if (typeof (value) === "string") { // JSON string from server
+        value = value.split("T")[0]; // Removes time
+        }
+
+        var current = $(element).datepicker("getDate");
+
+        if (value - current !== 0) {
+        var parsedDate = $.datepicker.parseDate('yy-mm-dd', value);
+        $(element).datepicker("setDate", parsedDate);
+        } */
+
+        } catch (ex) { alert(ex); }
+    }
+};
+/* <input data-bind="datepicker: myDate, datepickerOptions: { minDate: new Date() }" /> */

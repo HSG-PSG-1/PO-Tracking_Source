@@ -7,7 +7,7 @@ using POT.Services;
 using POT.Models;
 using HSG.Helper;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     //Can't because Security is also in the same controller
     //[IsAuthorize(IsAuthorizeAttribute.Rights.MasterManage)]

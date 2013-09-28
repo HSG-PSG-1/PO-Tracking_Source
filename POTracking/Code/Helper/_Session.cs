@@ -91,20 +91,11 @@ namespace HSG.Helper
             }
         }
 
-        public static bool IsSales
+        public static bool IsVendor
         {
             get
             {
-                try { return IsAdmin || (_SessionUsr.RoleID == (int)SecurityService.Roles.Sales); }
-                catch { return false; }
-            }
-        }
-
-        public static bool IsOnlyCustomer
-        {
-            get
-            {
-                try { return (_SessionUsr.OrgTypeId == (int)OrgService.OrgType.Customer); }
+                try { return IsAdmin || (_SessionUsr.RoleID == (int)SecurityService.Roles.Vendor); }
                 catch { return false; }
             }
         }
@@ -118,29 +109,20 @@ namespace HSG.Helper
             }
         }
 
-        public static bool IsOnlySales
-        {
-            get
-            {
-                try { return (_SessionUsr.RoleID == (int)SecurityService.Roles.Sales); }
-                catch { return false; }
-            }
-        }
-
         #endregion
         
-        /*#region PO related
+        #region PO related
         
-        public static PO PO1
+        public static POHeader PO1
         {
             get
             {
                 try
                 {
-                    string byteArrStr = HttpContext.Current.Session["POObj"].ToString();
+                    string byteArrStr = HttpContext.Current.Session["POHeaderObj"].ToString();
                     if (string.IsNullOrEmpty(byteArrStr))
                         return new POService().emptyPO;
-                    return Serialization.Deserialize<PO>(byteArrStr);
+                    return Serialization.Deserialize<POHeader>(byteArrStr);
                 }
                 catch { return new POService().emptyPO; }
             }
@@ -150,11 +132,11 @@ namespace HSG.Helper
                 //Set here to avoid replication and maintain at a single location
                 if (string.IsNullOrEmpty(value.POGUID)) //initiate GUID - if not done already (OBSOLETE NOW)
                     value.POGUID = System.Guid.NewGuid().ToString();
-                HttpContext.Current.Session["POObj"] = Serialization.Serialize<PO>(value);
+                HttpContext.Current.Session["POHeaderObj"] = Serialization.Serialize<POHeader>(value);
             }
         }
 
-        public static POs POs { get{return new POs();} }
+        public static POs POs { get { return new POs(); } }
 
         public static void ResetPOInSessionAndEmptyTempUpload(string POGUID)
         { // Use POGUID to find the exact po from
@@ -165,7 +147,28 @@ namespace HSG.Helper
             //HttpContext.Current.Session.Remove("POObj");
         }
 
-        #endregion */
+        public static List<int> POIDs { 
+            get {
+                object POIDs = HttpContext.Current.Session["POIDs"];
+                if (POIDs != null)
+                    return (List<int>)POIDs;
+                else
+                    return null;
+            }
+            set {
+                if (value == null || value.Count < 1) return;//Extra worst-case check                
+                HttpContext.Current.Session["POIDs"] = value;
+            }
+        
+        }
+
+        public static int POposition(int POID)
+        {
+            try { return POIDs.FindIndex(i => i == POID); }
+            catch { return -1; }
+        }
+
+        #endregion
 
         #region Misc & functions
 
@@ -265,14 +268,14 @@ namespace HSG.Helper
         #endregion
     }
 
-    /*public class POs
+    public class POs
     {
         //http://stackoverflow.com/questions/287928/how-do-i-overload-the-square-bracket-operator-in-c
         //http://msdn.microsoft.com/en-us/library/2549tw02.aspx
 
         // Indexer declaration. 
-        // If index is out of range, the array will throw the exception.         
-        public PO this[string POGUID]
+        // If index is out of range, the array will throw the exception.
+        public POHeader this[string POGUID]
         {
             get
             {
@@ -281,16 +284,16 @@ namespace HSG.Helper
                 {
                     if (string.IsNullOrEmpty(data.ToString()))//byteArrStr
                         return new POService().emptyPO;
-                    return Serialization.Deserialize<PO>(data.ToString());//byteArrStr
+                    return Serialization.Deserialize<POHeader>(data.ToString());//byteArrStr
                 }
                 catch { return new POService().emptyPO; }
                 //foreach (PO clm in this)
-                //    if (clm.POGUID == POGUID) return clm;                
+                //    if (clm.POGUID == POGUID) return clm;
             }
             set
             {
                 if (!string.IsNullOrEmpty(value.POGUID))
-                    HttpContext.Current.Session[value.POGUID] = Serialization.Serialize<PO>(value);
+                    HttpContext.Current.Session[value.POGUID] = Serialization.Serialize<POHeader>(value);
             }
         }
 
@@ -298,7 +301,7 @@ namespace HSG.Helper
         {
             HttpContext.Current.Session.Remove(POGUID);
         }
-    }*/
+    }
 
     [Serializable]
     public class Filters

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using HSG.Helper;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     [CompressFilter]
     //[HandleError] - handled in Application_Error

@@ -17,7 +17,6 @@ namespace POT.Services
             {
                 CustID = _Session.NewCustOrgId,
                 AssignTo = Config.DefaultPOAssigneeId,
-                SalespersonID = 0,
                 ShipToLocID = 0,
                 OrderStatusID = Config.DefaultPOStatusId,
                 BrandID = 0
@@ -35,7 +34,7 @@ namespace POT.Services
                     LastModifiedBy = userID,
                     LastModifiedByVal = usrName,
                     LastModifiedDate = DateTime.Now,
-                    RoleData = new UserRole() { OrgTypeId = (int)OrgService.OrgType.Customer },
+                    RoleData = new UserRole() { OrgTypeId = (int)OrgService.OrgType.Internal },
                     CanDelete = true,
                     SortOrder = sortOrdr
                 };

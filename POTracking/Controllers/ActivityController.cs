@@ -7,7 +7,7 @@ using POT.DAL;
 using POT.Services;
 using HSG.Helper;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     [IsAuthorize(IsAuthorizeAttribute.Rights.ViewActivity)]//Special case for some dirty session-abandoned pages and hacks
     public class ActivityController : BaseController
@@ -72,7 +72,7 @@ namespace CPM.Controllers
 
             //vw_ActivityLog searchOptions = (vw_ActivityLog)(searchOpts);
 
-            if (_Session.IsOnlyCustomer) //If its customer he can view only his activity
+            if (_Session.IsOnlyVendor) //If its customer he can view only his activity
                 (searchOpts as vw_ActivityLog).UserID = _SessionUsr.ID; // searchOptions
 
             if (fetchOtherData){
