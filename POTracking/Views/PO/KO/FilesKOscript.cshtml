@@ -95,11 +95,12 @@
              viewModelFH.FileTypes = ko.mapping.fromJS(data.FileTypes);
              @*alert('PO-FilesHeader');*@
              ko.applyBindings(viewModelFH, document.getElementById("divFiles"));
+
+             setFocus("Comment"); // FileNameNEW
          });
  }
       
-    function callDocReadyFiles(){
-        //setFocus("Comment");        
+    function callDocReadyFiles(){        
         createFilesHeaderKO();
     }
 

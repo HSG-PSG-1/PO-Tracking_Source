@@ -229,7 +229,10 @@
       function createPOInfoKO()
       {        
     $.getJSON('@Html.Raw(Url.Action("POInfoKOVM", "PO", new { POGUID = ViewData["POGUID"] }))',
-        function (data) {            
+        function (data) {
+            
+            setFocus("Info_BLNumber");
+            
             viewModelPOInfo.Info = ko.mapping.fromJS(data.Info);
             viewModelPOInfo.Carrier = ko.mapping.fromJS(data.Carrier);
             viewModelPOInfo.ContainerType = ko.mapping.fromJS(data.ContainerType);
@@ -244,7 +247,7 @@
 function callDocReadyPOInfo()
 {
     createPOInfoKO();
-    setFocus("PoPlacedDate");
+    
     @*// Otherwise dtp will be overwritten
     createjQDTP("PoPlacedDate");
     createjQDTP("DateLcOpened");

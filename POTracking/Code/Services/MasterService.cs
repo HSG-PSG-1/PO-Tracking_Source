@@ -236,6 +236,7 @@ namespace POT.Services
                         ID = mObj.ID,
                         Code = mObj.Code,
                         SortOrder = mObj.SortOrder,
+                        Description = mObj.Description,
                         LastModifiedBy = mObj.LastModifiedBy,
                         LastModifiedDate = mObj.LastModifiedDate,
                         CanDelete = IsAdd || mObj.CanDelete // Can't allow for add!
@@ -246,6 +247,7 @@ namespace POT.Services
                         ID = mObj.ID,
                         Code = mObj.Code,
                         SortOrder = mObj.SortOrder,
+                        Description = mObj.Description,
                         LastModifiedBy = mObj.LastModifiedBy,
                         LastModifiedDate = mObj.LastModifiedDate,
                         CanDelete = IsAdd || mObj.CanDelete
@@ -256,6 +258,7 @@ namespace POT.Services
                         ID = mObj.ID,
                         Code = mObj.Code,
                         SortOrder = mObj.SortOrder,
+                        Description = mObj.Description,
                         LastModifiedBy = mObj.LastModifiedBy,
                         LastModifiedDate = mObj.LastModifiedDate,
                         CanDelete = IsAdd || mObj.CanDelete
@@ -266,6 +269,7 @@ namespace POT.Services
                         ID = mObj.ID,
                         Code = mObj.Code,
                         SortOrder = mObj.SortOrder,
+                        Description = mObj.Description,
                         LastModifiedBy = mObj.LastModifiedBy,
                         LastModifiedDate = mObj.LastModifiedDate,
                         CanDelete = IsAdd || mObj.CanDelete

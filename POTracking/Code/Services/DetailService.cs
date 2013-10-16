@@ -26,7 +26,7 @@ namespace POT.Services
             //using (dbc)//HT: DON'T coz we're sending IQueryable
             IQueryable<vw_POLine> cQuery = from c in dbc.vw_POLines
                          where c.POID == POID
-                         orderby c.ItemCode
+                         orderby c.ID // make sure its Id otherwise the sort order will differ from what was entered
                          select c;
             return cQuery.ToList();
         }

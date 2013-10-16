@@ -107,6 +107,8 @@ function createRecordsKO()
             vmMaster.allRecords = ko.mapping.fromJS(data);// Make sure the last record is removed
             vmMaster.newRecord = ko.mapping.fromJS(newRec);            
             ko.applyBindings(vmMaster);
+
+            setFocus("ddlMaster");
         });
 }
 

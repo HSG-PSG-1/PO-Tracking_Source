@@ -29,7 +29,7 @@
                 if (elem.length > 0) elem = elem[0]; //If its a checkbox it'll have 2 of same name
             }
             try { elem.focus(); return; } catch (ex) { /*alert(elem + ":" + elemID + ":" + ex);*/ } //skip if id is wrong
-        }
+        }        
     </script>
     <link rel="shortcut icon" href="@Url.Content("~/Content/favicon.ico")" type="image/x-icon" />
     <link rel="icon" href="@Url.Content("~/Content/favicon.ico")" type="image/ico" />
@@ -49,6 +49,12 @@
     <script src="@Url.Content("~/Content/jQUI/min/jquery-migrate-1.1.1.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Content/jQUI/min/jquery-ui.1.10.2.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Content/Scripts/jquery.validate.1.11.0.min.js")" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+    $().ready(function () {@*Render menu ASAP*@
+            $("#menu1").menu({position:{at:"left bottom"}});
+        });
+    </script>
+
     <style type="text/css">
 		    body {overflow:scroll;background-color:Transparent;height:100%}
 		    /* for tablesorter plugin */
@@ -193,8 +199,8 @@
 <script language="javascript" src="@Url.Content("~/Content/Scripts/jquery.form.js")" type="text/javascript"></script>
 <script type="text/javascript" language="javascript" defer="defer">
         $().ready(function () {
-        $("#menu1").menu({position:{at:"left bottom"}});
-           @* ddsmoothmenu.init({
+        @* $("#menu1").menu({position:{at:"left bottom"}});
+            ddsmoothmenu.init({
                 mainmenuid: "smoothmenu", //menu DIV id
                 orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
                 classname: 'ddsmoothmenu', //class added to menu's outer DIV

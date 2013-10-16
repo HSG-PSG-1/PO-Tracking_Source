@@ -189,6 +189,10 @@ namespace POT.Controllers
             //Reset the Session PO object
             //PO poObj = POService.GetPOObjFromVW(vw);
 
+            //Log Activity
+            new ActivityLogService(ActivityLogService.Activity.POPrint).
+                Add(new ActivityHistory() { POID = POID, PONumber = vw.PONumber.ToString() });
+
             return View(printView);
         }        
         

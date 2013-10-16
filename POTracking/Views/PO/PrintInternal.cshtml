@@ -104,7 +104,7 @@
                                         DELIVERY TERMS:
                                     </td>
                                     <td nowrap="nowrap">
-                                        <b>N / A</b>
+                                        <b>@view.FOB</b>
                                     </td>
                                 </tr>
                                 <tr>
@@ -160,12 +160,12 @@
                         </th>
                     </tr>
                     <tr>
-                        <td class="uline" width="30%" style="text-decoration: none" nowrap="nowrap">
+                        <td class="uline" width="30%" style="text-decoration: none" nowrap="nowrap" valign="top">
                             @view.VendorName<br />@Html.Raw(view.VendorAddress)<br />
                             Attn.:@view.ConfirmTo<br />
                             Fax:@view.FaxNumber
                         </td>
-                        <td>
+                        <td valign="top">
                             @view.ShipToName<br />@Html.Raw(view.ShipToAddress)
                         </td>
                     </tr>

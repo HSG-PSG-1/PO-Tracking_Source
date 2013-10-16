@@ -313,7 +313,7 @@
                                         </tr>
                                         <tr>
                                             <td align="left" nowrap="nowrap">
-                                                ZIP Code :&nbsp;
+                                                &nbsp;&nbsp;ZIP Code :&nbsp;
                                             </td>
                                             <td align="left" nowrap="nowrap">
                                                 @Html.CustomTextBoxFor(p => p.PO.VendorZipCode, new { @readonly = "readonly" })
@@ -404,7 +404,7 @@
                                         </tr>
                                         <tr>
                                             <td align="right" nowrap="nowrap">
-                                                ZIP Code :&nbsp;
+                                                &nbsp;&nbsp;&nbsp;&nbsp;ZIP Code :&nbsp;
                                             </td>
                                             <td align="left" nowrap="nowrap">
                                                 @Html.CustomTextBoxFor(p => p.PO.ShipToZipCode, new { @readonly = "readonly" })
@@ -505,14 +505,17 @@
         // Objects available in the function context:
         // ui.tab     // anchor element of the selected (clicked) tab
         // ui.newPanel   // element, that contains the selected/clicked tab contents
-        // ui.newPanel.index()   // zero-based index of the selected (clicked) tab
+        // ui.newPanel.index()   // non-zero-based index of the selected (clicked) tab
         switch (ui.newPanel.index()) {
-            case 2: //Info
-                setFocus("OrderStatusID"); break;
-            case 3: //Comments
+            case 1: //Header
+                setFocus("PODate"); break;
+            @*case 2:break; //Lines*@                
+            case 3: //Info
+                setFocus("Info_BLNumber"); break; // PoPlacedDate
+            case 4: //Comments
                 setFocus("Comment1"); break;
-            case 4: 
-                setFocus("FileNameNEW");            
+            case 5: // Files
+                setFocus("Comment"); break;  //FileNameNEW
         }
     }
     // Check and prompt if the user is getting away from the page without
