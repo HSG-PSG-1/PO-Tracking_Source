@@ -42,6 +42,7 @@
 
        function gotoPO(POId)
         {
+            if(POId > 0)
             window.location.href = 
             "@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new { POId = -99 }))".replace('-99',POId);
         }
@@ -448,16 +449,14 @@
                                         <tr>
                                             <td align="left" nowrap="nowrap">
                                                 <i>Last Modified By</i> :&nbsp; <i>
-                                                    @Model.PO.LastModifiedBy
-                                                </i>
+                                                    @Model.PO.LastModifiedBy&nbsp;(@Model.PO.LastModifiedDate.ToString(Defaults.dtTFormat))
+                                                </i>                                                
                                             </td>
-                                            <td width="171">
+                                            @*<td width="171">
                                             </td>
                                             <td align="right" nowrap="nowrap">
-                                                <i>Last Modified Date</i> :&nbsp; <i>
-                                                    @Model.PO.LastModifiedDate
-                                                </i>
-                                            </td>
+                                                
+                                            </td>*@
                                         </tr>
                                     </table>
                                 </fieldset>

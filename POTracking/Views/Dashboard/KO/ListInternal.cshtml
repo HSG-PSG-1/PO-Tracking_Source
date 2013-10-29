@@ -40,8 +40,11 @@
     <tbody data-bind="foreach: pagedRows">@* POs *@
     <tr>
         <td align="center">            
-                <u><div title="Click to view this po" style="height: 99%; cursor: pointer;" data-bind="text:$data.PONumber, 
-                click:function(data,event){ gotoPO($data.ID);return false;}"></div></u>            
+                @*<u><div title="Click to view this po" style="height: 99%; cursor: pointer;" data-bind="text:$data.PONumber, 
+                click:function(data,event){ gotoPO($data.ID);return false;}"></div></u>*@
+                <a title="Click to view this po" data-bind="text:$data.PONumber, 
+                attr:{href:'@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new {POID = -99 }))'.replace('-99', $data.ID)}">
+                </a>
         </td>
         <td align="center" data-bind="text:PODateOnly"></td>
         @if (!isVendor)

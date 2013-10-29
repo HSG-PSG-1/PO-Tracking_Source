@@ -113,12 +113,12 @@ namespace POT.Services
 
             if (!string.IsNullOrEmpty(das.PONumbers))// Filter for multiple PO No.s
             {
-                int SinglePONumber = -1;
+                dasQ = dasQ.Where(o => SqlMethods.Like(o.PONumber.ToLower(), "%" + das.PONumbers.ToLower() + "%"));
 
-                if (int.TryParse(das.PONumbers, out SinglePONumber))
-                    dasQ = dasQ.Where(o => SqlMethods.Like(o.PONumber.ToString(),"%" + SinglePONumber.ToString() + "%"));                
+                /*if (das.PONumbers.IndexOf(",") < 1)
+                    dasQ = dasQ.Where(o => SqlMethods.Like(o.PONumber.ToString(), "%" + das.PONumbers + "%"));                
                 else
-                    dasQ = dasQ.Where(o => das.PONumbers.Contains(o.PONumber));
+                    dasQ = dasQ.Where(o => das.PONumbers.Contains(o.PONumber)); ERROR !!! */
             }
             
             if (das.BrandID > 0) dasQ = dasQ.Where(o => o.BrandID == das.BrandID);

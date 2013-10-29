@@ -31,7 +31,7 @@ namespace POT.Controllers
             //   return Json(null);//Customer doesn't have access to Comments
 
             //Set Comment object
-            POComment newObj = new POComment() { ID = -1, _Added = true, POID = POID, POGUID = POGUID, CommentBy = _SessionUsr.Email, LastModifiedBy = _SessionUsr.ID, LastModifiedDate = DateTime.Now, PostedOn = DateTime.Now, UserID = _SessionUsr.ID };
+            POComment newObj = new POComment() { ID = -1, _Added = true, POID = POID, POGUID = POGUID, CommentBy = _SessionUsr.UserName, LastModifiedBy = _SessionUsr.ID, LastModifiedDate = DateTime.Now, PostedOn = DateTime.Now, UserID = _SessionUsr.ID };
 
             CommentKOModel vm = new CommentKOModel()
             {

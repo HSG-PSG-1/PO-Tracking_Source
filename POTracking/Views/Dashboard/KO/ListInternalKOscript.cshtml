@@ -70,7 +70,7 @@ var viewModel = function(){
             
             var s = self.search;
 
-            var PONumbers = (s.PONumbers != null && s.PONumbers() != null && s.PONumbers() != "")?s.PONumbers():null;
+            var PONumbers = (s.PONumbers != null && s.PONumbers() != null && s.PONumbers() != "")?s.PONumbers().toLowerCase():null;
             var OrderStatusID = (s.OrderStatusID != null && s.OrderStatusID() != null && s.OrderStatusID() != "")?s.OrderStatusID():0;
             var AssignTo = (s.AssignTo != null && s.AssignTo() != null && s.AssignTo() != "")?s.AssignTo():0;
             var VendorName = (s.VendorName != null && s.VendorName() != null && s.VendorName() != "")?s.VendorName().toLowerCase():null;            
@@ -92,7 +92,7 @@ var viewModel = function(){
                         
             return ko.utils.arrayFilter(self.fields(), function(rec) {                                
                 return (
-                    (PONumbers == null || rec.PONumber.toString().indexOf(PONumbers) > -1) &&
+                    (PONumbers == null || rec.PONumber.toLowerCase().toString().indexOf(PONumbers) > -1) &&
                     (OrderStatusID < 1 || rec.OrderStatusID == OrderStatusID) &&
                     (AssignTo < 1 @*|| rec.AssignTo == null *@|| rec.AssignTo == AssignTo) &&
                     

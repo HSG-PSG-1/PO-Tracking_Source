@@ -44,10 +44,10 @@ namespace HSG.Helper
         #region Date variables & functions
         
         public const string dtFormat = "MM/dd/yyyy"; // Make sure you use "ci" with it or it'll become MM-dd-yyyy
-        public const string dtFormatNeutral = "dd-MMM-yyyy hh:mm:ss"; // to avoid culture
+        public const string dtFormatNeutral = "dd-MMM-yyyy hh:mm:ss tt"; // to avoid culture
         public const string dtUniFormat = "dd-MM-yyyy";
         public const string dtUniFormat2 = "MMMM dd,yyyy";
-        public const string dtTFormat = "MM/dd/yyyy hh:mm:ss"; // Make sure you use "ci" with it or it'll become MM-dd-yyyy
+        public const string dtTFormat = "MM/dd/yyyy hh:mm:ss tt"; // Make sure you use "ci" with it or it'll become MM-dd-yyyy
         public static readonly System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo(String.Empty, false);
 
         public const string bindKOdatepicker = "datepicker:{0}, datepickerOptions: {{ minDate: minSQLDate, maxDate: maxSQLDate }}";

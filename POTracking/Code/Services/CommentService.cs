@@ -42,7 +42,7 @@ namespace POT.Services
         {
             return c.Set(c1 =>
             {
-                c1.CommentBy = commentBy; /* Need to check & verify - c1.PostedOn = new DateTime(c1.PostedOn.Year, c1.PostedOn.Month, c1.PostedOn.Day);*/
+                c1.CommentBy = commentBy; c1.PostedOn = new DateTime(c1.PostedOn.Year, c1.PostedOn.Month, c1.PostedOn.Day);
                 /* IMP: NOTE - The following is NOT needed because we've set the Association Access to Internal in the dbml
                  c1.PO = null; c1.POID1 = poID; */
             });

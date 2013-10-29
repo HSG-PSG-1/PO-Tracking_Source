@@ -22,10 +22,13 @@ namespace POT.Controllers
 
         [HttpGet]
         //[ValidateInput(false)] // SO: 2673850/validaterequest-false-doesnt-work-in-asp-net-4
-        public ActionResult Login(string from)
+        public ActionResult Login(string from, string email, string pwd, bool remember = false)
         {
             if ((from ?? "").ToLower() == "logoff") LogOff();// Special Case: using an action named logoff creates complexity
-            
+
+            if (remember)
+                SetCookie(new LogInModel() { Email = email, Password = Crypto.EncodeStr(pwd, false), RememberMe = remember });
+
             HttpCookie authCookie = Request.Cookies[Defaults.cookieName];
             LogInModel loginM = new LogInModel();
 
@@ -74,32 +77,7 @@ namespace POT.Controllers
                     FormsAuthentication.SetAuthCookie(usr.Email, model.RememberMe);//Set forms authentication!
 
                     #region Remember Me (add or remove cookie)
-
-                    if (model.RememberMe)//set cookie
-                    {
-                        #region Forms cookie - kept for future ref
-                        /* HttpCookie cookie = FormsAuthentication.GetAuthCookie(model.Email, true);
-                        cookie.Expires = DateTime.Now.Add(new TimeSpan(120, 0, 0, 0));
-                        Response.Cookies.Remove(cookie.Name);
-                        Response.Cookies.Add(cookie);*/
-                        #endregion
-
-                        //Set Cookie (double encryption - encrypted pwd & encrypted cookie)
-                        HttpCookie authRememberCookie = new HttpCookie(Defaults.cookieName);
-                        authRememberCookie.Values[Defaults.emailCookie] = model.Email;
-                        authRememberCookie.Values[Defaults.passwordCookie] = Crypto.EncodeStr(model.Password, true);
-                        authRememberCookie.Expires = DateTime.Now.AddHours(Config.RememberMeHours);
-                        Response.Cookies.Add(HttpSecureCookie.Encode(authRememberCookie));//HT: encode the cookie
-                    }
-                    else
-                    {// Can't remove so we add the same cookie as EXPIRED & empty values!
-                        HttpCookie authForgetCookie = new HttpCookie(Defaults.cookieName);
-                        authForgetCookie.Values[Defaults.emailCookie] = "";
-                        authForgetCookie.Values[Defaults.passwordCookie] = "";
-                        authForgetCookie.Expires = DateTime.Now.AddYears(-1);//to avoid any datetime diff
-                        Response.Cookies.Add(authForgetCookie);
-                    }
-
+                    SetCookie(model);
                     #endregion
 
                     //Set session
@@ -138,8 +116,10 @@ namespace POT.Controllers
                 bool oprSuccess = !string.IsNullOrEmpty(Pwd);
                 
                 ViewData["oprSuccess"] = oprSuccess;//Err msg handled in View
-                if(oprSuccess)//Send email
-                    MailManager.ForgotPwdMail(Email,Pwd, new SettingService().GetContactEmail());
+                if (oprSuccess)//Send email
+                {
+                    MailManager.ForgotPwdMail(Email, Pwd, new SettingService().GetContactEmail());
+                }
             }
             #endregion
 
@@ -150,6 +130,35 @@ namespace POT.Controllers
         #endregion
 
         #region Functions & JSON result returning Actions
+        
+        //Remember Me (add or remove cookie)
+        void SetCookie(LogInModel model)
+        {
+            bool remember = model.RememberMe;
+
+            #region Forms cookie - kept for future ref
+            /* HttpCookie cookie = FormsAuthentication.GetAuthCookie(model.Email, true);
+                        cookie.Expires = DateTime.Now.Add(new TimeSpan(120, 0, 0, 0));
+                        Response.Cookies.Remove(cookie.Name);
+                        Response.Cookies.Add(cookie);*/
+            #endregion
+
+            //Set Cookie (double encryption - encrypted pwd & encrypted cookie)
+            HttpCookie authRememberCookie = new HttpCookie(Defaults.cookieName);
+            authRememberCookie.Values[Defaults.emailCookie] = remember?model.Email:"";
+            authRememberCookie.Values[Defaults.passwordCookie] = remember?Crypto.EncodeStr(model.Password, true):"";
+            authRememberCookie.Expires = remember ? DateTime.Now.AddHours(Config.RememberMeHours) 
+                : DateTime.Now.AddYears(-1);//to avoid any datetime diff
+            Response.Cookies.Add(HttpSecureCookie.Encode(authRememberCookie));//HT: encode the cookie
+            /*else
+            {// Can't remove so we add the same cookie as EXPIRED & empty values!
+                HttpCookie authForgetCookie = new HttpCookie(Defaults.cookieName);
+                authForgetCookie.Values[Defaults.emailCookie] = "";
+                authForgetCookie.Values[Defaults.passwordCookie] = "";
+                authForgetCookie.Expires = DateTime.Now.AddYears(-1);//to avoid any datetime diff
+                Response.Cookies.Add(authForgetCookie);
+            }*/
+        }
         
         //[CacheControl(HttpCacheability.NoCache), HttpGet]
         [OutputCache(Duration=3600, VaryByParam="id;term;extras")]

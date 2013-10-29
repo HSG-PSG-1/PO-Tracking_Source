@@ -40,7 +40,7 @@ namespace POT.Controllers
         {
             //Set File object
             POFile newObj = new POFile() { ID = -1, _Added = true, POID = POID, POGUID = POGUID,
-                UploadedBy = _SessionUsr.Email, LastModifiedBy = _SessionUsr.ID, LastModifiedDate = DateTime.Now, UploadDate = DateTime.Now,
+                UploadedBy = _SessionUsr.UserName, LastModifiedBy = _SessionUsr.ID, LastModifiedDate = DateTime.Now, UploadDate = DateTime.Now,
                 UserID = _SessionUsr.ID, FileName="", FileNameNEW="" };
 
             List<POFile> files = new List<POFile>();

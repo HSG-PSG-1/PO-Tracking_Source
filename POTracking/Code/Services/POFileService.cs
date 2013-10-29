@@ -53,7 +53,8 @@ namespace POT.Services
             /*also set .PO = null to avoid issues during serialization but persist POID as POID1 */
             return f.Set(f1 =>
             {
-                f1.UploadedBy = fileHeaderBy; f1.FileTypeTitle = fileTypeTitle; f1.POGUID = f1.POID.ToString(); 
+                f1.UploadedBy = fileHeaderBy; f1.FileTypeTitle = fileTypeTitle; f1.POGUID = f1.POID.ToString();
+                f1.UploadDate = new DateTime(f1.UploadDate.Year, f1.UploadDate.Month, f1.UploadDate.Day);
                 /*f1.PO = null; f1.POID1 = poID;
                  NOT needed because we've set the Association Access to Internal in the dbml*/});
         }

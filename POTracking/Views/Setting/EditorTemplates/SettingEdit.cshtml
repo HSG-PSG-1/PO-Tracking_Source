@@ -16,7 +16,7 @@
             @Html.HiddenFor(model => model.LastModifiedBy)@Model.LastModifiedByVal@Html.HiddenFor(model => model.LastModifiedByVal)
         </td>
         <td align="center" class="sqz">
-            @Html.Hidden("LastModifiedDate", Model.LastModifiedDate.ToString("dd-MMM-yyyy hh:mm:ss"))@Model.LastModifiedDate.ToString(Defaults.dtFormat, Defaults.ci) 
+            @Html.Hidden("LastModifiedDate", Model.LastModifiedDate.ToString(Defaults.dtFormatNeutral))@Model.LastModifiedDate.ToString(Defaults.dtFormat, Defaults.ci) 
         </td>
     </tr>
 

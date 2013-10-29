@@ -108,7 +108,9 @@
                 <input type="submit" value="Reset" class="button" onclick="resetForm(this);" />
                 <input type="checkbox" name="doReset" id="doReset" style="display: none;" />                
                 @if (true || Model.Count > 0) {//Kept for ref 
-                <input type="button" value="Export to Excel" class="button" onclick="document.getElementById('btnExcel').click();return false;" />                  
+                <input type="button" value="Export to Excel" class="button" onclick="document.getElementById('btnExcel').click();return false;"
+                data-bind = "enable: (filteredRecords().length > 0)"
+                 />                  
                 }               
                         </td>
                     </tr>

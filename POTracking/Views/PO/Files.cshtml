@@ -67,7 +67,8 @@
                                     </div>
                                     @*<input id="FileNameNEW" type="text" data-bind="value:FileNameNEW" />*@
                                     <input id="FileName" Name="FileName" type="text" style="display: none" data-bind="value:FileName"
-                                        onchange='if($(this).val() != ""){$("#btnFHSubmit").removeAttr("disabled");} else {$("#btnFHSubmit").attr("disabled", true);}' />
+                                        onchange='if($(this).val() != ""){$("#btnFHSubmit").removeAttr("disabled");$("#btnFHReset").removeAttr("disabled");}
+                                         else {$("#btnFHSubmit").attr("disabled", true);$("#btnFHReset").attr("disabled", true);}' />
                                 </td>
                                 <td valign="middle" align="right" nowrap="nowrap" width="5%">
                                     &nbsp;&nbsp;File Type :
@@ -91,7 +92,7 @@
                                     <input type="submit" data-bind="click:$parent.addFile, enable: (FileName.length > 0)"
                                         value="Add" class="button" onclick1="javascript:$('#frmFiles').submit();" title="Select a file, set type and click Add"
                                         id="btnFHSubmit" />@*onclick="setDDLtext('FileType', 'FileTypeTitle');"*@
-                                    <input type="reset" data-bind="click:$parent.cancelFile" value="Cancel" class="button"
+                                    <input type="reset" data-bind="click:$parent.cancelFile, enable: (FileName.length > 0)" value="Cancel" class="button"
                                         id="btnFHReset" />
                             </tr>
                         </table>

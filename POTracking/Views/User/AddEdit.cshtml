@@ -134,17 +134,14 @@
                             <tr>
                                 <td colspan="2" nowrap="nowrap" align="center">
                                     <img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="700px" /><br />
-                                    [<i>@Html.LabelFor(model => model.LastModifiedBy)
+                                    <i>@Html.LabelFor(model => model.LastModifiedBy)
                                         :
                                         @Model.LastModifiedByVal
                                         @Html.HiddenFor(model => model.LastModifiedByVal, new { @class = "ignore" })
-                                        &nbsp;&nbsp;&nbsp;
-                                        @Html.LabelFor(model => model.LastModifiedDate)
-                                        :
-                                        @Model.LastModifiedDate.ToString(Defaults.dtFormat, Defaults.ci)
-                                        @Html.Hidden("LastModifiedDate", Model.LastModifiedDate.ToString("dd-MMM-yyyy hh:mm:ss"),
+                                        &nbsp;(@Model.LastModifiedDate.ToString(Defaults.dtTFormat, Defaults.ci))
+                                        @Html.Hidden("LastModifiedDate", Model.LastModifiedDate.ToString(Defaults.dtFormatNeutral),
                         new { @class = "ignore" })
-                                    </i>]
+                                    </i>
                                 </td>
                             </tr>
                         }
