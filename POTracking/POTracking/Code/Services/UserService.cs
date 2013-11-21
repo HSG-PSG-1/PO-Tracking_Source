@@ -18,7 +18,9 @@ namespace POT.Services
             new vw_Users_Role_Org() { ID = Defaults.Integer };
         public readonly Users emptyUsr = new Users() { ID = Defaults.Integer};//Make sure UserLocations is reset
         public const string sortOn = "UserName ASC", sortOn1 = "UserName ASC"; // Default for secondary sort
-        
+
+        public const string orgTypeJS = "if(user.OrgTypeId() == 1)user.OrgType(\"Internal\"); else if(user.OrgTypeId() == 2)user.OrgType(\"Vendor\");";
+
         #endregion
 
         #region Login related
@@ -45,7 +47,7 @@ namespace POT.Services
                 roleRights = dbc.UserRoles.SingleOrDefault(r => r.ID == RoleID);
                 //(from r in dbc.UserRoles where r.ID == RoleID select r).SingleOrDefault();
                 //roleRights.OrgType = null;
-                roleRights.Users = null;//to avoid issues with XMLSerializer
+                //roleRights.Users = null;//to avoid issues with XMLSerializer
             }
             return roleRights;
         }
@@ -142,7 +144,7 @@ namespace POT.Services
                          Name = vw_u.UserName,                         
                          RoleID = vw_u.RoleID,
                          OrgID = vw_u.OrgID,
-                         OrgType = vw_u.OrgTypeId.Value,
+                         OrgType = vw_u.OrgTypeId ?? -1,
                          Email = vw_u.Email,
                          LastModifiedBy = vw_u.LastModifiedBy,
                          Password = vw_u.Password,
@@ -151,8 +153,7 @@ namespace POT.Services
                          EmailOLD = vw_u.Email,
                          LastModifiedByVal = vw_u.LastModifiedByName,
                          OrgName = vw_u.OrgName,
-                         OrgTypeName = vw_u.OrgType,
-                         Comment = vw_u.Comment
+                         OrgTypeName = vw_u.OrgType
                      };
                 
                 usr.OriOrgId = usr.OrgID;//Required ahead
@@ -189,13 +190,17 @@ namespace POT.Services
             dbc.Users.InsertOnSubmit(userObj);
             dbc.SubmitChanges();
 
-            //Process Locations
-            //BulkAddDelLocations(userObj.ID, LinkedLoc, UnlinkedLoc, true, userObj.OrgIdChanged);
-
             return userObj.ID; // Return the 'newly inserted id'
         }
 
-        public int AddEdit(Users userObj)//, string LinkedLoc, string UnlinkedLoc)
+        public static Users GetObjFromVW(vw_Users_Role_Org usr)
+        {
+            return new Users() { ID = usr.ID, RoleID = usr.RoleID, OrgID = usr.OrgID, Name = usr.UserName, Email = usr.Email, 
+                Password = usr.Password, LastModifiedBy = usr.LastModifiedBy, LastModifiedDate = DateTime.Now
+             };
+        }
+
+        public int AddEdit(Users userObj)
         {
             int userID = userObj.ID;
 
@@ -207,7 +212,7 @@ namespace POT.Services
                 #region Update
                 
                 //Set lastmodified fields
-                userObj.LastModifiedBy = _SessionUsr.ID;
+                userObj.LastModifiedBy = _SessionUsr.ID; userObj.LastModifiedByVal = _SessionUsr.UserName;
                 userObj.LastModifiedDate = DateTime.Now;
 
                 dbc.Users.Attach(userObj);//attach the object as modified
@@ -263,7 +268,12 @@ namespace POT.Services
 
         public bool IsUserEmailDuplicate(string userEmail)
         {
-            return (dbc.Users.Where(u => u.Email.ToUpper() == userEmail.ToUpper()).Count() > 0);
+            return (UserEmailCount(userEmail) > 0);
+        }
+
+        public int UserEmailCount(string userEmail)
+        {
+            return dbc.Users.Where(u => u.Email.ToUpper() == userEmail.ToUpper()).Count();
         }
 
         #endregion        

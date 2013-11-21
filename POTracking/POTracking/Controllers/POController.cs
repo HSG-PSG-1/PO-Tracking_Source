@@ -117,7 +117,10 @@ namespace POT.Controllers
             
             if(success)
                 TempData["printPOAfterSave"] = printPOAfterSave.HasValue && printPOAfterSave.Value;
-            
+
+            if (poObj.AssignTo > 0 && poObj.AssignTo != poObj.AssignToIDold)
+                CommentService.SendEmail(POID, poObj.AssignTo.Value, poObj.PONumber, new POComment(){ Comment1 = "(no comment)"});
+
             return RedirectToAction("Manage", new { POID = poObj.ID });
         }
         #endregion   
@@ -151,8 +154,7 @@ namespace POT.Controllers
 
             return RedirectToAction("Manage", new { POID = POID });
         }
-
-        
+                
         [AccessPO("POID")]
         [CacheControl(HttpCacheability.NoCache), HttpGet]
         public ActionResult Print(int POID)
@@ -238,6 +240,7 @@ namespace POT.Controllers
         public POInfoKOModel doAddEditPopulateInfoKO(POHeader poObj)
         {
             poObj.OrderStatusIDold = poObj.OrderStatusID;
+            poObj.AssignToIDold = poObj.AssignTo??-1;
 
             POInfoKOModel vm = new POInfoKOModel()
             {

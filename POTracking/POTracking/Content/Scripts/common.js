@@ -10,7 +10,7 @@ var delTR = ""; // Required tohold te deleted TR fopas using taconite plugin
 function checkReq(ctrl, impactCtrl) { if (!($(ctrl).val().toString().length > 0)) $(impactCtrl).val('').trigger("change"); }
 // Log the selected item.id or empty into id textbox
 function log(item, idBox, txtBox) {
-    $(idBox).val(item ? item.id : '').trigger("change"); /*"#ItemID" */    
+    $(idBox).val(item ? item.id : '').trigger("change");
     //try { $(txtBox).validate().valid(); } catch (e) { }
 }
 //Toggle the display of the two images in parent (make sure you follow the sequence)
@@ -452,4 +452,17 @@ function createToFromjQDTP(FromDtpID, ToDtpID) {
 
     $(ToDtpID1).datepicker("option", "altField", ToDtpID);
     $(ToDtpID1).datepicker("option", "altFormat", 'dd-M-yy');
+}
+
+function createjQDTP(DtpID) {
+    var DtpID1 = "#" + DtpID + "Str";
+    //NEW : http://jqueryui.com/datepicker/#date-range
+    $(DtpID1).datepicker({
+        minDate: minSQLDate,
+        maxDate: maxSQLDate,
+        changeMonth: true        
+    });
+    // Set format to be used by alt date field
+    $(DtpID1).datepicker("option", "altField", "#" + DtpID);
+    $(DtpID1).datepicker("option", "altFormat", 'dd-M-yy');
 }

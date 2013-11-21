@@ -20,7 +20,7 @@ namespace POT.Services
 
         #endregion
 
-        #region Search / Fetch
+        #region Search / Fetch / Mail
 
         public List<POComment> Search(int poID, int? userID)
         {
@@ -59,6 +59,24 @@ namespace POT.Services
                 return cmt;
             }
         }*/
+
+        public static bool SendEmail(int POID, int AssignTo, string PONumber, POComment CommentObj)
+        {
+            bool sendMail = (POID > Defaults.Integer && AssignTo != _SessionUsr.ID);// No need to send mail if its current user
+            try
+            {
+                #region Check and send email
+                if (sendMail)
+                {// No need to send mail if its current user
+                    string UserEmail = new UserService().GetUserEmailByID(AssignTo);
+                    MailManager.AssignToMail(PONumber, CommentObj.Comment1, POID, UserEmail, (_SessionUsr.UserName), true);
+                }
+                #endregion
+            }
+            catch (Exception ex) { sendMail = false; }
+
+            return sendMail;
+        }
 
         #endregion
 

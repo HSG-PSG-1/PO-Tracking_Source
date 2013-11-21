@@ -151,6 +151,7 @@
                     <td align="left" nowrap="nowrap">
                         <select id="OrderStatusID" class="dropDown required" data-bind="options: $parent.Status, value:OrderStatusID, optionsText: 'value', optionsValue:'id'">
                         </select>
+                        @Html.Hidden("AssignToIDold", Model.Info.AssignToIDold, new { data_bind = "value:AssignToIDold" })
                         @Html.Hidden("OrderStatusIDold", Model.Info.OrderStatusIDold, new { data_bind = "value:OrderStatusIDold" })
                         @Html.ValidationMessageFor(model => model.Info.OrderStatusID)
                         @if (!isNewPO)

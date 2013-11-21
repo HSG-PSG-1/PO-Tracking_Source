@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Collections;
 using POT.DAL;
 using POT.Services;
 using HSG.Helper;
 
-namespace CPM.Controllers
+namespace POT.Controllers
 {
     [IsAuthorize(IsAuthorizeAttribute.Rights.ManageUser)]
     public partial class UserController : BaseController
@@ -31,18 +32,19 @@ namespace CPM.Controllers
         #region Will need GET (for AJAX) & Post
 
         [CacheControl(HttpCacheability.NoCache)]
-        public JsonResult UserList()
+        public JsonResult POUserList()
         {
             //Make sure searchOpts is assigned to set ViewState
             vw_Users_Role_Org oldSearchOpts = (vw_Users_Role_Org)searchOpts;
             searchOpts = new vw_Users_Role_Org();
             populateData(false);
 
-            var result = from vw_u in new UserService().SearchKO((vw_Users_Role_Org)searchOpts)                             
+            var result = from vw_u in new UserService().SearchKO((vw_Users_Role_Org)searchOpts)
                          select new
                          {
                              ID = vw_u.ID,
                              Email = vw_u.Email,
+                             Password = vw_u.Password,
                              OrgID = vw_u.OrgID,
                              OrgName = vw_u.OrgName,
                              OrgType = vw_u.OrgType,
@@ -57,7 +59,7 @@ namespace CPM.Controllers
 
         [HttpPost]
         [SkipModelValidation]//HT: Use with CAUTION only meant for POSTBACK search Action        
-        public JsonResult UserList(vw_Users_Role_Org searchObj, string doReset)
+        public JsonResult POUserList(vw_Users_Role_Org searchObj, string doReset)
         {
             searchOpts = (doReset == "on") ? new vw_Users_Role_Org() : searchObj; // Set or Reset Search-options
             populateData(false);// Populate ddl Viewdata
@@ -67,7 +69,7 @@ namespace CPM.Controllers
 
         [HttpPost]
         [SkipModelValidation]
-        public ActionResult SetSearchOpts(vw_PO_Dashboard searchObj)
+        public ActionResult SetSearchOpts(vw_Users_Role_Org searchObj)
         {
             if (searchObj != null)
             {//Called only to set filter via ajax
@@ -76,6 +78,33 @@ namespace CPM.Controllers
             }
             return Json(false);
         }
+
+        [CacheControl(HttpCacheability.NoCache), HttpGet]
+        public ActionResult UsersKOVM(vw_Users_Role_Org searchObj, string doReset)
+        {
+            //Set Item object
+            vw_Users_Role_Org newObj = new vw_Users_Role_Org() { ID = 0, LastModifiedBy = _SessionUsr.ID, LastModifiedDate = DateTime.Now, Editing = true, Edited = true };
+
+            //Make sure searchOpts is assigned to set ViewState
+            vw_Users_Role_Org oldSearchOpts = (vw_Users_Role_Org)searchOpts;
+            searchOpts = new vw_Users_Role_Org(); 
+            
+            populateData(false);// Populate ddl Viewdata
+
+            DAL.UserKOModel vm = new UserKOModel()
+            {
+                NewRecord = newObj,
+                AllUsers = new UserService().SearchKO((vw_Users_Role_Org)searchOpts),
+                Search = oldSearchOpts,
+                Roles = new SecurityService().GetRolesCached()
+            };
+
+            // Lookup data
+            vm.Roles = new SecurityService().GetRolesCached();
+
+            vm.showGrid = true;
+            return Json(vm, JsonRequestBehavior.AllowGet);
+        }        
 
         #endregion
 
@@ -99,8 +128,11 @@ namespace CPM.Controllers
                 new ActivityLogService(ActivityLogService.Activity.UserDelete).Add();
             }
             //base.operationSuccess = proceed; HT: DON'T
-            return this.Content(Defaults.getTaconite(proceed,
-                Defaults.getOprResult(proceed, err), null, true), "text/xml");
+            return this.Content(Defaults.getTaconiteResult(proceed,
+                Defaults.getOprResult(proceed, err), null, "removeUser()"), "text/xml");
+
+            /*return this.Content(Defaults.getTaconite(proceed,
+                Defaults.getOprResult(proceed, err), null, true), "text/xml");*/
         }
 
         #endregion
@@ -120,7 +152,7 @@ namespace CPM.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddEdit(int id, Users usr)//, string LinkedLoc, string UnlinkedLoc)
+        public ActionResult AddEdit(int id, Users usr)
         {
             if (base.IsAutoPostback() || !ModelState.IsValid)
             {
@@ -135,6 +167,27 @@ namespace CPM.Controllers
 
             TempData["oprSuccess"] = true;
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult AddEditKO([FromJson] vw_Users_Role_Org usr)
+        {
+            if (!ModelState.IsValid)    return Json(false, JsonRequestBehavior.AllowGet);
+            int UserEmailCount = new UserService().UserEmailCount(usr.Email);
+            bool isEdit = usr.ID > 0;
+            if((isEdit && UserEmailCount > 1) || (!isEdit && UserEmailCount > 0))
+                return Json(false, JsonRequestBehavior.AllowGet);            
+            
+            Users objUsr = UserService.GetObjFromVW(usr);
+            int result = new UserService().AddEdit(objUsr);
+            //Log Activity
+            new ActivityLogService(isEdit ? ActivityLogService.Activity.UserEdit : ActivityLogService.Activity.UserAdd).Add();
+            // Update certain field with the latest data
+            usr.ID = objUsr.ID; usr.LastModifiedDate = objUsr.LastModifiedDate; 
+            usr.LastModifiedBy = objUsr.LastModifiedBy; usr.LastModifiedByName = objUsr.LastModifiedByVal;
+            usr.Edited = true; usr.Editing = false;
+
+            return Json(usr, JsonRequestBehavior.AllowGet);
         }
         
         [HttpPost]
@@ -182,5 +235,17 @@ namespace CPM.Controllers
         }
 
         #endregion
+    }
+}
+
+namespace POT.DAL
+{
+    public class UserKOModel
+    {
+        public vw_Users_Role_Org NewRecord { get; set; }
+        public vw_Users_Role_Org Search { get; set; }
+        public List<vw_Users_Role_Org> AllUsers { get; set; }
+        public IEnumerable Roles { get; set; }
+        public bool showGrid { get; set; }
     }
 }

@@ -81,19 +81,8 @@ namespace POT.Controllers
 
         [HttpPost]
         public JsonResult CommentsKOEmail(int POID, string POGUID, int AssignTo, string PONumber, [FromJson] POComment CommentObj)        
-        {            
-            bool sendMail = (POID > Defaults.Integer && AssignTo != _SessionUsr.ID);// No need to send mail if its current user
-            try
-            {
-                #region Check and send email
-                if (sendMail)
-                {// No need to send mail if its current user
-                    string UserEmail = new UserService().GetUserEmailByID(AssignTo);
-                    MailManager.AssignToMail(PONumber, CommentObj.Comment1, POID, UserEmail, (_SessionUsr.UserName), true);
-                }
-                #endregion
-            }
-            catch (Exception ex) { sendMail = false; }
+        {
+            bool sendMail = CommentService.SendEmail(POID, AssignTo, PONumber, CommentObj);
             return Json(sendMail, JsonRequestBehavior.AllowGet); ;// RedirectToAction("Comments");//new CommentKOModel()
         }        
     }
