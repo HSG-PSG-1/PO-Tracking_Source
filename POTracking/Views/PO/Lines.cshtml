@@ -1,9 +1,8 @@
-﻿@model IEnumerable<POT.DAL.vw_POLine>
-@using HSG.Helper
+﻿@using HSG.Helper
 @{string showToInternal = !_Session.IsOnlyVendor ? "" : "style='display:none'";}
-<div id="divItems">
+<div id="divLines">
     @* Lines : START *@
-    <table class="thinBorder" width="99%" id="tblItems">
+    <table class="thinBorder" width="99%" id="tblLines">
         <thead class="header">
             <tr>
                 <th nowrap="nowrap">
@@ -32,39 +31,41 @@
                 </th>
             </tr>
         </thead>
-        <tbody>
-            @foreach (POT.DAL.vw_POLine line in Model)
-            {
-                <tr>
-                    <td>@line.ItemCode
-                    </td>
-                    <td>@line.WarehouseCode
-                    </td>
-                    <td>@line.UnitOfMeasure
-                    </td>
-                    <td>@line.Description
-                    </td>
-                    <td align="right">@((line.QtyOrdered ?? 0.00M).ToString("#0.00"))
-                    </td>
-                    <td align="right">@((line.QtyReceived ?? 0.00M).ToString("#0.00"))
-                    </td>
-                    <td align="right">@((line.UnitCost ?? 0.00M).ToString("#0.00"))
-                    </td>
-                    <td align="right">@((line.OrderExtension ?? 0.00M).ToString("#0.00"))
-                    </td>
-                </tr>
-            }
+        <tbody data-bind="foreach: Lines()">
+            <td data-bind="text:ItemCode"></td>
+            <td data-bind="text:WarehouseCode"></td>
+            <td data-bind="text:UnitOfMeasure"></td>
+            <td data-bind="text:Description"></td>
+            <td align="right" data-bind="text:QtyOrdered() != null ? QtyOrdered() : '0.00'"></td>
+            <td align="right" data-bind="text:QtyReceived() != null ? QtyReceived() : '0.00'"></td>
+            <td align="right" data-bind="text:UnitCost() != null ? UnitCost() : '0.00'"></td>
+            <td align="right" data-bind="text:OrderExtension() != null ? OrderExtension() : '0.00'"></td>
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="7" align="right">
                     Total:
                 </td>
-                <td align="right">
-                    @Model.Sum(l => l.OrderExtension ?? 0.00M).ToString("#0.00")
+                <td align="right" data-bind="text:OrderExtTotal">
                 </td>
             </tr>
         </tfoot>
     </table>
     @* Lines : END *@
 </div>
+<script type="text/javascript" language="javascript">
+    var linesViewModel = function () {
+        var self = this;
+        self.Lines = ko.observableArray();
+        self.OrderExtTotal = ko.observable();
+    };
+    var viewModelLines = new linesViewModel();
+    function createLinesKO(lines, total)
+    {
+        viewModelLines.Lines = ko.mapping.fromJS(lines);
+        viewModelLines.OrderExtTotal(total);
+
+        if (lines != null && lines.length > 0)
+            ko.applyBindings(viewModelLines, document.getElementById("divLines"));
+    }
+</script>

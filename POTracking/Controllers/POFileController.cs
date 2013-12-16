@@ -26,38 +26,9 @@ namespace POT.Controllers
         
         #region File Header Actions
 
-        //Files List (PO\1\Files) & Edit (PO\1\Files\2)
-        [CacheControl(HttpCacheability.NoCache), HttpGet]
-        public ActionResult Files(int POID, string POGUID) // PartialViewResultViewResultBase 
-        {
-            ViewData["Archived"] = false;
-            ViewData["POGUID"] = POGUID;
-            return View();
-        }
-
-        [CacheControl(HttpCacheability.NoCache), HttpGet]
-        public JsonResult FilesKOVM(int POID, string POGUID, int? FileID)
-        {
-            //Set File object
-            POFile newObj = new POFile() { ID = -1, _Added = true, POID = POID, POGUID = POGUID,
-                UploadedBy = _SessionUsr.UserName, LastModifiedBy = _SessionUsr.ID, LastModifiedDate = DateTime.Now, UploadDate = DateTime.Now,
-                UserID = _SessionUsr.ID, FileName="", FileNameNEW="" };
-
-            List<POFile> files = new List<POFile>();
-            FileKOModel vm = new FileKOModel()
-            {
-                FileToAdd = newObj, EmptyFileHeader = newObj,
-                AllFiles = (new POFileService().Search(POID, null))
-            };
-            // Lookup data
-            vm.FileTypes = new LookupService().GetLookup(LookupService.Source.POFileType);
-
-            return Json(vm, JsonRequestBehavior.AllowGet);
-        }
-                
         [HttpPost]
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")] //SO: 2570051/error-returning-ajax-in-ie7
-        public ActionResult FilePostKO(int POID, string POGUID, POFile FileHdrObj)
+        public ActionResult FilePostKO(int POID, /*string POGUID,*/ POFile FileHdrObj)
         { 
             HttpPostedFileBase hpFile = Request.Files["FileNameNEW"];
             bool success = true;
@@ -69,7 +40,7 @@ namespace POT.Controllers
             {//HT Delete old\existing file? For Async need to wait until final commit
                 //HT:IMP: Set Async so that now the file maps to Async file-path
                 FileHdrObj.IsAsync = true;
-                //FileHdrObj.POGUID = _Session.PO.POGUID; // to be used further
+                
                 #region Old code (make sure the function 'ChkAndSavePOFile' does all of it)
                 //string docName = string.Empty;
                 //FileIO.result uploadResult = SavePOFile(Request.Files["FileNameNEW"], ref docName, POID, true);
@@ -80,6 +51,7 @@ namespace POT.Controllers
                 //    else
                 //        ModelState.AddModelError("FileName", "Unable to upload file");
                 #endregion
+
                 FileHdrObj.FileName = ChkAndSavePOFile("FileNameNEW", POID, HeaderFM, FileHdrObj.POGUID);
                 success = (ModelState["FileName"].Errors.Count() < 1);
             }
@@ -161,7 +133,7 @@ namespace POT.Controllers
             return docName;
         }
 
-        //Get Header File
+        // Get Header File
         [ValidateInput(false)] // SO: 2673850/validaterequest-false-doesnt-work-in-asp-net-4
         public ActionResult GetFile()
         {
@@ -190,6 +162,7 @@ namespace POT.Controllers
             }
             catch (Exception ex) { ViewData["Message"] = "File not found"; return View("DataNotFound"); }
         }
+        
         // Send file stream for download
         private ActionResult SendFile(string POGUID, int? poDetailId, FileIO.mode fMode, string filename)
         {
@@ -227,7 +200,7 @@ namespace POT.Controllers
 
 namespace POT.DAL
 {
-    public class FileKOModel
+    public class FileVM
     {
         public POFile EmptyFileHeader { get; set; }
         public POFile FileToAdd { get; set; }

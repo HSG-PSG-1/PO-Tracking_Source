@@ -87,7 +87,7 @@ namespace HSG.Helper
             "/Images/clip.gif' title='Click to download' border='0'/>";
         public static string clipImgLink = "<a href=\"{0}\"><img src='" + contentRoot + 
             "/Images/clip.gif' title='Click to download' border='0' target=\"_blank\"/></a>";
-        public static string cancelImgOnly = "<img {0} src='" + contentRoot + 
+        public static string cancelImgOnly = "<img src='" + contentRoot + 
             "/Images/cancel.png' title='Click here to undo' border='0' style='cursor: pointer' />";
         #endregion
 
@@ -96,9 +96,11 @@ namespace HSG.Helper
         public static string delImgPathTitle = " src='" + contentRoot + 
             "/Images/del.gif' title='Click here to delete' border='0' ";
         
-        public static string delImgOnly = @"<img {0} " + delImgPathTitle + " style='cursor: pointer' />";
+        /*public static string delImgOnly = @"<img {0} " + delImgPathTitle + " style='cursor: pointer' />";*/
         public static string delImg = "<img " + delImgPathTitle + " border='0' onclick='return confirmDelete(event);' />";
         public static string delImgForObj(string obj) { return "<img " + delImgPathTitle + " border='0' onclick='return confirmDeleteM(event,\"Are you sure you want to delete this "+ obj + "?\");' />"; }
+        public static string delImgForObjKO(string obj) { return "<img " + delImgPathTitle + " border='0' class='dDialog' " + 
+            "data-bind='click:function(data,event){if(confirmDeleteM(event,\"Are you sure you want to delete this " + obj + "?\")) $parent.removeSelected($data); return false;}' />"; }
         public static string delPOSTImg = "<input type='image' " + delImgPathTitle + 
             " border='0' onclick='return confirmDelete(event);' />";
         public static string delImgLink = "<img " + delImgPathTitle + 

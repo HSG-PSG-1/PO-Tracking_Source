@@ -30,7 +30,7 @@ namespace POT
             );
 
             routes.MapRoute("User", "Users/{action}", new { controller = "User", action = "List" });
-            routes.MapRoute("PO_Default", "PO/{POID}/{action}", new { controller = "PO", POID = -1, action = "Manage" });// (default action? because we dpn't want to hide it)
+            routes.MapRoute("PO_Default", "PO/{POID}/{action}", new { controller = "PO", POID = -1, action = "Manage" });// (default action? because we dpn't want to hide it)            
             routes.MapRoute("Role", "Roles/{action}", new { controller = "Role", action = "Manage" });
             routes.MapRoute("Master_Default", "Master/Manage/{masterTbl}", new { controller = "Master", action = "Manage"});
             routes.MapRoute("Home", "Dashboard/{action}", new { controller = "Dashboard", action = "List" });
@@ -201,5 +201,12 @@ namespace POT
         }
 
         #endregion
+
+        /*For future migration to .Net v4.5
+         * 
+         * public void FormsAuthentication_OnAuthenticate(object sender, System.Web.Security.FormsAuthenticationEventArgs args)
+        { // http://www.sitecore.net/Community/Technical-Blogs/John-West-Sitecore-Blog/Posts/2012/09/Object-of-type-System-Int32-cannot-be-converted-to-type-System-Web-Security-Cryptography-Purpose.aspx
+            args.User = HttpContext.Current.User;
+        }*/
     }
 }

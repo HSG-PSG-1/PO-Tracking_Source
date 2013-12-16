@@ -35,9 +35,12 @@ namespace POT.Services
                 vw_POHeader vw_c = (from vw in dbc.vw_POHeaders
                                   where vw.ID == id
                                     select vw).SingleOrDefault<vw_POHeader>();
-                
+
                 if (vw_c != null)
+                {
                     vw_c.OrderStatusIDold = vw_c.OrderStatusID.Value;
+                    vw_c.AssignToOld = (vw_c.AssignTo??-1);
+                }
                 else
                     vw_c = emptyView;
 
@@ -54,7 +57,10 @@ namespace POT.Services
                                     select p).SingleOrDefault<POHeader>();
 
                 if (po != null)
+                {
                     po.OrderStatusIDold = po.OrderStatusID.Value;
+                    po.AssignToIDold = po.AssignTo??-1;
+                }
                 else
                     po = emptyPO;
 
@@ -103,37 +109,6 @@ namespace POT.Services
 
                 return vw_c;
             }
-        }
-
-        public static POHeader GetPOObjFromVW(vw_POHeader vw)
-        {
-            vw.POGUID = vw.POGUID??System.Guid.NewGuid().ToString();// MAke sure the GUID is set at this initial level
-            return new POHeader()
-            {ID = vw.ID,
-                PODate = vw.PODate,
-                PONumber = vw.PONumber, //HT: Needed for Comment-AssignTo email (Auto-Generated)
-                VendorID = vw.VendorID,
-                OrderStatusID = vw.OrderStatusID,
-                //VendorID = vw.VendorID,
-                POGUID = vw.POGUID
-            };
-        }
-
-        public static vw_POHeader GetVWFromPOObj(POHeader c, string SPNameForCustomer)
-        {
-            return new vw_POHeader()
-            {
-                ID = c.ID,
-                AssignTo = c.AssignTo, //HT? : CAUTION: Handle default Assignee !!!
-                AssignToVal = c.AssignToVal,
-                //BrandID = c.BrandID,
-                PODate = c.PODate,
-                PONumber = c.PONumber, //HT: Needed for Comment-AssignTo email (Auto-Generated)
-                VendorID = c.VendorID,
-                OrderStatusID = c.OrderStatusID,
-                //VendorID = c.VendorID,
-                POGUID = c.POGUID // HT: Make sure this is set!
-            };
         }
 
         #endregion
@@ -292,8 +267,11 @@ namespace POT.Services
                     dbc.Transaction = null;
                 }
                 #endregion
-            }           
+            }
 
+            #region Send AssignTo email if Old value is other then the new one
+
+            #endregion
             return poObj.PONumber;//Return updated poobj
         }
 

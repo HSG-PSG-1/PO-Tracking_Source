@@ -183,7 +183,7 @@
             var data = {}; //Set data to be posted back
             data["POId"] = POId;  data["OldStatusID"] = OldStatusID;  data["NewStatusID"] = NewStatusID;
             
-            var url = '@Url.Action("ChangePOStatus", "PO", new { POID = -99 })'.replace('-99',POId);
+            var url = '@Url.Action("ChangePOStatus", "Dashboard", new { POID = -99 })'.replace('-99',POId);
             $.post(url, data);
                          
             return false; // prevent any postback

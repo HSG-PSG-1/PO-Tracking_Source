@@ -112,60 +112,39 @@ namespace HSG.Helper
         #endregion
         
         #region PO related
-        
-        public static POHeader PO1
+
+        public static List<int> POIDs
         {
             get
             {
-                try
-                {
-                    string byteArrStr = HttpContext.Current.Session["POHeaderObj"].ToString();
-                    if (string.IsNullOrEmpty(byteArrStr))
-                        return new POService().emptyPO;
-                    return Serialization.Deserialize<POHeader>(byteArrStr);
-                }
-                catch { return new POService().emptyPO; }
-            }
-            set
-            {
-                if (value == null) return;//Extra worst-case check
-                //Set here to avoid replication and maintain at a single location
-                if (string.IsNullOrEmpty(value.POGUID)) //initiate GUID - if not done already (OBSOLETE NOW)
-                    value.POGUID = System.Guid.NewGuid().ToString();
-                HttpContext.Current.Session["POHeaderObj"] = Serialization.Serialize<POHeader>(value);
-            }
-        }
-
-        public static POs POs { get { return new POs(); } }
-
-        public static void ResetPOInSessionAndEmptyTempUpload(string POGUID)
-        { // Use POGUID to find the exact po from
-            if (!string.IsNullOrEmpty(POGUID)) // HT: ENSURE POGUID is present
-                FileIO.EmptyDirectory(System.IO.Path.Combine(Config.UploadPath, POGUID));
-            
-            POs.Remove(POGUID); // Remove the PO from session
-            //HttpContext.Current.Session.Remove("POObj");
-        }
-
-        public static List<int> POIDs { 
-            get {
                 object POIDs = HttpContext.Current.Session["POIDs"];
                 if (POIDs != null)
                     return (List<int>)POIDs;
                 else
                     return null;
             }
-            set {
+            set
+            {
                 if (value == null || value.Count < 1) return;//Extra worst-case check                
                 HttpContext.Current.Session["POIDs"] = value;
             }
-        
+
         }
 
         public static int POposition(int POID)
         {
             try { return POIDs.FindIndex(i => i == POID); }
             catch { return -1; }
+        }
+
+
+        public static void ResetPOInSessionAndEmptyTempUpload(string POGUID)
+        { // Use POGUID to find the exact po from
+            if (!string.IsNullOrEmpty(POGUID)) // HT: ENSURE POGUID is present
+                FileIO.EmptyDirectory(System.IO.Path.Combine(Config.UploadPath, POGUID));
+            
+            //POs.Remove(POGUID); // Remove the PO from session
+            //HttpContext.Current.Session.Remove("POObj");
         }
 
         #endregion
@@ -268,6 +247,9 @@ namespace HSG.Helper
         #endregion
     }
 
+    /* Kept for future ref
+    public static POs POs { get { return new POs(); } }
+
     public class POs
     {
         //http://stackoverflow.com/questions/287928/how-do-i-overload-the-square-bracket-operator-in-c
@@ -301,7 +283,7 @@ namespace HSG.Helper
         {
             HttpContext.Current.Session.Remove(POGUID);
         }
-    }
+    }*/
 
     [Serializable]
     public class Filters

@@ -49,10 +49,8 @@ namespace POT.DAL
         public List<PODetail> aLines { get; set; }
         public List<POFile> aFiles { get; set; }
 
-        public bool AssignToChanged { get; set; }
         public string AssignToVal { get; set; }
-        public string AssignToComment { get; set; }
-
+        
         public string PODateStr { get { return Defaults.formattedDate(PODate); } }
         public string DateLcOpenedStr { get { return Defaults.formattedDate(DateLcOpened); } }
         public string EtaStr { get { return Defaults.formattedDate(Eta); } }
@@ -61,6 +59,7 @@ namespace POT.DAL
         public string BLDateStr { get { return Defaults.formattedDate(BLDate); } }        
 
         public int? OrderStatusIDold { get; set; }
+        public int? AssignToIDold { get; set; }
         
         public string POGUID { get; set; } // common property required for all the PO and its child objects
 

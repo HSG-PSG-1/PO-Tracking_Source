@@ -121,12 +121,13 @@
     <Compile Include="Code\Services\_ServiceBase.cs" />
     <Compile Include="Code\Services\UserService.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\POController.cs" />
     <Compile Include="Controllers\POCommentController.cs" />
     <Compile Include="Controllers\POFileController.cs" />
-    <Compile Include="Controllers\POController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
-    <Compile Include="Controllers\POStatusController.cs" />
+    <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\SettingController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -136,7 +137,6 @@
       <DependentUpon>POTracking.dbml</DependentUpon>
     </Compile>
     <Compile Include="Controllers\MasterController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -262,17 +262,14 @@
     <Content Include="Views\Shared\ErrUserControl.cshtml" />
     <Content Include="Views\Shared\LogOnUserControl.cshtml" />
     <Content Include="Views\Shared\NoAccess.cshtml" />
-    <Content Include="Views\User\AddEdit.cshtml" />
     <Content Include="Views\Shared\_SiteMasterLayout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\User\List.cshtml" />
     <Content Include="Views\Common\Navigate.cshtml" />
     <Content Include="Views\User\KO\UserList.cshtml" />
     <Content Include="packages.config" />
     <Content Include="Views\Dashboard\KO\ListInternal.cshtml" />
     <Content Include="Views\Dashboard\List.cshtml" />
     <Content Include="Views\Dashboard\KO\ListInternalKOscript.cshtml" />
-    <Content Include="Views\User\KO\UserListKOscript.cshtml" />
     <Content Include="Views\Master\Manage.cshtml" />
     <Content Include="Views\Master\KO\MasterGrid.cshtml" />
     <Content Include="Views\Master\KO\MasterGridKOscript.cshtml" />
@@ -280,21 +277,19 @@
     <Content Include="Views\Role\KO\RoleGridKOscript.cshtml" />
     <Content Include="Views\Role\KO\RoleGrid.cshtml" />
     <Content Include="Views\Dashboard\Print.cshtml" />
-    <Content Include="Views\PO\Status.cshtml" />
-    <Content Include="Views\PO\Manage.cshtml" />
-    <Content Include="Views\PO\KO\CommentsKOscript.cshtml" />
-    <Content Include="Views\PO\KO\FilesKOscript.cshtml" />
-    <Content Include="Views\PO\Info.cshtml" />
-    <Content Include="Views\PO\Comments.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\PO\Files.cshtml">
-      <SubType>Code</SubType>
-    </Content>
+    <Content Include="Views\User\List.cshtml" />
+    <Content Include="Views\User\AddEdit.cshtml" />
+    <Content Include="Views\User\KO\UserKOscript.cshtml" />
+    <Content Include="Views\PO\Comments.cshtml" />
+    <Content Include="Views\PO\Files.cshtml" />
     <Content Include="Views\PO\GetFile.cshtml" />
+    <Content Include="Views\PO\Info.cshtml" />
+    <Content Include="Content\Scripts\KOVM\CommentsFilesKOscript.js" />
     <Content Include="Views\PO\Lines.cshtml" />
+    <Content Include="Views\PO\Manage.cshtml" />
     <Content Include="Views\PO\Print.cshtml" />
     <Content Include="Views\PO\PrintInternal.cshtml" />
+    <Content Include="Views\Dashboard\Status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
