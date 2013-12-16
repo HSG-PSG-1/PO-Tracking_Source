@@ -33,13 +33,13 @@ ko.bindingHandlers.date = {
         var value = new Date(); // today by default         
         //alert(value.toString());        
         if (jsonDate != null && jsonDate != Date111) {
-            try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e); } //value = new Date();
+        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e); } //value = new Date();
         }
         */
         var ret = ParseJSONdate(jsonDate); //value.getMonth() + 1 + "/" + value.getDate() + "/" + value.getFullYear();
 
         if (element.value == null) element.innerHTML = ret;
-        else $(element).val(ret); //input element
+        else { $(element).val(ret);/*.trigger("change");*/ } //input element
     }
 };
 

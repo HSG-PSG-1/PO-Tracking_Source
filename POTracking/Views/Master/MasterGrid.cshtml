@@ -52,8 +52,7 @@
                         onblur ="editable(this, false);" maxlength="50" title="click to edit" />
                 </td>
                 <td data-bind="text:LastModifiedByVal">
-                </td>
-                @*<td data-bind="text:new Date(parseInt(PostedOn.substr(6)))"></td>*@
+                </td>                
                 <td data-bind="date: LastModifiedDate()">
                 </td>@*http://forums.asp.net/t/1651593.aspx/1*@
                 <td nowrap="nowrap" style="display: none">                    
@@ -68,4 +67,3 @@
         </tfoot>
     </table>
 </div>
-@{ Html.RenderPartial("KO/MasterGridKOscript"); }

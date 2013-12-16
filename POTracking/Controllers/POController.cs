@@ -18,12 +18,14 @@ namespace POT.Controllers
 
         [AccessPO("POID")]
         [CacheControl(HttpCacheability.NoCache), HttpGet]
-        public ActionResult Manage(int POID, bool? printPOAfterSave)
+        public ActionResult Manage(int POID, string activeTab, bool? printPOAfterSave)
         {
             ViewData["oprSuccess"] = base.operationSuccess; //oprSuccess will be reset after this
             ViewData["printPOAfterSave"] = (TempData["printPOAfterSave"] ?? false);
+            ViewData["activeTab"] = activeTab??"2";
 
             #region Edit mode
+
             #region Get PO view and check if its empty or archived - redirect
 
             POHeader po = new POService().GetPOInfoById(POID);// GetPOHeaderById
@@ -44,6 +46,7 @@ namespace POT.Controllers
             po.AssignToIDold = po.AssignTo;
             
             return View(po);
+
             #endregion
         }
 
@@ -85,7 +88,7 @@ namespace POT.Controllers
         [HttpPost]
         [AccessPO("POID")]
         public ActionResult Manage(int POID, bool isAddMode, [FromJson]POHeader poObj, [FromJson] IEnumerable<POComment> comments,
-            [FromJson] IEnumerable<POFile> files, /*int OrderStatusIDold,*/ bool? printPOAfterSave)
+            [FromJson] IEnumerable<POFile> files, /*int OrderStatusIDold,*/string activeTab, bool? printPOAfterSave)
         {
             bool success = false;
             //return new JsonResult() { Data = new{ msg = "success"}};
@@ -114,36 +117,15 @@ namespace POT.Controllers
             if (success)
                 TempData["printPOAfterSave"] = printPOAfterSave.HasValue && printPOAfterSave.Value;
 
+            #region Send AssignTo email if Old value is other then the new one
             if (poObj.AssignTo > 0 && poObj.AssignTo != poObj.AssignToIDold)
                 CommentService.SendEmail(POID, poObj.AssignTo.Value, poObj.PONumber, new POComment() { Comment1 = "(no comment)" });
+            #endregion
 
-            return RedirectToAction("Manage", new { POID = poObj.ID });
+            return RedirectToAction("Manage", new { POID = poObj.ID, activeTab = activeTab });
         }
+        
         #endregion
-
-        /*[HttpPost]
-        public ActionResult Navigate(int POID, string NavString)
-        {
-            object dashboardFilter = _Session.Search[Filters.list.Dashboard];
-            vw_PO_Dashboard searchOpts = (dashboardFilter != null) ? (vw_PO_Dashboard)dashboardFilter : new DashboardService().emptyView;
-            List<int> POIDs = _Session.POIDs;// new DashboardService().SearchPOIDKO(searchOpts);
-
-            if (POIDs == null)
-                return RedirectToAction("Manage", new { POID = POID });
-
-            int pos = _Session.POposition(POID);// POIDs.FindIndex(i => i == POID);
-
-            switch (NavString.ToUpper())
-            {
-                case "FIRST": POID = POIDs[0]; break;
-                case "PREV": if (pos - 1 <= 0) pos = 1; POID = POIDs[pos - 1]; break;
-                case "NEXT": if (pos + 1 > POIDs.Count - 1) pos = POIDs.Count - 2; POID = POIDs[pos + 1]; break;
-                case "LAST": POID = POIDs[POIDs.Count - 1]; break;
-            }
-
-            return RedirectToAction("Manage", new { POID = POID });
-        }
-        */
 
         [AccessPO("POID")]
         [CacheControl(HttpCacheability.NoCache), HttpGet]
@@ -178,9 +160,6 @@ namespace POT.Controllers
             if (vw.ID <= Defaults.Integer && vw.OrderStatusID == Defaults.Integer && vw.AssignTo == Defaults.Integer)
             { ViewData["Message"] = "PO not found"; return View("DataNotFound"); }// deleted po accessed from Log
 
-            //Reset the Session PO object
-            //PO poObj = POService.GetPOObjFromVW(vw);
-
             //Log Activity
             new ActivityLogService(ActivityLogService.Activity.POPrint).
                 Add(new ActivityHistory() { POID = POID, PONumber = vw.PONumber.ToString() });
@@ -192,7 +171,7 @@ namespace POT.Controllers
         public ActionResult Info(int POID, string POGUID)
         {
             ViewData["POGUID"] = POGUID;
-            return View(new POInfoKOModel() { Info = new POHeader() { ID = POID, POGUID = POGUID } }); // set only whats required POService().GetPOInfoById(POID)
+            return View(new POInfoKOModel() { Info = new POHeader() { ID = POID, POGUID = POGUID } });
         }
 
         [CacheControl(HttpCacheability.NoCache), HttpGet]
@@ -201,7 +180,7 @@ namespace POT.Controllers
 
             POKOViewModel povm = new POKOViewModel(); // Main consolidated viewmodel
 
-            vw_POHeader vwPOHdr = new POService().GetPOHeaderById(POID);// POHeader poObj=POService.GetPOObjFromVW(vwPOHdr); // To set GUID
+            vw_POHeader vwPOHdr = new POService().GetPOHeaderById(POID);// To set GUID
             POHeader poHdr = new POService().GetPOInfoById(POID);
 
             
@@ -240,12 +219,7 @@ namespace POT.Controllers
             poData.AssignToOld = (poData.AssignTo ?? -1);
 
             poData.POGUID = System.Guid.NewGuid().ToString(); // set unique identifier ID
-
-            /*vm.Statuses = new LookupService().GetLookup(LookupService.Source.Status);
-             vm.Brands = !_Session.IsOnlyVendor?new LookupService().GetLookup(LookupService.Source.BrandItems):
-                //Special case for Vendor users (they must see only their Brands)
-                new LookupService().GetLookup(LookupService.Source.BrandVendorItems,extras:_SessionUsr.OrgID.ToString());
-            */
+            
             return poData;
         }
 
@@ -264,70 +238,11 @@ namespace POT.Controllers
 
             return vm;
         }
-
-        public CommentVM GetCommentKOModel(int POID, string POGUID, int AssignTo)
-        {
-            //Set Comment object
-            POComment newObj = new POComment()
-            {
-                ID = -1,
-                _Added = true,
-                POID = POID,
-                POGUID = POGUID,
-                CommentBy = _SessionUsr.UserName,
-                LastModifiedBy = _SessionUsr.ID,
-                LastModifiedDate = DateTime.Now,
-                PostedOn = DateTime.Now,
-                UserID = _SessionUsr.ID
-            };
-
-            CommentVM vm = new CommentVM()
-            {
-                CommentToAdd = newObj,
-                EmptyComment = newObj,
-                AllComments = new CommentService().Search(POID, null),
-                AssignTo = AssignTo
-            };
-
-            vm.Users = new LookupService().GetLookup(LookupService.Source.User);
-
-            return vm;
-        }
-
-        public FileVM GetFileKOModel(int POID, string POGUID)
-        {
-            //Set File object
-            POFile newObj = new POFile()
-            {
-                ID = -1,
-                _Added = true,
-                POID = POID,
-                POGUID = POGUID,
-                UploadedBy = _SessionUsr.UserName,
-                LastModifiedBy = _SessionUsr.ID,
-                LastModifiedDate = DateTime.Now,
-                UploadDate = DateTime.Now,
-                UserID = _SessionUsr.ID,
-                FileName = "",
-                FileNameNEW = ""
-            };
-
-            List<POFile> files = new List<POFile>();
-            FileVM vm = new FileVM()
-            {
-                FileToAdd = newObj,
-                EmptyFileHeader = newObj,
-                AllFiles = (new POFileService().Search(POID, null))
-            };
-            // Lookup data
-            vm.FileTypes = new LookupService().GetLookup(LookupService.Source.POFileType);
-
-            return vm;
-        }
-
+        
         #endregion
     }
 }
+
 namespace POT.DAL
 {    
     public class POInfoKOModel
@@ -342,6 +257,7 @@ namespace POT.DAL
     {
         public vw_POHeader Header { get; set; }
         public List<vw_POLine> Lines { get; set; }
+        
         public string LinesOrderExtTotal { get { return Lines.Sum(l => l.OrderExtension ?? 0.00M).ToString("#0.00"); } }
 
         public POHeader Info { get; set; }

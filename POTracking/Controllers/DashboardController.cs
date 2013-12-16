@@ -142,7 +142,7 @@ namespace POT.Controllers
         public ActionResult Comments(int POID)
         {
             return View(new CommentService().Search(POID, null));
-        }
+        }        
 
         //[AccessPO("POID")]
         [CacheControl(HttpCacheability.NoCache), HttpGet]
@@ -151,12 +151,6 @@ namespace POT.Controllers
             return View(new POFileService().Search(POID, null));
         }
         
-        /*[CacheControl(HttpCacheability.NoCache), HttpGet]
-        public ActionResult Status(int POID)
-        {//Redirect to PO\X\Status?Archived = true (ref: http://forums.asp.net/t/1202550.aspx/1)
-            return RedirectToAction("Status", new { POID = POID });
-            //?Archived=" + Archived.ToString()
-        }*/
         #endregion
 
         #region Extra Functions

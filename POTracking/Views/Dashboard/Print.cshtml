@@ -2,7 +2,7 @@
 @using System.Collections
 @using HSG.Helper
 @{Layout = ""; /* Master page is NOT needed here */}
-<style>
+<style type="text/css">
 table {font-size: 12px;font-family: Calibri, Verdana, Helvetica, Sans-Serif;border: solid 1px #BFB88E;border-collapse: collapse;}
 td,th{text-align: center;background-color:#EEECE1;}
 tbody tr td{background-color:#ffffff;}
@@ -12,9 +12,7 @@ tbody tr td{background-color:#ffffff;}
     <tr>
         <th>PO #</th>
         <th>PO Date</th>
-        @if (!_Session.IsOnlyVendor){
-        <th>Vendor</th>
-            }        
+        @if (!_Session.IsOnlyVendor){<th>Vendor</th>}        
         <th>Shtip To City</th>        
         <th>ETD</th>
         <th>ETA</th>        

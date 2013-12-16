@@ -4,7 +4,7 @@
 @{ ViewBag.Title = "PO"; Layout = Defaults.masterLayout;
    bool IsOnlyVendor = _Session.IsOnlyVendor;
    bool printPOAfterSave = (bool)ViewData["printPOAfterSave"];
-   string poPrintopenWindow = "openWinScrollable('" + Url.Action("Print", "PO", new { POID = Model.ID }) + "',648,838);";   
+   string poPrintopenWindow = "openWinScrollable('" + Url.Action("Print", "PO", new { POID = Model.ID }) + "',648,838);";      
 }
 @section HeadContent {
     <script type="text/javascript">        
@@ -24,9 +24,11 @@
             if ( ui.tab.data( "loaded" ) ) {  event.preventDefault();  return;  } 
             ui.jqXHR.success(function() {   ui.tab.data( "loaded", true ); });
            },
-        activate: function(event, ui) { setFocus1(event, ui) } 
+        activate: function(event, ui) { setFocus1(event, ui) },
+        active: @ViewBag.activeTab.ToString() 
         }); @*//HT: cache: true - to prevent reload on each tab select!*@
         
+        @*$("#tabs").tabs({ active: 2 });*@
         @*//bind event to check po commit*@
         window.onbeforeunload = chkCommit;
         
@@ -42,9 +44,10 @@
 
        function gotoPO(POId)
         {
+            var activeTab = $( "#tabs" ).tabs( "option", "active" );
             if(POId > 0)
             window.location.href = 
-            "@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new { POId = -99 }))".replace('-99',POId);
+            "@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new { POId = -99 }))".replace('-99',POId) + 'activeTab=' + activeTab;
         }
 
         var commentsEmailURL = '@Url.Action("CommentsKOEmail", "PO", new { POGUID = Model.POGUID })';
@@ -254,7 +257,7 @@
                                                             <td align="right" nowrap="nowrap" width="5%">
                                                                 FOB :&nbsp;
                                                             </td>
-                                                            <td align="left" nowrap="nowrap">
+                                                            <td align="left" nowrap="nowrap">                                                            
                                                                 <input type="text" id="FOB" name="FOB" data-bind="value:FOB" readonly="readonly" />
                                                             </td>
                                                         </tr>
@@ -464,7 +467,6 @@
                                                     <i>Last Modified By</i> :&nbsp;
                                                     <i><span data-bind="text:LastModifiedBy()">
                                                       ( <span data-bind="date: LastModifiedDate"></span>)
-@*Model.LastModifiedBy&nbsp;(@Model.LastModifiedDate.ToString(Defaults.dtTFormat))*@
                                                     </i>
                                                 </td>
                                                 @*<td width="171">
@@ -541,8 +543,6 @@ var headerViewModel = function () {
             createFilesHeaderKO(POVM.Files);
             @*reloadWithCallback('@Url.Action("Files", new { POGUID = Model.POGUID })','',"#tabs-5", 
                 function(){createFilesHeaderKO(POVM.Files);});*@
-
-            $("#tabs").tabs({ active: 2 });
       }       
     function setFocus1(evt, ui) {
         // Objects available in the function context:

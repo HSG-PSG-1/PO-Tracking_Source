@@ -96,6 +96,37 @@ namespace POT.Controllers
 
         #endregion
 
+        public FileVM GetFileKOModel(int POID, string POGUID)
+        {
+            //Set File object
+            POFile newObj = new POFile()
+            {
+                ID = -1,
+                _Added = true,
+                POID = POID,
+                POGUID = POGUID,
+                UploadedBy = _SessionUsr.UserName,
+                LastModifiedBy = _SessionUsr.ID,
+                LastModifiedDate = DateTime.Now,
+                UploadDate = DateTime.Now,
+                UserID = _SessionUsr.ID,
+                FileName = "",
+                FileNameNEW = ""
+            };
+
+            List<POFile> files = new List<POFile>();
+            FileVM vm = new FileVM()
+            {
+                FileToAdd = newObj,
+                EmptyFileHeader = newObj,
+                AllFiles = (new POFileService().Search(POID, null))
+            };
+            // Lookup data
+            vm.FileTypes = new LookupService().GetLookup(LookupService.Source.POFileType);
+
+            return vm;
+        }
+
         #region Extra Actions and functions to get code for file download
 
         /// <summary>
@@ -189,7 +220,7 @@ namespace POT.Controllers
         {
             if (string.IsNullOrEmpty(code)) return new string[] { };
 
-            //code = HttpUtility.UrlDecode(HttpUtility.UrlDecode(code)); // decode URL (first is done by us and second by browser
+            // decode URL (first is done by us and second by browser
             code = HttpUtility.UrlDecode(code); // Decoding twice creates issue for certain codes
             return Crypto.EncodeStr(code, false).Split(new char[] { POFile.sep[0] });
         }

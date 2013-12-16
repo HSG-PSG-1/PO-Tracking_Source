@@ -50,7 +50,7 @@ namespace POT.Services
 
         POFile Transform(POFile f, string fileHeaderBy, string fileTypeTitle, int poID)
         {
-            /*also set .PO = null to avoid issues during serialization but persist POID as POID1 */
+            /*also set .PO = null to avoid issues during session serialization but persist POID as POID1 */
             return f.Set(f1 =>
             {
                 f1.UploadedBy = fileHeaderBy; f1.FileTypeTitle = fileTypeTitle; f1.POGUID = f1.POID.ToString();
@@ -63,8 +63,7 @@ namespace POT.Services
         {
             using (dbc)
             {
-                POFile cmt = (from f in dbc.POFiles where f.ID == id select f).SingleOrDefault<POFile>();
-                //cmt.PO = new PO();//HT: So that it doesn't complain NULL later
+                POFile cmt = (from f in dbc.POFiles where f.ID == id select f).SingleOrDefault<POFile>();                
                 return cmt;
             }
         }

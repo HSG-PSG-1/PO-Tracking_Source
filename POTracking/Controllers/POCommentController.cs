@@ -19,8 +19,37 @@ namespace POT.Controllers
         public JsonResult CommentsKOEmail(int POID, /*string POGUID,*/ int AssignTo, string PONumber, [FromJson] POComment CommentObj)        
         {
             bool sendMail = CommentService.SendEmail(POID, AssignTo, PONumber, CommentObj);
-            return Json(sendMail, JsonRequestBehavior.AllowGet); ;// RedirectToAction("Comments");//new CommentKOModel()
-        }        
+            return Json(sendMail, JsonRequestBehavior.AllowGet); ;
+        }
+
+        public CommentVM GetCommentKOModel(int POID, string POGUID, int AssignTo)
+        {
+            //Set Comment object
+            POComment newObj = new POComment()
+            {
+                ID = -1,
+                _Added = true,
+                POID = POID,
+                POGUID = POGUID,
+                CommentBy = _SessionUsr.UserName,
+                LastModifiedBy = _SessionUsr.ID,
+                LastModifiedDate = DateTime.Now,
+                PostedOn = DateTime.Now,
+                UserID = _SessionUsr.ID
+            };
+
+            CommentVM vm = new CommentVM()
+            {
+                CommentToAdd = newObj,
+                EmptyComment = newObj,
+                AllComments = new CommentService().Search(POID, null),
+                AssignTo = AssignTo
+            };
+
+            vm.Users = new LookupService().GetLookup(LookupService.Source.User);
+
+            return vm;
+        }
     }
 }
 

@@ -268,10 +268,7 @@ namespace POT.Services
                 }
                 #endregion
             }
-
-            #region Send AssignTo email if Old value is other then the new one
-
-            #endregion
+            
             return poObj.PONumber;//Return updated poobj
         }
 

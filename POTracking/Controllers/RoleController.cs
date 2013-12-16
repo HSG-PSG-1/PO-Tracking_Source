@@ -23,8 +23,6 @@ namespace POT.Controllers
         {
             if (Response.IsRequestBeingRedirected) return View();//Access denied
 
-            //doAddEditPopulate(); 
-
             _Session.MasterTbl = null;//Make sure this is set because we use it for Duplicate validation
             ViewData["oprSuccess"] = base.operationSuccess;//For successful operation
 
@@ -69,16 +67,6 @@ namespace POT.Controllers
             #endregion
 
             return Json(string.Empty, JsonRequestBehavior.AllowGet);
-        }
-
-        #endregion
-
-        #region Extra Functions
-
-        public void doAddEditPopulate()
-        {
-           // ViewData["oprSuccess"] = base.operationSuccess;//oprSuccess will be reset after this
-            ViewData["OrgTypes"] = new LookupService().GetLookup(LookupService.Source.OrgType);
         }
 
         #endregion

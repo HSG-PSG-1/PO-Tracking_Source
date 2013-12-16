@@ -10,7 +10,7 @@ using HSG.Helper;
 namespace POT.Controllers
 {
     //Can't because Security is also in the same controller
-    //[IsAuthorize(IsAuthorizeAttribute.Rights.MasterManage)]
+    //[IsAuthorize(IsAuthorizeAttribute.Rights.ManageMaster)]
     public partial class MasterController : BaseController
     {
         const string defaultMaster = "Manage/Defect";

@@ -9,9 +9,6 @@
         /* ===== Variables used in diff pages ===== */
 
         var loginURL = '@HSG.Helper.Defaults.commonRoot/Login'; //Make sure Login page has table with id=tblLogin001
-        //@* ===== Menu images ===== *@
-        var menuDownGifURL = '@Url.Content("~/Content/Menu/down.gif")'; //Make sure this is set for menu        
-        var menuRightGifURL = '@Url.Content("~/Content/Menu/right.gif")'; //Make sure this is set for menu
         //@* ===== Loading content ===== *@
         var loading = '<div id="loading" style="text-align:center;display:block;"><img src=" @Url.Content("~/Content/Images/loading.gif")" title="" alt="Loading" /></div>'; //Used by forms using AJAX
         //@* ===== Required to show/hide search-panel ===== *@
@@ -34,21 +31,13 @@
     <link rel="shortcut icon" href="@Url.Content("~/Content/favicon.ico")" type="image/x-icon" />
     <link rel="icon" href="@Url.Content("~/Content/favicon.ico")" type="image/ico" />
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
-    @*<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/Menu/ddsmoothmenu.css")" />*@
-    @* CDN includes
-    <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.min.css" rel="stylesheet"type="text/css" />
-    /*SOME scripts are better persisted in head */
-    <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js" type="text/javascript"></script>
     
-    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js" type="text/javascript"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js" type="text/javascript"></script>
-     *@ @* Local includes *@
     <link href="@Url.Content("~/Content/jQUI/smoothness/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Content/jQUI/min/jquery-1.9.1.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Content/jQUI/min/jquery-migrate-1.1.1.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Content/jQUI/min/jquery-ui.1.10.2.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Content/Scripts/jquery.validate.1.11.0.min.js")" type="text/javascript"></script>
+    
     <script language="javascript" type="text/javascript">
     $().ready(function () {@*Render menu ASAP*@
             $("#menu1").menu({position:{at:"left bottom"}});
@@ -69,17 +58,7 @@
             table.tablesorter thead tr .headerSortDown {
 	            background-image: url('@Url.Content("~/Content/Images/asc.gif")');	            
             }
-	    </style>
-    @*<style type="text/css">
-        #menu1 .ui-menu {z-index: 1000; overflow: hidden;}
-        #menu1 .ui-menu .ui-menu { overflow: visible !important;}
-        #menu1 .ui-menu > li { float: left; display: block; width: auto !important;}
-        #menu1 .ui-menu > li { margin: 1px 1px !important; padding: 0 0 0 0 !important;}
-        #menu1 .ui-menu > li > a { float: left; display: block; clear: both; overflow: hidden;}
-        #menu1 .ui-menu .ui-menu-icon { margin-top: 0.1em !important;}
-        #menu1 .ui-menu .ui-menu .ui-menu li { float: left; display: block;}
-        </style>*@
-    <style type="text/css">
+	
         .ui-menu
         {
             z-index: 1000;
@@ -113,15 +92,7 @@
     @*MiniProfiler.RenderIncludes()*@
 </head>
 <body>
-    <table cellpadding="3" width="100%" cellspacing="3" border="0" align="center">
-        @*<tr style="background:#333333;">
-            <td id="header">                
-                    &nbsp;&nbsp;<img src='@Url.Content("~/Content/Images/AOT-Header.png")' alt="AOT" border="0" style="display:inline"/>
-            </td>
-            <td id="logindisplay" align="right" valign="bottom" nowrap="nowrap">
-            @{Html.RenderPartial("LogOnUserControl");}
-            </td>
-        </tr>*@
+    <table cellpadding="3" width="100%" cellspacing="3" border="0" align="center">        
         <tr>
             <td id="header" colspan="2">
                 <table cellspacing="0" width="99%" align="center" style="background: #333333;">
@@ -130,8 +101,18 @@
                             &nbsp;&nbsp;<img src='@Url.Content("~/Content/Images/AOT-Header.png")' alt="AOT" border="0" style="display:inline;"/>
                         </td>
                         <td id="logindisplay" align="right" valign="bottom" nowrap="nowrap" class="white" style="background-position:right; background-repeat:no-repeat; background-image:url('@Url.Content("~/Content/Images/tires_banner.gif")');">
-                            @*<div style="height:85px;"></div>*@
-                            @{Html.RenderPartial("LogOnUserControl");} 
+                            @{
+                                string LogOnHTML = "";    
+                                string template = "Welcome {0} ({1} of {2}) ";
+                             }
+                                @if(_SessionUsr.RoleID == -1){
+                                    <span>[ @Html.ActionLink("Log On", "Login", "Common") ]</span>
+                                }
+                                else
+                                {
+                                    LogOnHTML = string.Format(template, _SessionUsr.UserName, _SessionUsr.RoleName, _SessionUsr.OrgName);
+                                    <span>@LogOnHTML [ @Html.ActionLink("Log Off", "Login", "Common", new { from = "logoff" }, null) ] </span>
+                                }                            
                         </td>
                     </tr>
                 </table>
@@ -139,8 +120,7 @@
         </tr>
         <tr>
             <td colspan="2" align="center" style="padding: 4px 4px 4px 4px">
-                @*MENU (ddsmoothmenu) : START *@
-                <div id="smoothmenu" class="ddsmoothmenu" style="text-align: left;">
+                <div id="smoothmenu" style="text-align: left;">
                     <ul id="menu1">
                         <li>
                             @Html.ActionLink("Dashboard", "List", "Dashboard")
@@ -172,14 +152,12 @@
                         @if (_Session.RoleRights.ViewActivity)
                         { <li>@Html.ActionLink("Activity", "Log", "Activity")</li>}
                     </ul>
-                    <br style="clear: left" />
-                </div>
-                @*MENU (ddsmoothmenu) : END*@
+                    @*<br style="clear: left" />*@
+                </div>                
             </td>
         </tr>
         <tr>
-            <td id="main" colspan="2" align="left" valign="top">@RenderBody()
-            </td>
+            <td id="main" colspan="2" align="left" valign="top">@RenderBody()</td>
         </tr>
         <tr>
             <td id="footer" colspan="2" align="left" class="small">
@@ -194,19 +172,10 @@
     <div id="divdlg" style="text-align: center; display: none; height: 70px; width: 61px;">
         <img src=" @Url.Content("~/Content/Images/loading.gif")" title="" alt="Loading" style="text-align:center" /></div>
 </body>
-@*<script type="text/javascript" src="@Url.Content("~/Content/Menu/ddsmoothmenu2.js")"></script>    *@
 <script language="javascript" src="@Url.Content("~/Content/Scripts/common.js")" type="text/javascript"></script>
 <script language="javascript" src="@Url.Content("~/Content/Scripts/jquery.form.js")" type="text/javascript"></script>
 <script type="text/javascript" language="javascript" defer="defer">
-        $().ready(function () {
-        @* $("#menu1").menu({position:{at:"left bottom"}});
-            ddsmoothmenu.init({
-                mainmenuid: "smoothmenu", //menu DIV id
-                orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
-                classname: 'ddsmoothmenu', //class added to menu's outer DIV
-                //customtheme: ["#1c5a80", "#18374a"],
-                contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
-            });*@
+        $().ready(function () {        
             $.validator.setDefaults({
                 //onfocusin: function(element) { $(element).valid(); },            
                 focusInvalid: false

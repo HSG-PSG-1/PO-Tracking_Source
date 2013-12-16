@@ -115,7 +115,7 @@ namespace POT.Services
             {
                 dasQ = dasQ.Where(o => SqlMethods.Like(o.PONumber.ToLower(), "%" + das.PONumbers.ToLower() + "%"));
 
-                /*if (das.PONumbers.IndexOf(",") < 1)
+                /* Kept for future ref - if (das.PONumbers.IndexOf(",") < 1)
                     dasQ = dasQ.Where(o => SqlMethods.Like(o.PONumber.ToString(), "%" + das.PONumbers + "%"));                
                 else
                     dasQ = dasQ.Where(o => das.PONumbers.Contains(o.PONumber)); ERROR !!! */
@@ -133,22 +133,16 @@ namespace POT.Services
             if (das.VendorID > 0) dasQ = dasQ.Where(o => o.VendorID == das.VendorID);
 
             if (!string.IsNullOrEmpty(das.ShipToCity)) dasQ = dasQ.Where
-               (o => SqlMethods.Like(o.ShipToCity.ToLower(), das.ShipToCity.ToLower()));
+               (o => SqlMethods.Like(o.ShipToCity.ToLower(), "%" + das.ShipToCity.ToLower() + "%"));
 
             #region Apply date filter
             //http://www.filamentgroup.com/lab/date_range_picker_using_jquery_ui_16_and_jquery_ui_css_framework/
-            if (das.PODateFrom.HasValue)
-                dasQ = dasQ.Where(o => o.PODate.Value.Date >= das.PODateFrom_SQL.Value.Date);
-            if (das.PODateTo.HasValue)
-                dasQ = dasQ.Where(o => o.PODate.Value.Date <= das.PODateTo_SQL.Value.Date);
-            if (das.ETAFrom.HasValue)
-                dasQ = dasQ.Where(o => o.Eta.Value.Date >= das.ETAFrom_SQL.Value.Date);
-            if (das.ETATo.HasValue)
-                dasQ = dasQ.Where(o => o.Eta.Value.Date <= das.ETATo_SQL.Value.Date);
-            if (das.ETDFrom.HasValue)
-                dasQ = dasQ.Where(o => o.Etd.Value.Date >= das.ETDFrom_SQL.Value.Date);
-            if (das.ETDTo.HasValue)
-                dasQ = dasQ.Where(o => o.Etd.Value.Date <= das.ETDTo_SQL.Value.Date);
+            if (das.PODateFrom.HasValue) dasQ = dasQ.Where(o => o.PODate.Value.Date >= das.PODateFrom_SQL.Value.Date);
+            if (das.PODateTo.HasValue) dasQ = dasQ.Where(o => o.PODate.Value.Date <= das.PODateTo_SQL.Value.Date);
+            if (das.ETAFrom.HasValue) dasQ = dasQ.Where(o => o.Eta.Value.Date >= das.ETAFrom_SQL.Value.Date);
+            if (das.ETATo.HasValue) dasQ = dasQ.Where(o => o.Eta.Value.Date <= das.ETATo_SQL.Value.Date);
+            if (das.ETDFrom.HasValue) dasQ = dasQ.Where(o => o.Etd.Value.Date >= das.ETDFrom_SQL.Value.Date);
+            if (das.ETDTo.HasValue) dasQ = dasQ.Where(o => o.Etd.Value.Date <= das.ETDTo_SQL.Value.Date);
 
             #endregion
 

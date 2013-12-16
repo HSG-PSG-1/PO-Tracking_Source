@@ -129,8 +129,7 @@ namespace HSG.Helper
     public sealed class DuplicateMatchAndRequiredForMASTERAttribute : ValidationAttribute
     {
         //HT: Exclusive class for the Bulk edit feature of MASTERs - for now it is meant only for Title
-        //
-
+        
         private readonly object _typeId = new object();
 
         public DuplicateMatchAndRequiredForMASTERAttribute(string _PropertyNEW, string _PropertyOLD)
@@ -313,8 +312,7 @@ namespace HSG.Helper
             if (goAhead)
                 base.OnActionExecuting(filterContext);
             else// Ref: http://www.joe-stevens.com/2010/08/19/asp-net-mvc-authorize-attribute-using-action-parameters-with-the-actionfilterattribute/
-                filterContext.Result = new RedirectResult(AccessDeniedPath);// or HttpUnauthorizedResult();
-            //ctx.Response.Redirect(AccessDeniedPath);
+                filterContext.Result = new RedirectResult(AccessDeniedPath);// or HttpUnauthorizedResult();  //ctx.Response.Redirect(AccessDeniedPath);
             //ABOVE STATEMENT NOT WORKING: It still executes the action
         }
 
@@ -365,7 +363,7 @@ namespace HSG.Helper
     /// http://stackoverflow.com/questions/2027610/asp-net-mvc-2-rc-caching-problem
     /// </summary>
     public class CacheControlAttribute : ActionFilterAttribute
-    {//Also see: http://stackoverflow.com/questions/2243568/needs-a-cause-for-a-error-in-mvc
+    {//SO:2243568/needs-a-cause-for-a-error-in-mvc
         public CacheControlAttribute(HttpCacheability cacheability)
         {
             this._cacheability = cacheability;
@@ -379,7 +377,7 @@ namespace HSG.Helper
             cache.SetCacheability(_cacheability);
 
             if (_cacheability == HttpCacheability.NoCache)
-            {// Look for NoCacheAttribute - http://stackoverflow.com/questions/8488496/mvc-3-and-ajax-calls-cant-stop-it-caching
+            {// Look for NoCacheAttribute - SO: 8488496/mvc-3-and-ajax-calls-cant-stop-it-caching
                 cache.SetExpires(DateTime.UtcNow.AddDays(-1));
                 cache.SetValidUntilExpires(false);
                 cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
@@ -389,7 +387,7 @@ namespace HSG.Helper
         }
     }
 
-    #region Session Validation Action Filter(Kept for future ref)
+    #region Session Validation Action Filter(Kept for future ref - when we'll have manual session check and multi-role access)
     // HT: NOT needed any more as we're using forms based authentication (hoping all session vars are intact)
     //http://www.tyronedavisjr.com/index.php/2008/11/23/detecting-session-timeouts-using-a-aspnet-mvc-action-filter/
     /*    public class SessionExpireChkAttribute1 : ActionFilterAttribute

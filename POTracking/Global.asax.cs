@@ -6,7 +6,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Reflection;
 using HSG.Helper;
-//using StackExchange.Profiling;
+/*using StackExchange.Profiling;
+using StackExchange.Profiling.MVCHelpers;*/
 namespace POT
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -44,7 +45,7 @@ namespace POT
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            //filters.Add(new HandleErrorAttribute());            
+            //filters.Add(new HandleErrorAttribute());
         }
 
         protected void Application_Start()
@@ -190,14 +191,14 @@ namespace POT
 
         protected void Application_BeginRequest()
         {
-            //if (Request.IsLocal)
-            //{ MiniProfiler.Start(); } //or any number of other checks, up to you 
+            /*if (Request.IsLocal)
+            { MiniProfiler.Start(); } //or any number of other checks, up to you */
         }
 
         protected void Application_EndRequest()
         {
-           // MiniProfiler.Stop(); //stop as early as you can, even earlier with MvcMiniProfiler.
-           // MiniProfiler.Stop(discardResults: true);
+            /*MiniProfiler.Stop(); //stop as early as you can, even earlier with MvcMiniProfiler.
+            MiniProfiler.Stop(discardResults: true);*/
         }
 
         #endregion

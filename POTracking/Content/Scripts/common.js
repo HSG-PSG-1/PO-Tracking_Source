@@ -402,28 +402,9 @@ function showDlg(show) {
         $("#divdlg").dialog("destroy");
 }
 
-function createToFromjQDTP(FromDtpID, ToDtpID) {
-    /*OLD: http://jqueryui.com/demos/datepicker/date-range.html
-    var dates = $("#PODateFrom1, #PODateTo1").datepicker({
-        defaultDate: "+1w",
-        minDate: minSQLDate,
-        maxDate: maxSQLDate,
-        changeMonth: true,
-        numberOfMonths: 3,
-        onSelect: function (selectedDate) {
-            var option = this.id == "PODateFrom1" ? "minDate" : "maxDate",
-					instance = $(this).data("datepicker"),
-					date = $.datepicker.parseDate(
-						instance.settings.dateFormat ||
-						$.datepicker._defaults.dateFormat,
-						selectedDate, instance.settings);
-            dates.not(this).datepicker("option", option, date);
-
-            $(this).trigger("change"); // Specially for KO
-        }
-    });*/
-    var ToDtpID1 = "#" + ToDtpID + "1";
-    var FromDtpID1 = "#" + FromDtpID + "1";
+function createToFromjQDTP(FromDtpID, ToDtpID) {    
+    var ToDtpID1 = ToDtpID + "1";
+    var FromDtpID1 = FromDtpID + "1";
     //NEW : http://jqueryui.com/datepicker/#date-range
     $(FromDtpID1).datepicker({
         defaultDate: "+1w",
@@ -431,6 +412,8 @@ function createToFromjQDTP(FromDtpID, ToDtpID) {
         maxDate: maxSQLDate,
         changeMonth: true,
         numberOfMonths: 3,
+        altField: FromDtpID, altFormat: 'dd M yy',
+        onSelect: function (selectedDate) { $(FromDtpID).trigger("change"); }, // DON'T : .val(selectedDate)
         onClose: function (selectedDate) {
             $(ToDtpID1).datepicker("option", "minDate", selectedDate);
             $(FromDtpID1).trigger("change"); // Specially for KO
@@ -440,6 +423,8 @@ function createToFromjQDTP(FromDtpID, ToDtpID) {
         defaultDate: "+1w",
         changeMonth: true,
         numberOfMonths: 3,
+        altField: ToDtpID, altFormat: 'dd M yy',
+        onSelect: function (selectedDate) { $(ToDtpID).trigger("change"); }, // DON'T : .val(selectedDate)        
         onClose: function (selectedDate) {
             $(FromDtpID1).datepicker("option", "maxDate", selectedDate);
             $(ToDtpID1).trigger("change"); // Specially for KO
@@ -447,11 +432,8 @@ function createToFromjQDTP(FromDtpID, ToDtpID) {
     });
 
     // Set format to be used by alt date field
-    $(FromDtpID1).datepicker("option", "altField", FromDtpID);
-    $(FromDtpID1).datepicker("option", "altFormat", 'dd-M-yy');
-
-    $(ToDtpID1).datepicker("option", "altField", ToDtpID);
-    $(ToDtpID1).datepicker("option", "altFormat", 'dd-M-yy');
+    //$(FromDtpID1).datepicker("option", "altField", FromDtpID);    $(FromDtpID1).datepicker("option", "altFormat", 'dd-M-yy');
+    //$(ToDtpID1).datepicker("option", "altField", ToDtpID);    $(ToDtpID1).datepicker("option", "altFormat", 'dd-M-yy');
 }
 
 function createjQDTP(DtpID) {

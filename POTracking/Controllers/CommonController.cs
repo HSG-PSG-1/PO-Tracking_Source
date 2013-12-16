@@ -43,8 +43,8 @@ namespace POT.Controllers
                     loginM.Password = Crypto.EncodeStr(authCookie.Values[Defaults.passwordCookie], false);
                     loginM.RememberMe = true;
                 }
-                catch
-                { /* BAD Cookie */loginM.RememberMe = false; }
+                catch/* BAD Cookie */
+                { loginM.RememberMe = false; }
             }
 
             #endregion
@@ -96,9 +96,8 @@ namespace POT.Controllers
                     ModelState.AddModelError("", "The email and/or password provided is incorrect.");
             }
 
-            LogOff();// To make sure no session is set until Login (or it'll go in Login HttpGet instead of Post)
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            LogOff();// To make sure no session is set until Login (or it'll go in Login HttpGet instead of Post)            
+            return View(model);// If we got this far, something failed, redisplay form
         }
 
         public ActionResult SendPassword(string Email, LogInModel model)
@@ -136,28 +135,13 @@ namespace POT.Controllers
         {
             bool remember = model.RememberMe;
 
-            #region Forms cookie - kept for future ref
-            /* HttpCookie cookie = FormsAuthentication.GetAuthCookie(model.Email, true);
-                        cookie.Expires = DateTime.Now.Add(new TimeSpan(120, 0, 0, 0));
-                        Response.Cookies.Remove(cookie.Name);
-                        Response.Cookies.Add(cookie);*/
-            #endregion
-
             //Set Cookie (double encryption - encrypted pwd & encrypted cookie)
             HttpCookie authRememberCookie = new HttpCookie(Defaults.cookieName);
             authRememberCookie.Values[Defaults.emailCookie] = remember?model.Email:"";
             authRememberCookie.Values[Defaults.passwordCookie] = remember?Crypto.EncodeStr(model.Password, true):"";
             authRememberCookie.Expires = remember ? DateTime.Now.AddHours(Config.RememberMeHours) 
                 : DateTime.Now.AddYears(-1);//to avoid any datetime diff
-            Response.Cookies.Add(HttpSecureCookie.Encode(authRememberCookie));//HT: encode the cookie
-            /*else
-            {// Can't remove so we add the same cookie as EXPIRED & empty values!
-                HttpCookie authForgetCookie = new HttpCookie(Defaults.cookieName);
-                authForgetCookie.Values[Defaults.emailCookie] = "";
-                authForgetCookie.Values[Defaults.passwordCookie] = "";
-                authForgetCookie.Expires = DateTime.Now.AddYears(-1);//to avoid any datetime diff
-                Response.Cookies.Add(authForgetCookie);
-            }*/
+            Response.Cookies.Add(HttpSecureCookie.Encode(authRememberCookie));//HT: encode the cookie            
         }
         
         //[CacheControl(HttpCacheability.NoCache), HttpGet]
@@ -181,17 +165,7 @@ namespace POT.Controllers
                     case LookupService.Source.Internal:
                     case LookupService.Source.Vendor:
                         return Json(string.Empty, JsonRequestBehavior.AllowGet);
-                    #region Folllowing cases are either accessible to ALL type of users or their access is NOT done via this JSON Lookup
-                    /*
-                case LookupService.Source.Item:break;
-                case LookupService.Source.Brand:break;
-                case LookupService.Source.POFile:break;                
-                case LookupService.Source.Status: break;
-                case LookupService.Source.User:break;
-                case LookupService.Source.VendorUser:break;
-                default: return Json(string.Empty);
-             */
-                    #endregion
+                    default: return Json(string.Empty);
                 }
             }
 
@@ -202,11 +176,11 @@ namespace POT.Controllers
 
             #region Kept for future ref
             /*
-            //HT: http://stackoverflow.com/questions/313281/how-can-i-get-a-jsonresult-object-as-a-string-so-i-can-modify-it
+            //HT: SO: 313281/how-can-i-get-a-jsonresult-object-as-a-string-so-i-can-modify-it
             System.Web.Script.Serialization.JavaScriptSerializer jsr = new System.Web.Script.Serialization.JavaScriptSerializer();
             string yourJsonResult = jsr.Serialize(result.Data);
             
-            //HT: http://stackoverflow.com/questions/4234455/jquery-autocomplete-not-working-with-json-data
+            //HT: SO: 4234455/jquery-autocomplete-not-working-with-json-data
             //[{ "id": "Erithacus rubecula", "label": "European Robin", "value": "European Robin" }, { "id": ...
             */
             #endregion
@@ -222,9 +196,8 @@ namespace POT.Controllers
         }
 
         public void LogOff()
-        {
-            //Log Activity
-            if (/*_Session.Usr != null && */ _SessionUsr.ID > 0)
+        {   
+            if (_SessionUsr.ID > 0)//Log Activity
                 new ActivityLogService(ActivityLogService.Activity.Logout).Add();
             //Signout FormsAuthentication, session, etc..
             _Session.Signout();            

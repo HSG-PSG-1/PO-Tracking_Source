@@ -48,18 +48,6 @@ namespace POT.Services
             });
         }
                 
-        /*public POComment GetCommentById(int id)
-        {
-            using (dbc)
-            {
-                POComment cmt = (from c in dbc.POComments where c.ID == id select c).SingleOrDefault<POComment>();
-
-                if (cmt == null) return newObj;
-                cmt.PO = new PO();//HT: So that it doesn't complain NULL later
-                return cmt;
-            }
-        }*/
-
         public static bool SendEmail(int POID, int AssignTo, string PONumber, POComment CommentObj)
         {
             bool sendMail = (POID > Defaults.Integer && AssignTo != _SessionUsr.ID);// No need to send mail if its current user

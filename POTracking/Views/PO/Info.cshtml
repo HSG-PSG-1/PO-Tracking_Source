@@ -217,6 +217,8 @@
 
             if (proceed) {
                 showDlg(true);
+                var activeTab = $( "#tabs" ).tabs( "option", "active" );
+
                 ko.utils.postJson(location.href, 
                 { 
                     isAddMode: @isNewPO.ToString().ToLower(),
@@ -224,7 +226,8 @@
                     //lines: ko.mapping.toJS(viewModelItems.allLines()),
                     comments: ko.mapping.toJS(viewModelComments.allComments()),
                     files: ko.mapping.toJS(viewModelFH.allFiles()),
-                    printPOAfterSave: printPOAfterSave  
+                    printPOAfterSave: printPOAfterSave,
+                    activeTab : activeTab 
                 });
                 return false;
             }

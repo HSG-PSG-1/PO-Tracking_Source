@@ -44,7 +44,7 @@
         }        
     </script>
     <style>
-    input[type="text"], input[type="password"]{ width: 200px;}
+    select, input[type="text"], input[type="password"]{ width: 250px;}
     </style>
 }
 @{ POT.DAL.vw_Users_Role_Org usrSearch = ((POT.DAL.vw_Users_Role_Org)(ViewData["SearchData"]));
@@ -119,19 +119,13 @@
         </td>
     </tr>
 </table>
-<div id="usrAddEditDialog" data-bind="if: editRecord() != null && editRecord().length > 0">
-    <br />
-    <form id="frmUsr" name="frmUsr" action="@Url.Action("AddEdit")" method="post" onsubmit1="if($(this).valid())$('#btnSubmit').prop('disabled', true); return false;">
-    <table align="center" data-bind="with: editRecord()[0]" width="95%">
-        <tr>
-            <td align="right">
-                <div class="small" style="text-align: center; margin: 0 auto;">
-                    *NOTE: All fields in <b>bold</b> are required</div>
-            </td>
-        </tr>
+<div id="usrAddEditDialog" data-bind="if: editRecord() != null && editRecord().length > 0" title="Edit User" style="padding:0px 0px 0px 0px;">
+    <form id="frmUsr" name="frmUsr" action="@Url.Action("AddEdit")" method="post" 
+    onsubmit1="if($(this).valid())$('#btnSubmit').prop('disabled', true); return false;">
+    <table align="center" data-bind="with: editRecord()[0]" width="100%" style="padding:0px 0px 0px 0px;">
         <tr>
             <td>
-                <table class="onlyBorder" cellpadding="4" cellspacing="4" width="95%" align="center">
+                <table class1="onlyBorder" border="0" cellpadding="4" cellspacing="4" width="100%" align="center">
                     <thead class="header">
                         <th colspan="2" align="center">
                             <b class="smallHeading"><span data-bind="html: $parent.opr()"></span>&nbsp;User Details</b>
@@ -146,7 +140,7 @@
                         </tr>
                         <tr>
                             <td class="bold" width="30%" align="right">
-                                Name
+                                Name :&nbsp;
                             </td>
                             <td width="70%">
                                 <input class="required" id="Name" maxlength="50" name="Name" type="text" data-bind="value:UserName" />&nbsp;
@@ -154,7 +148,7 @@
                         </tr>
                         <tr>
                             <td class="bold" align="right">
-                                Role
+                                Role :&nbsp;
                             </td>
                             <td>
                                 <select id="ddlRoles" class="dropDown required" data-bind="options: $parent.roles, value:RoleID, optionsText: 'TEXT', optionsValue:'ID'"
@@ -165,25 +159,25 @@
                         </tr>
                         <tr>
                             <td class="bold" align="right">
-                                Organization
+                                Organization :&nbsp;
                             </td>
                             <td nowrap="nowrap">
-                                <input class="required" id="OrgName" name="OrgName" style="width: 200px" type="text" 
+                                <input class="required" id="OrgName" name="OrgName" style="width: 250px" type="text" 
                                 data-bind="value:OrgName" />&nbsp;&nbsp;@Html.Raw(string.Format(Defaults.lookupImgBtn, "OrgName"))
                                 <input id="OrgID" name="OrgID" type="text" data-bind="value:OrgID" />                                
                             </td>
                         </tr>
                         <tr>
                             <td class="bold" align="right">
-                                Email
+                                Email :&nbsp;
                             </td>
                             <td nowrap="nowrap">
-                                <input class="email required" id="Email" maxlength="80" name="Email" style="width: 200px" type="text" data-bind="value:Email" />&nbsp;                                
+                                <input class="email required" id="Email" maxlength="80" name="Email" type="text" data-bind="value:Email" />&nbsp;                                
                             </td>
                         </tr>
                         <tr>
                             <td class="bold" align="right">
-                                Password
+                                Password :&nbsp;
                             </td>
                             <td>
                                 <input class="required" id="Password" maxlength="20" name="Password" type="text"
@@ -193,9 +187,9 @@
                         <!-- ko if: $parent.opr() == "Edit" -->
                         <tr>
                             <td colspan="2" nowrap="nowrap" align="center">
-                                <img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="600px" /><br />
                                 <i>Last Modified By : <span data-bind="html:LastModifiedByName"></span>&nbsp;
                                 (<span data-bind="html:LastModifiedDateTxt"></span>) </i>
+                                <br /><img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="600px" />
                             </td>
                         </tr>
                         <!-- /ko -->
@@ -211,8 +205,7 @@
                 </table>
             </td>
         </tr>
-    </table>
-    </form>
+    </table></form>
 </div>
 <script type="text/javascript" id="mailToCellTemplate">
     var mailToCellTemplate =
@@ -296,8 +289,8 @@
         $("#usrAddEditDialog").dialog({
                  modal: true,
                  autoOpen: false,
-                 height:320,
-                 width:700,
+                 height:270,
+                 width:620,
                  open: function( event, ui ) { if(validator == null){}setupValidation(); fillOrgs(false); 
                  $(".ui-dialog-titlebar-close").hide(); /* SO: 896777, 12901102 */
                  $(".ui-dialog-titlebar").hide();
