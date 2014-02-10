@@ -31,7 +31,7 @@ namespace POT.Controllers
                 _Added = true,
                 POID = POID,
                 POGUID = POGUID,
-                CommentBy = _SessionUsr.UserName,
+                CommentBy = _SessionUsr.Email,//UserName,
                 LastModifiedBy = _SessionUsr.ID,
                 LastModifiedDate = DateTime.Now,
                 PostedOn = DateTime.Now,

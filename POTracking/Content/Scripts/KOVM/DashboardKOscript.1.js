@@ -1,8 +1,8 @@
 ﻿$().ready(function () {
     setFocus("PONumbers");
     doCollapse(); //If url has collapse
-
-    renderAutoComplete(autocompleteURL + "Brand", "#BrandID", "#BrandName");
+        
+    renderAutoComplete(autocompleteURL + "Brand", "#BrandID", "#BrandName");    
     renderAutoComplete(autocompleteURL + "Vendor", "#VendorID", "#VendorName");
 
     // Configure Date picker plugin
@@ -24,9 +24,6 @@ function setDTPdateForKO() {
 }
 
 function resetForm(btn) {
-    var vendorName = vm_D.search.VendorName();
-    var vendorID = vm_D.search.VendorID();
-
     clearForm(document.getElementById('frm'));
     document.getElementById('doReset').checked = true;
     resetDatepicker('#PODateFrom1, #PODateTo1');
@@ -35,14 +32,7 @@ function resetForm(btn) {
     vm_D.search.PONumbers(null);
     vm_D.search.OrderStatusID(0);
     vm_D.search.AssignTo(0);
-    if (!isVendor) {
-        vm_D.search.VendorName(null);
-        vm_D.search.VendorID(0);
-    }
-    else {
-        vm_D.search.VendorName(vendorName);
-        vm_D.search.VendorID(vendorID);
-    }
+    vm_D.search.VendorName(null);
     vm_D.search.BrandName(null);
     vm_D.search.ShipToCity(null);
 
@@ -163,8 +153,6 @@ var viewModel = function () {
         var OrderStatusID = (s.OrderStatusID != null && s.OrderStatusID() != null && s.OrderStatusID() != "") ? s.OrderStatusID() : 0;
         var AssignTo = (s.AssignTo != null && s.AssignTo() != null && s.AssignTo() != "") ? s.AssignTo() : 0;
         var VendorName = (s.VendorName != null && s.VendorName() != null && s.VendorName() != "") ? s.VendorName().toLowerCase() : null;
-        //var VendorID = (s.VendorID != null && s.VendorID() != null && s.VendorID() != "") ? s.VendorID() : 0;
-
         var BrandName = (s.BrandName != null && s.BrandName() != null && s.BrandName() != "") ? s.BrandName().toLowerCase() : null;
         var ShipToCity = (s.ShipToCity != null && s.ShipToCity() != null && s.ShipToCity() != "") ? s.ShipToCity().toLowerCase() : null;
 
@@ -187,8 +175,7 @@ var viewModel = function () {
                     (OrderStatusID < 1 || rec.OrderStatusID == OrderStatusID) &&
                     (AssignTo < 1 || rec.AssignTo == AssignTo) && /*|| rec.AssignTo == null */
 
-            (VendorName == null || (rec.VendorName != null && rec.VendorName.toLowerCase().indexOf(VendorName) > -1)) &&
-                    //(VendorID < 1 || rec.VendorID == VendorID) &&
+                    (VendorName == null || (rec.VendorName != null && rec.VendorName.toLowerCase().indexOf(VendorName) > -1)) &&
 
                     (BrandName == null || rec.BrandName.toLowerCase().indexOf(BrandName) > -1) &&
                     (ShipToCity == null || rec.ShipToCity.toLowerCase().indexOf(ShipToCity) > -1) &&

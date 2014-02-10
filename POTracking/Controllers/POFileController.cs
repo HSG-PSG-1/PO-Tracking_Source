@@ -105,7 +105,7 @@ namespace POT.Controllers
                 _Added = true,
                 POID = POID,
                 POGUID = POGUID,
-                UploadedBy = _SessionUsr.UserName,
+                UploadedBy = _SessionUsr.Email,//UserName,
                 LastModifiedBy = _SessionUsr.ID,
                 LastModifiedDate = DateTime.Now,
                 UploadDate = DateTime.Now,

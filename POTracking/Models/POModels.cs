@@ -73,11 +73,11 @@ namespace POT.DAL
         {
             get {
                 return
-                    (string.IsNullOrEmpty(VendorAddress1) ? "" : VendorAddress1+ ",<br/>")  +
-                    (string.IsNullOrEmpty(VendorAddress2) ? "" : VendorAddress2 + ",<br/>") +
-                    (string.IsNullOrEmpty(VendorAddress3) ? "" : VendorAddress3 + ",<br/>") +
-                    (string.IsNullOrEmpty(VendorCity) ? "" : VendorCity + ",") +
-                    (string.IsNullOrEmpty(VendorState) ? "" : VendorState + ",<br/>") +
+                    (string.IsNullOrEmpty(VendorAddress1) ? "" : VendorAddress1+ "<br/>")  +
+                    (string.IsNullOrEmpty(VendorAddress2) ? "" : VendorAddress2 + "<br/>") +
+                    (string.IsNullOrEmpty(VendorAddress3) ? "" : VendorAddress3 + "<br/>") +
+                    (string.IsNullOrEmpty(VendorCity) ? "" : VendorCity + " ") +
+                    (string.IsNullOrEmpty(VendorState) ? "" : VendorState + "<br/>") +
                     (string.IsNullOrEmpty(VendorCountryName) ? "" : VendorCountryName);
             }
         }
@@ -87,11 +87,12 @@ namespace POT.DAL
             get
             {
                 return
-                    (string.IsNullOrEmpty(ShipToAddress1) ? "" : ShipToAddress1 + ",<br/>") +
-                    (string.IsNullOrEmpty(ShipToAddress2) ? "" : ShipToAddress2 + ",<br/>") +
-                    (string.IsNullOrEmpty(ShipToAddress3) ? "" : ShipToAddress3 + ",<br/>") +
-                    (string.IsNullOrEmpty(ShipToCity) ? "" : ShipToCity + ",") +
-                    (string.IsNullOrEmpty(ShipToState) ? "" : ShipToState + ",<br/>") +
+                    (string.IsNullOrEmpty(ShipToAddress1) ? "" : ShipToAddress1 + "<br/>") +
+                    (string.IsNullOrEmpty(ShipToAddress2) ? "" : ShipToAddress2 + "<br/>") +
+                    (string.IsNullOrEmpty(ShipToAddress3) ? "" : ShipToAddress3 + "<br/>") +
+                    (string.IsNullOrEmpty(ShipToCity) ? "" : ShipToCity + " ") +
+                    (string.IsNullOrEmpty(ShipToState) ? "" : ShipToState + " ") +
+                    (string.IsNullOrEmpty(ShipToZipCode) ? "" : ShipToZipCode + " ") +
                     (string.IsNullOrEmpty(ShipToCountryCode) ? "" : ShipToCountryCode);
             }
         }

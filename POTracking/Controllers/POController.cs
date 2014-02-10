@@ -167,6 +167,11 @@ namespace POT.Controllers
             return View(printView);
         }
 
+        public ActionResult PrintPO(int POID)
+        {
+            return View();
+        }
+
         [CacheControl(HttpCacheability.NoCache), HttpGet]
         public ActionResult Info(int POID, string POGUID)
         {
@@ -259,6 +264,8 @@ namespace POT.DAL
         public List<vw_POLine> Lines { get; set; }
         
         public string LinesOrderExtTotal { get { return Lines.Sum(l => l.OrderExtension ?? 0.00M).ToString("#0.00"); } }
+        //public string TotalAmtInvoiced { get { return Lines.Sum(l => l.AmountInvoiced ?? 0.00M).ToString("#0.00"); } }
+        public string OrderTotal { get { return Lines.Sum(l => l.QtyOrdered ?? 0).ToString(); } }
 
         public POHeader Info { get; set; }
 

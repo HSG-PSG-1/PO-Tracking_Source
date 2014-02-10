@@ -15,7 +15,7 @@ namespace POT.Services
         #region Variables & Constructor
         public const string sortOn = "SortOrder";
         private const string selectSQL =
-            "SELECT m.*, u.[Name] FROM Master{0} as m LEFT OUTER JOIN Users as u ON m.LastModifiedBy = u.ID ORDER BY {1} sortOrder";
+            "SELECT m.*, u.[Email] as [Name] FROM Master{0} as m LEFT OUTER JOIN Users as u ON m.LastModifiedBy = u.ID ORDER BY {1} sortOrder";
         // {1} is for special sorting required by MasterDefect
         private const string deleteSQL = "DELETE FROM Master{0} WHERE ID = {1}";
 
@@ -64,7 +64,7 @@ namespace POT.Services
                     Code = "[Code-1]",//Required otherwise it'll be considered as ModelState error !
                     SortOrder = result.Count + 1,//To make sure the js sort doesn't mess up like 0
                     LastModifiedBy = Defaults.Integer,//Make sure this is set to 0
-                    LastModifiedByVal = _SessionUsr.UserName,
+                    LastModifiedByVal = _SessionUsr.Email,//UserName,
                     LastModifiedDate = DateTime.Now,
                     CanDelete = true
                 });

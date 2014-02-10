@@ -174,7 +174,7 @@
    var setSearchOptsURL = "@Html.Raw(@Url.Action("SetSearchOpts", "Dashboard"))";
    var printPOURL = "@HttpUtility.UrlDecode(Url.Action("Print", "PO", new { POID = -99 }))";
 
-   var gridPageSize = '@ViewData["gridPageSize"]';
+   var gridPageSize = @ViewData["gridPageSize"];
    var skipCommitChk = false;
     
     $(document).ready(function () {        
@@ -191,7 +191,7 @@
             ,async : false // SO: 14645011 (for FF to ensure the postback is not
             @*,success: function (data) {
                 if (data != null) {/*//vm_D.fields.removeAll();
-                    vm_D.pageIndex(0);  self.cachedPagesTill(0);
+                    vm_D.pageIndex(0);  vm_D.cachedPagesTill(0);
                     vm_D.fields(data.records);vm_D.search(data.search);
                     document.getElementById('doReset').checked = false;*/             
                 }
@@ -199,9 +199,8 @@
         });  
          
         };
-
     });        
-    
+    var isVendor = @isVendor.ToString().ToLower();    
 </script>
 <script src="@Url.Content("~/Content/Scripts/KOVM/DashboardKOscript.js")" type="text/javascript" ></script>
 <script src="@Url.Content("~/Content/Scripts/jquery.taconite.js")" type="text/javascript" ></script>

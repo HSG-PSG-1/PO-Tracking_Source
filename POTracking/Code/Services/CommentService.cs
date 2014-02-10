@@ -30,7 +30,7 @@ namespace POT.Services
                                          from u in u_join.DefaultIfEmpty()
                                          where c.POID == poID
                                          orderby c.PostedOn descending
-                                         select Transform(c,u.Name, c.POID);
+                                         select Transform(c,u.Email, c.POID);
 
             //Append WHERE clause if applicable
             //if ((userID ?? 0) > 0) cQuery = cQuery.Where(o => o.UserID == userID.Value);

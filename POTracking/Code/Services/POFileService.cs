@@ -43,7 +43,7 @@ namespace POT.Services
 
                                             where f.POID == poID
                                             orderby f.UploadDate descending
-                                            select Transform(f, u.Name, t.Code, f.POID);
+                                            select Transform(f, u.Email, t.Code, f.POID);
 
             return cQuery.ToList<POFile>();
         }

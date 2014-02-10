@@ -46,6 +46,14 @@ namespace POT.Controllers
             vw_PO_Dashboard oldSearchOpts = (vw_PO_Dashboard)searchOpts;
             searchOpts = new vw_PO_Dashboard();
             populateData(false);
+            
+            #region Special case for Vendor Users
+            if (_Session.IsOnlyVendor)
+            {//Set the Vendor filter
+                oldSearchOpts.VendorID = _SessionUsr.OrgID;
+                oldSearchOpts.VendorName = _SessionUsr.OrgName;
+            }
+            #endregion
 
             index = (index > 0) ? index + 1 : index; // paging starts with 2
 
@@ -160,7 +168,11 @@ namespace POT.Controllers
             //using (MiniProfiler.Current.Step("Populate lookup Data"))
             {
                 vw_PO_Dashboard searchOptions = (vw_PO_Dashboard)(searchOpts);
-                if (_Session.IsOnlyVendor) searchOptions.VendorID = _SessionUsr.OrgID;//Set the Vendor filter
+                if (_Session.IsOnlyVendor)
+                {//Set the Vendor filter
+                    searchOptions.VendorID = _SessionUsr.OrgID;
+                    searchOptions.VendorName = _SessionUsr.OrgName;
+                }
 
                 if (fetchOtherData)
                 {

@@ -159,13 +159,13 @@ namespace POT.Controllers
             #region Check explicit Security (Only for Customer)
 
             if (_Session.IsOnlyVendor)
-            {//Exclusive checks for Customer user
+            {//Exclusive checks for Vendor user
                 switch (enumObj)
-                {//Because Customer does not have access to any of this
+                {//Because Vendor does not have access to any of this
                     case LookupService.Source.Internal:
                     case LookupService.Source.Vendor:
-                        return Json(string.Empty, JsonRequestBehavior.AllowGet);
-                    default: return Json(string.Empty);
+                        return Json(new LookupService().GetLookup(enumObj), JsonRequestBehavior.AllowGet); // Handled in lookup service
+                    default: break;//return Json(string.Empty, JsonRequestBehavior.AllowGet);
                 }
             }
 

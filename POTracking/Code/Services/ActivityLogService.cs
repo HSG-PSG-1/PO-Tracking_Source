@@ -134,7 +134,7 @@ namespace POT.Services
             aHisObj.ActivityID = (int)Act;
             //Set lastmodified fields
             aHisObj.UserID = Usr.ID;
-            aHisObj.UserText = Usr.Name;
+            aHisObj.UserText = Usr.Email;// Name;
             aHisObj.ActDateTime = DateTime.Now;
 
             dbc.ActivityHistories.InsertOnSubmit(aHisObj);

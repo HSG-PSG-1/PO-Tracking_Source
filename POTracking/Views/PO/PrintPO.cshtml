@@ -2,15 +2,15 @@
 @{ Response.CacheControl = "no-cache"; }
 @{ Response.AddHeader("Pragma", "no-cache"); }
 @{ Response.Expires = -1; }
-@model POT.DAL.POInternalPrint
+@*model POT.DAL.POInternalPrint*@
 @using POT.DAL
 @using HSG.Helper
 @{
-    vw_POHeader view = @Model.view;
+    /*vw_POHeader view = @Model.view;
     //List<POComment> comments = @Model.comments;
     //List<POFile> filesH = @Model.filesH;
     List<vw_POLine> items = @Model.items;
-
+    */
     string root = Defaults.getAbsSiteURL(Request.Url.ToString());
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -34,6 +34,18 @@
         .noBorder tfoot tr td
         {border:red;}
     </style>
+    <script language="javascript" type="text/javascript">
+        window.initChildFrame = function (headerViewModel, linesViewModel, LinesOrderExtTotal, OrderTotal) {
+        //TotalAmtInvoiced
+            headerViewModel.LinesOrderExtTotal = ko.observable(parseFloat(LinesOrderExtTotal));
+            headerViewModel.OrderTotal = ko.observable(parseFloat(OrderTotal));
+            //window.ko = ko;
+            ko.applyBindings(headerViewModel, document.getElementById("tblPOHdr"));
+            ko.applyBindings(headerViewModel, document.getElementById("tblVendorShip"));
+            ko.applyBindings(headerViewModel, document.getElementById("tblfooter"));
+            ko.applyBindings(linesViewModel, document.getElementById("tblLines"));            
+            }
+    </script>
 </head>
 <body style="background-color: #ffffff; margin: 1px 1px 1px 1px;">
     <div style="text-align: right" onclick="window.print();">
@@ -73,23 +85,23 @@
                 @*Report Header 2 : START*@
                 <br />
                 <b class="PrintHeading">PURCHASE ORDER</b><br /><br />
-                <table align="right">
+                <table align="right" id="tblPOHdr">
                     <tr>
                         <td>
-                            <table width="90%" cellpadding="6" cellspacing="3" align="left">
+                            <table width="90%" cellpadding="6" cellspacing="3" align="left" data-bind="with: header">
                                 <tr>
                                     <td nowrap="nowrap" align="right">
                                         ORDER DATE:
                                     </td>
                                     <td nowrap="nowrap">
-                                        <b>@view.PODate.Value.ToString(Defaults.dtFormat, Defaults.ci)</b>
+                                        <b data-bind="date:PODate()"></b>
                                     </td>
                                     <td>&nbsp;&nbsp;</td>
                                     <td nowrap="nowrap" align="right">
                                         TERMS OF SALE:
                                     </td>
                                     <td nowrap1="nowrap">
-                                        <b>@view.TermsDescription</b>
+                                        <b data-bind="text:TermsDescription()"></b>
                                     </td>
                                 </tr>
                                 <tr>
@@ -97,14 +109,14 @@
                                         P.O.NUMBER:
                                     </td>
                                     <td nowrap="nowrap">
-                                        <b>@view.PONumber</b>
+                                        <b data-bind="text:PONumber()"></b>
                                     </td>
                                     <td>&nbsp;&nbsp;</td>
                                     <td nowrap="nowrap" align="right">
                                         DELIVERY TERMS:
                                     </td>
                                     <td nowrap="nowrap">
-                                        <b>@view.FOB</b>
+                                        <b data-bind="text:FOB()"></b>
                                     </td>
                                 </tr>
                                 <tr>
@@ -112,14 +124,14 @@
                                         VENDOR NUMBER:
                                     </td>
                                     <td nowrap="nowrap">
-                                        <b>@view.VendorNumber</b>
+                                        <b data-bind="text:VendorNumber()"></b>
                                     </td>
                                     <td>&nbsp;&nbsp;</td>
                                     <td nowrap="nowrap" align="right">
                                         ETA:
                                     </td>
                                     <td nowrap="nowrap">
-                                        <b>@view.Eta.Value.ToString(Defaults.dtFormat, Defaults.ci)</b>
+                                        <b data-bind="date:Eta()"></b>
                                     </td>
                                 </tr>
                                 <tr>
@@ -127,14 +139,14 @@
                                         FREIGHT:
                                     </td>
                                     <td nowrap="nowrap">
-                                        <b>@view.ShipVia</b>
+                                        <b data-bind="text:ShipVia()"></b>
                                     </td>
                                     <td>&nbsp;&nbsp;</td>
                                     <td nowrap="nowrap" align="right">
                                         CONTAINER TYPE:
                                     </td>
                                     <td nowrap="nowrap">
-                                        <b>@view.ContainerTypeCode</b>
+                                        <b data-bind="text:ContainerTypeCode()"></b>
                                     </td>
                                 </tr>
                             </table>
@@ -150,7 +162,7 @@
         <tr>
             <td>
                 @* Vendor, ShipTo : START *@
-                <table class="thinBorder" width="100%">
+                <table class="thinBorder" width="100%" data-bind="with: header" id="tblVendorShip">
                     <tr class="header smallBold">
                         <th width="50%">
                             VENDOR
@@ -161,12 +173,13 @@
                     </tr>
                     <tr>
                         <td class="uline" width="30%" style="text-decoration: none" nowrap="nowrap" valign="top">
-                            @view.VendorName<br />@Html.Raw(view.VendorAddress)<br />
+                        <span data-bind="html: (VendorName()!= null?VendorName():'') + '<br/>' + VendorAddress() + '<br/>Attn.:' + (ConfirmTo()!= null?ConfirmTo():'') + '<br/>Fax:' + (FaxNumber()!= null?FaxNumber():'')"></span>
+                            @*view.VendorName<br />@Html.Raw(view.VendorAddress)<br />
                             Attn.:@view.ConfirmTo<br />
-                            Fax:@view.FaxNumber
+                            Fax:@view.FaxNumber*@
                         </td>
                         <td valign="top">
-                            @view.ShipToName<br />@Html.Raw(view.ShipToAddress)
+                            <span data-bind="html: (ShipToName()!= null?ShipToName():'') + '<br/>' + (ShipToAddress()!= null?ShipToAddress():'')"></span>
                         </td>
                     </tr>
                 </table>
@@ -174,11 +187,9 @@
             </td>
         </tr>
         <tr>
-            <td>
-                @*<div style="text-align: right">Total Items :<%= items.Count.ToString() %></div>*@
+            <td>                
                 <span class="small">&nbsp;</span>
-                @if (items.Count > 0 || true)
-                {
+                
 @*Items : START *@
                     <table width="100%" cellpadding="1" cellspacing="1">
                         <thead class="header">
@@ -200,30 +211,17 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody align="center" class="thinBorder">
-                            @foreach (var item in items)
-                            {
-                                <tr>
-                                    <td nowrap="nowrap">@item.ItemCode
-                                    </td>
-                                    <td>
-                                        &nbsp;@item.Description
-                                    </td>
-                                    <td nowrap="nowrap">@((item.QtyOrdered ?? 0.0M).ToString("#0"))
-                                    </td>
-                                    <td nowrap="nowrap">$@((item.UnitCost ?? 0.0M).ToString("#0.00"))
-                                    </td>
-                                    <td nowrap="nowrap" align="right">$@((item.OrderExtension ?? 0.0M).ToString("#0.00"))
-                                    </td>
-                                </tr>                            
-                            }
-                        </tbody>
-                        <tfoot class="noBorder">
+                        <tbody align="center" data-bind="foreach: Lines()" id="tblLines" class="thinBorder">
+                            <td data-bind="text:ItemCode()"></td>
+                            <td data-bind="text:Description()"></td>
+                            @*<td align="right" data-bind="text:QtyOrdered() != null ? QtyOrdered() : 0"></td>*@
+                            <td align="right" data-bind="text:QtyOrdered() > 0 ? QtyOrdered() : ''"></td>
+                            @*<td align="right" data-bind="text:'$' + (UnitCost() != null ? UnitCost() : 0.00).toFixed(2)"></td>*@
+                            <td align="right" data-bind="text:UnitCost() > 0.00 ? '$'+ UnitCost().toFixed(2) : ''"></td>
+                            <td align="right" data-bind="text:OrderExtension() > 0.00 ? '$' + OrderExtension().toFixed(2) : ''"></td>
+                            </tbody>
+                        <tfoot class="noBorder" data-bind="with: header" id="tblfooter">
                             @*Report Footer : START*@
-                            @{
-                    decimal LinesOrderExtTotal
-                                = items.Sum(i => Math.Round(i.OrderExtension ?? 0.0M, 2));// .Where(c => !c._Deleted)
-                            }
                             <tr>
                                 <td colspan="5" class="small">
                                     &nbsp;
@@ -231,20 +229,22 @@
                             </tr>
                             <tr>
                                 <td>FILL SIZE: </td>
-                                <td colspan="2"><b>@view.FillerSize</b></td>
+                                <td><b data-bind="text:FillerSize()"></b></td>
+                                <td class="smallBold" align="right">Order Total: <b data-bind="text:$parent.OrderTotal()"></b></td>
                                 <td nowrap="nowrap" align="right" class="smallBold">Net Order:</td>
-                                <td align="right">$@LinesOrderExtTotal.ToString("#0.00")</td>
+                                <td align="right">$<span data-bind="html:$parent.LinesOrderExtTotal().toFixed(2)"></span></td>                                
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
                                 <td nowrap="nowrap" align="right" class="smallBold">Frieght:</td>
-                                <td align="right" class="uline">$@((view.FreightAmount ?? 0.00M).ToString("#0.00"))</td>
+                                <td align="right" class="uline">$<span data-bind="html:FreightAmount().toFixed(2)"></span>                                
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
                                 <td nowrap="nowrap" align="right"><b>Order Total:</b></td>
-                                <td align="right">
-                                    <b>$@Html.Raw((LinesOrderExtTotal + view.FreightAmount ?? 0.0M).ToString("#0.00"))</b>
+                                <td align="right"> @*(FreightAmount() != null ? FreightAmount() : 0.00)*@
+                                    <b>$<span data-bind="html:($parent.LinesOrderExtTotal() + FreightAmount()).toFixed(2)"></span></b>
                                 </td>
                             </tr>
                             <tr>
@@ -264,10 +264,17 @@
                             @*Report Footer : END*@
                         </tfoot>
                     </table>
-@*Items : END *@
-                }
+@*Items : END *@               
             </td>
         </tr>
     </table>
 </body>
+<script src="@Url.Content("~/Content/jQUI/min/jquery-1.9.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/jQUI/min/jquery-migrate-1.1.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/Scripts/KO/knockout-2.2.0.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/Scripts/KO/knockout.mapping-latest.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/Scripts/KO/KoExtra.js")" type="text/javascript"></script>
+<script language="javascript" type="text/javascript">
+    window.opener.invokeBinding(window);
+</script>
 </html>

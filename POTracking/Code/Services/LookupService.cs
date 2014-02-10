@@ -62,7 +62,11 @@ namespace POT.Services
                     break;
                 case Source.Internal:
                 case Source.Vendor:
-                    results = new OrgService().GetOrgs(src, term);
+                    if (_Session.IsOnlyVendor)
+                        results = new List<POT.Models.Lookup>(){new Lookup(){ id = _SessionUsr.OrgID.ToString(),
+                            value = _SessionUsr.OrgName }}.AsQueryable();
+                    else
+                        results = new OrgService().GetOrgs(src, term);
                     break;
                 case Source.Item://HT: Almost obsolete for now
                     results = from i in dbc.MasterItems

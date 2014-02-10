@@ -180,7 +180,7 @@
       <Column Name="ProductLine" Type="System.String" DbType="NVarChar(4)" CanBeNull="true" />
       <Column Name="ExtendedDescription" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
       <Column Name="Weight" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
       <Column Name="VendorAliasItemNumber" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
       <Column Name="QtyOrdered" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
       <Column Name="QtyReceived" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
@@ -467,7 +467,7 @@
       <Column Name="UnitOfMeasure" Type="System.String" DbType="NVarChar(4)" CanBeNull="true" />
       <Column Name="WarehouseCode" Type="System.String" DbType="NVarChar(3)" CanBeNull="true" />
       <Column Name="ExtendedDescription" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
       <Column Name="QtyOrdered" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
       <Column Name="QtyReceived" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />
       <Column Name="UnitCost" Type="System.Decimal" DbType="Decimal(15,4)" CanBeNull="true" />

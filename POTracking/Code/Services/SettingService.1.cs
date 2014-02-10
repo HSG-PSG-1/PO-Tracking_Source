@@ -38,7 +38,7 @@ namespace POT.Services
                 return (from s in dbc.Settings
                         join u in dbc.Users on new { UserID = s.LastModifiedBy } equals new { UserID = u.ID } into msu
                         from usr in msu.DefaultIfEmpty() /* Make sure its left outer-join otherwise it'll not display records! */
-                        select Transform(s, usr.Email)).ToList();
+                        select Transform(s, usr.Name)).ToList();
             }
         }
 

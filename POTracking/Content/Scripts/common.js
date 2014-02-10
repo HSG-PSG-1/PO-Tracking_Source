@@ -295,8 +295,10 @@ function openWinScrollable(url, h, w) {
     //Make sure if the window is opened second time old one is closed
     if (targetWin1 != null) targetWin1.close();
     //Open new window
-    targetWin1 = window.open(url, "_blank", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes," + 
+    targetWin1 = window.open(url, "_blank", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes," +
     " resizable=yes, copyhistory=no, width=" + w + ", height=" + h + ", top=" + top + ", left=" + left);
+
+    return targetWin1;
 }
 
 function setFocus(elemID) {    

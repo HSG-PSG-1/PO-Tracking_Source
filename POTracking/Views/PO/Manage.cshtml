@@ -4,7 +4,8 @@
 @{ ViewBag.Title = "PO"; Layout = Defaults.masterLayout;
    bool IsOnlyVendor = _Session.IsOnlyVendor;
    bool printPOAfterSave = (bool)ViewData["printPOAfterSave"];
-   string poPrintopenWindow = "openWinScrollable('" + Url.Action("Print", "PO", new { POID = Model.ID }) + "',648,838);";      
+   string poPrintopenWindow = "openWinScrollable('" + Url.Action("Print", "PO", new { POID = Model.ID }) + "',648,838);";
+   string poPrintKOopenWindow = "openWinScrollable('" + Url.Action("PrintPO", "PO", new { POID = Model.ID }) + "',648,838);";      
 }
 @section HeadContent {
     <script type="text/javascript">        
@@ -75,7 +76,7 @@
         {
             background-color: #f5f5f5;
         }
-    </style>
+    </style>    
 }
 @{ bool isNewPO = (Model.ID <= Defaults.Integer);
    string cancelorDelete = isNewPO ? "Cancel" : "Delete";
@@ -204,7 +205,7 @@
                     <li><a href="#tabs-4" href1='@Url.Action("Comments", new { POGUID = Model.POGUID })'>
                         <span class="blue">4.Comments</span></a></li>
                     <li><a href="#tabs-5" href1='@Url.Action("Files", new { POGUID = Model.POGUID })'>
-                        <span class="blue">5.Files</span></a></li>
+                        <span class="blue">5.Files</span></a></li>                    
                 </ul>
                 <div id="tabs-1" name="tabs-1">
                     <div id="divHdr" data-bind="with: header">
@@ -385,7 +386,7 @@
                                                     Code :&nbsp;
                                                 </td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
-                                                    <input type="text" id="ShipToCode" name="ShipToCode" data-bind="value:ShipToCode" readonly="readonly" />
+                                                    <input type="text" id="ShipToCode" name="ShipToCode" data-bind="value:(ShipToCode() != 0)?ShipToCode():''" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -437,7 +438,7 @@
                                                     State :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
-                                                    <input type="text" id="ShipToCity" name="ShipToCity" data-bind="value:ShipToCity" readonly="readonly" />
+                                                    <input type="text" id="ShipToState" name="ShipToState" data-bind="value:ShipToState" readonly="readonly" />
                                                 </td>
                                                 <td align="right" nowrap="nowrap">
                                                     Country :&nbsp;
@@ -465,8 +466,8 @@
                                             <tr>
                                                 <td align="left" nowrap="nowrap">
                                                     <i>Last Modified By</i> :&nbsp;
-                                                    <i><span data-bind="text:LastModifiedBy()">
-                                                      ( <span data-bind="date: LastModifiedDate"></span>)
+                                                    <i><span data-bind="text:LastModifiedBy()"></span>
+                                                      (<span data-bind="date: LastModifiedDate()"></span>)
                                                     </i>
                                                 </td>
                                                 @*<td width="171">
@@ -494,8 +495,8 @@
                 </div>
                 <div id="tabs-5">
                     @* SO: 607985 - pass multiple viewdata*@
-                    @{Html.RenderPartial("Files", new ViewDataDictionary {{"Archived", Model.Archived} , {"POGUID" , Model.POGUID }}); }
-                </div>
+                    @{Html.RenderPartial("Files", new ViewDataDictionary { { "Archived", Model.Archived }, { "POGUID", Model.POGUID } }); }
+                </div>                
             </div>
         </td>
     </tr>
@@ -519,8 +520,12 @@ var headerViewModel = function () {
       $.getJSON('@Html.Raw(Url.Action("POEditKOViewModel", "PO", new { POGUID = Model.POGUID }))',
         function (jsonData) { doTabLoadWithKOCallback(jsonData); });
      }
+     var LinesOrderExtTotal, OrderTotal;
      function doTabLoadWithKOCallback(POVM) {
             
+            LinesOrderExtTotal = POVM.LinesOrderExtTotal;//TotalAmtInvoiced;
+            OrderTotal = POVM.OrderTotal;
+
             //POGUID = POVM.Header.POGUID;
 
            @if (!printPOAfterSave)
@@ -529,7 +534,7 @@ var headerViewModel = function () {
             createHeaderKO(POVM.Header); // KO for headerViewModel tab
 
             @*Pre-Load tabs*@
-            createLinesKO(POVM.Lines, POVM.LinesOrderExtTotal); @* loaded as Html.RenderPartial("Lines")*@
+            createLinesKO(POVM.Lines, POVM.LinesOrderExtTotal, POVM.OrderTotal); @* loaded as Html.RenderPartial("Lines")*@
             @*reloadWithCallback('@Url.Action("Lines", new { POGUID = Model.POGUID })','',"#tabs-2", 
                 function(){ createLinesKO(POVM.Lines, POVM.LinesOrderExtTotal) } );*@
 
@@ -576,6 +581,7 @@ var headerViewModel = function () {
         }
 
         var printPOAfterSave = false;
+        var printWindow;
         function checkAndPrint(btn, evt){
             if(confirmDeleteM(evt, 'Do you want to save any po changes before printing? Click cancel to continue print.')){
                 skipCommitChk=true;
@@ -583,8 +589,16 @@ var headerViewModel = function () {
                 $("#btnCommit").click();
                 return false;
             }
-            else
-                @Html.Raw(poPrintopenWindow)
+            else {
+                printWindow = @Html.Raw(poPrintKOopenWindow)
+                //child.window.initChildFrame(ko, viewModelheader, viewModelLines);
                 @*openWinScrollable('@Url.Action("Print", "PO", new { POID = Model.Info.ID })',648,838);*@
+            }
+        }
+
+        function invokeBinding(child)
+        { //SO:13953321 (KO doesn't work for IE < 9)
+           if(printWindow != null && printWindow.closed == false)
+            printWindow.initChildFrame(viewModelheader, viewModelLines, LinesOrderExtTotal, OrderTotal);
         }
 </script>

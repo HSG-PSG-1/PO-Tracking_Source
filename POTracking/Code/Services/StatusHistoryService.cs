@@ -20,7 +20,7 @@ namespace POT.Services
         public List<vw_StatusHistory_Usr> FetchAll(int POID)
         {
             // Fetch all status history records for a PO
-            IQueryable<vw_StatusHistory_Usr> vw = from vw_s in dbc.vw_StatusHistory_Usrs where vw_s.POID == POID select vw_s;
+            IQueryable<vw_StatusHistory_Usr> vw = from vw_s in dbc.vw_StatusHistory_Usrs where vw_s.POID == POID orderby vw_s.LastModifiedDate select vw_s;
 
             List<vw_StatusHistory_Usr> records = vw.ToList();
 

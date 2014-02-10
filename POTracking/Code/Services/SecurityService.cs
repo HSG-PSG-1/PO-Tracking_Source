@@ -37,7 +37,7 @@ namespace POT.Services
                               new { LastModifiedBy = u.ID } into u_join
                               from u in u_join.DefaultIfEmpty()
                               orderby r.SortOrder
-                              select new { r, u.Name });
+                              select new { r, u.Email });
 
                 //Create type 'RoleRights' based on UserRoles
                 List<RoleRights> roleRightData = new List<RoleRights>();
@@ -53,7 +53,7 @@ namespace POT.Services
                         SortOrder = data.r.SortOrder,                        
                         LastModifiedBy = data.r.LastModifiedBy,
                         LastModifiedDate = data.r.LastModifiedDate,
-                        LastModifiedByVal = data.Name,
+                        LastModifiedByVal = data.Email,
 
                         #region Configure RoleData
                         RoleData = new UserRole()
@@ -77,7 +77,7 @@ namespace POT.Services
                 }
 
                 //Add an empty record for Add new
-                roleRightData.Add(DefaultDBService.GetNewRoleRight(Defaults.Integer, _SessionUsr.UserName, sortOrder));
+                roleRightData.Add(DefaultDBService.GetNewRoleRight(Defaults.Integer, _SessionUsr.Email, sortOrder));
                 return roleRightData;
             }
         }

@@ -212,7 +212,7 @@ namespace POT.Services
                 #region Update
                 
                 //Set lastmodified fields
-                userObj.LastModifiedBy = _SessionUsr.ID; userObj.LastModifiedByVal = _SessionUsr.UserName;
+                userObj.LastModifiedBy = _SessionUsr.ID; userObj.LastModifiedByVal = _SessionUsr.Email;// UserName;
                 userObj.LastModifiedDate = DateTime.Now;
 
                 dbc.Users.Attach(userObj);//attach the object as modified
