@@ -14,13 +14,14 @@
             <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'PODateOnly')}">
             @Html.Raw(Html.SortableColumn("PO Date", "PODateOnly", reload, routeValues))            
             </th>
+            @if (!isVendor)
+            { 
             <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'VendorName')}">
             @Html.Raw(HttpUtility.HtmlDecode(Html.SortableColumn("Vendor", "VendorName", reload, routeValues)))
             @* For future: reload(this.href,'','#main');*@</th>
-            @if (!isVendor){ 
+            }
             <th nowrap="nowrap"data-bind="click: function(data,event){$root.sortData(data, event,'ShipToCity')}">
-            @Html.Raw(Html.SortableColumn("Ship To City", "ShipToCity", reload, routeValues))</th>
-            } 
+            @Html.Raw(Html.SortableColumn("Ship To City", "ShipToCity", reload, routeValues))</th>            
             <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'ETDOnly')}">
             @Html.Raw(HttpUtility.HtmlDecode(Html.SortableColumn("ETD", "ETDOnly", reload, routeValues)))</th>
             <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'ETAOnly')}">
@@ -54,12 +55,15 @@
         <div data-bind="attr: {id : 'dialog' + $data.ID}"></div>
         <div class="noBorder dDialog uline" data-bind="click: function(data,event){showDialog('Status',$data.ID);poObj = this;},html:$data.Status, attr:{id:'statusDIV' + $data.ID}"></div>        
         </td>
+        @if (!isVendor)
+        {
          <td align="center">
         <!-- ko if: CommentsExist -->         
             <input type="image" src="@Url.Content("~/Content/Images/comments.gif")" alt="View Comments" title="View Comments"
                 data-bind="visible: CommentsExist, click: function(data,event){showDialog('Comments',$data.ID);return false;}" />
         <!-- /ko -->
         </td>
+        }
         <td align="center">
         <!-- ko if: FilesHExist -->         
         <input type="image" src="@Url.Content("~/Content/Images/files.gif")" alt="View Files" title="View Files"

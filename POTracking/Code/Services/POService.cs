@@ -180,7 +180,11 @@ namespace POT.Services
 
         internal bool IsPOAccessible(int POId, int UserId, int OrgId)
         {
-            return (dbc.POHeaders.Where(c => c.VendorID == OrgId && c.ID == POId).Count() > 0);
+            if (_Session.IsAsiaVendor) // Special Case for Asia Vendor
+                return (dbc.POHeaders.Where(c => 
+                    (c.VendorID == Config.VendorIDDeestone || c.VendorID == Config.VendorIDSvizz) && c.ID == POId).Count() > 0);
+            else
+                return (dbc.POHeaders.Where(c => c.VendorID == OrgId && c.ID == POId).Count() > 0);
         }
 
         #endregion

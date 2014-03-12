@@ -72,7 +72,7 @@ namespace POT.Controllers
 
             //vw_ActivityLog searchOptions = (vw_ActivityLog)(searchOpts);
 
-            if (_Session.IsOnlyVendor) //If its customer he can view only his activity
+            if (_Session.IsAsiaVendor) //If its customer he can view only his activity
                 (searchOpts as vw_ActivityLog).UserID = _SessionUsr.ID; // searchOptions
 
             if (fetchOtherData){

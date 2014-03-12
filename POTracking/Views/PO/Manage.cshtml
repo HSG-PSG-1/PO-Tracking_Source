@@ -2,7 +2,7 @@
 @using System.Collections
 @using HSG.Helper
 @{ ViewBag.Title = "PO"; Layout = Defaults.masterLayout;
-   bool IsOnlyVendor = _Session.IsOnlyVendor;
+   bool IsAsiaVendor = _Session.IsAsiaVendor;
    bool printPOAfterSave = (bool)ViewData["printPOAfterSave"];
    string poPrintopenWindow = "openWinScrollable('" + Url.Action("Print", "PO", new { POID = Model.ID }) + "',648,838);";
    string poPrintKOopenWindow = "openWinScrollable('" + Url.Action("PrintPO", "PO", new { POID = Model.ID }) + "',648,838);";      
@@ -179,7 +179,7 @@
                                     }
                                     <input type="reset" value="Cancel" class="button" onclick="try{window.location.href='@Url.Action("Cancel", new { POID = Model.ID, POGUID = Model.POGUID })'}catch(ex){;}"/>&nbsp;
                                     @if (!isNewPO)
-                                    { //&& !IsOnlyVendor
+                                    { //&& !IsAsiaVendor
                                         <input type="button" value="Print" class="button" onclick="return checkAndPrint(this, event);" />@Html.Raw("&nbsp;")}
 @*if (_Session.IsInternal && !isNewPO)
                                     {

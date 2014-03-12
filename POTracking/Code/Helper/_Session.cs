@@ -95,7 +95,7 @@ namespace HSG.Helper
         {
             get
             {
-                try { return IsAdmin || (_SessionUsr.RoleID == (int)SecurityService.Roles.Vendor); }
+                try { return IsAdmin || (_SessionUsr.RoleID == (int)SecurityService.Roles.AsiaVendor); }
                 catch { return false; }
             }
         }
@@ -104,7 +104,26 @@ namespace HSG.Helper
         {
             get
             {
-                try { return (_SessionUsr.RoleID == (int)SecurityService.Roles.Vendor); }
+               /* try { return (_SessionUsr.RoleID == (int)SecurityService.Roles.Vendor); }
+                catch { return false; }
+                */return false;
+            }
+        }
+
+        public static bool IsAsiaVendor
+        {
+            get
+            {
+                try { return (_SessionUsr.RoleID == (int)SecurityService.Roles.AsiaVendor); }
+                catch { return false; }
+            }
+        }
+
+        public static bool IsAsiaOperations
+        {
+            get
+            {
+                try { return (_SessionUsr.RoleID == (int)SecurityService.Roles.AsiaOperations); }
                 catch { return false; }
             }
         }

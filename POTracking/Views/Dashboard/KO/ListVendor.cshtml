@@ -3,7 +3,7 @@
 @using HSG.Helper
 @{  object routeValues = new { qData = Request["qData"] };
     string reload = "return false;";
-    /*bool isVendor = _Session.IsOnlyVendor;*/       }
+    /*bool isVendor = _Session.IsAsiaVendor;*/       }
 <div style="width:99%; text-align:center" data-bind="visible:filteredRecords().length < 1">No records found</div>
 <table width="100%" class="thinBorder" data-bind="visible:filteredRecords().length > 0">
     <thead class="header">

@@ -35,7 +35,7 @@
                         <td>@Html.TextBox("FileName", logSearch.FileName, txtAttr)</td>
                         </tr>
                     <tr>
-                        @if (!_Session.IsOnlyVendor)
+                        @if (!_Session.IsAsiaVendor)
                         { 
                         <td nowrap="nowrap" width="5%">User</td>
                         <td nowrap="nowrap">@Html.DropDownList("UserID", new SelectList((IEnumerable)ViewData["UserList"], "id", "value", logSearch.UserID), " ", new { @class = "dropDown" })</td>
@@ -46,7 +46,7 @@
                                 @Html.Hidden("ActDateFrom", logSearch.ActDateFrom.HasValue ? logSearch.ActDateFrom.Value.ToString(Defaults.dtUniFormat, Defaults.ci) : "", new { @id = "ActDateFrom" })
                         </td>
                         <td nowrap="nowrap" width="5%">Activity Date To</td>
-                        <td @if (_Session.IsOnlyVendor) { Html.Raw("colspan=\"3\""); } >
+                        <td @if (_Session.IsAsiaVendor) { Html.Raw("colspan=\"3\""); } >
                         @Html.TextBox("ActDateTo1", logSearch.ActDateTo.HasValue ? logSearch.ActDateTo.Value.ToString(Defaults.dtFormat, Defaults.ci) : "", new { @id = "ActDateTo1" })
                         @Html.Hidden("ActDateTo", logSearch.ActDateTo.HasValue ? logSearch.ActDateTo.Value.ToString(Defaults.dtFormat, Defaults.ci) : "", new { @id = "ActDateTo" })
                         </td>

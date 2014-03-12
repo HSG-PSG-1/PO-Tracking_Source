@@ -12,7 +12,7 @@ tbody tr td{background-color:#ffffff;}
     <tr>
         <th>PO #</th>
         <th>PO Date</th>
-        @if (!_Session.IsOnlyVendor){<th>Vendor</th>}        
+        @if (!_Session.IsAsiaVendor){<th>Vendor</th>}        
         <th>Shtip To City</th>        
         <th>ETD</th>
         <th>ETA</th>        
@@ -26,7 +26,7 @@ tbody tr td{background-color:#ffffff;}
     <tr>
         <td align="center">@item.PONumber</td>
         <td align="center">@Html.Raw(item.PODate.HasValue?item.PODate.Value.ToString(Defaults.dtFormat, Defaults.ci):"")</td>
-        @if (!_Session.IsOnlyVendor)
+        @if (!_Session.IsAsiaVendor)
         {
         <td align="center">@item.VendorName</td>
         }

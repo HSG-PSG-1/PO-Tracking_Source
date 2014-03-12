@@ -2,7 +2,7 @@
 @* Small place holder diaplayed along with the top header *@
 @{
     string LogOnHTML = "";    
-    string template = "Welcome {0} ({1} of {2}) ";
+    string template = "Welcome {0} ({1} of {2}) ";    
  }
     @if(_SessionUsr.RoleID == -1){
         <span>[ @Html.ActionLink("Log On", "Login", "Common") ]</span>

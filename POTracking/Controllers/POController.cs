@@ -139,7 +139,7 @@ namespace POT.Controllers
 
             #region Fetch PO data and set Viewstate
             vw_POHeader vw = new POService().GetPOByIdForPrint(POID,
-                ref comments, ref filesH, ref items, !_Session.IsOnlyVendor);
+                ref comments, ref filesH, ref items, !_Session.IsAsiaVendor);
 
             vw.POGUID = System.Guid.NewGuid().ToString();
 

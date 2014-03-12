@@ -113,9 +113,7 @@ namespace HSG.Helper
                 return flag;
             }
         }
-
-        
-
+                
         /// Application Error Email Notifiers
         /// <summary>
         /// Application Error Email Notifiers
@@ -135,6 +133,32 @@ namespace HSG.Helper
         /// </summary>
         public static int CustCodeLenInLocCode
         { get { return int.Parse(ConfigurationManager.AppSettings.Get("custCodeLenInLocCode")); } }
+
+        /// VendorID for Deestone
+        /// <summary>
+        /// VendorID for Deestone
+        /// </summary>
+        public static int VendorIDDeestone
+        {
+            get
+            {
+                try { return int.Parse(ConfigurationManager.AppSettings.Get("vendorIDDeestone")); }
+                catch (Exception ex) { return -1; }
+            }
+        }
+
+        /// VendorID for Svizz
+        /// <summary>
+        /// VendorID for Svizz
+        /// </summary>
+        public static int VendorIDSvizz
+        {
+            get
+            {
+                try { return int.Parse(ConfigurationManager.AppSettings.Get("VendorIDSvizz")); }
+                catch (Exception ex) { return -1; }
+            }
+        }
 
         #endregion //Properties
 
