@@ -50,7 +50,9 @@ namespace HSG.Helper
         public const string dtTFormat = "MM/dd/yyyy hh:mm:ss tt"; // Make sure you use "ci" with it or it'll become MM-dd-yyyy
         public static readonly System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo(String.Empty, false);
 
-        public const string bindKOdatepicker = "datepicker:{0}, datepickerOptions: {{ minDate: minSQLDate, maxDate: maxSQLDate }}";
+        // Make sure its altFormat NOT altformat - js is case sensitive
+        public const string bindKOdatepicker = 
+            "datepicker:{0}, datepickerOptions: {{ minDate: minSQLDate, maxDate: maxSQLDate, altFormat:'dd-M-yy', altField:'#{0}Str' }}";
 
         public static DateTime getValidDate(DateTime dt)
         {// Check and return a valid(within its range SQL date

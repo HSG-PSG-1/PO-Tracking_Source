@@ -10,7 +10,7 @@ var delTR = ""; // Required tohold te deleted TR fopas using taconite plugin
 function checkReq(ctrl, impactCtrl) { if (!($(ctrl).val().toString().length > 0)) $(impactCtrl).val('').trigger("change"); }
 // Log the selected item.id or empty into id textbox
 function log(item, idBox, txtBox) {
-    $(idBox).val(item ? item.id : '').trigger("change");
+    $(idBox).val(item ? item.id : '').trigger("change");    
     //try { $(txtBox).validate().valid(); } catch (e) { }
 }
 //Toggle the display of the two images in parent (make sure you follow the sequence)
@@ -34,7 +34,8 @@ function renderAutoComplete(url, idBox, txtBox) {
     , autoFocus: true
     , minLength: autoCompMinLen
     , select: function (event, ui) { if (ui.item.id == null) { event.preventDefault(); } else log(ui.item, idBox, txtBox); }
-    , focus: function(event, ui) {  if (ui.item.id == null) event.preventDefault(); }
+    , focus: function (event, ui) { if (ui.item.id == null) event.preventDefault(); }
+    , change: function (event, ui) { $(txtBox).trigger("change"); } // for chrome
     //, search: function(event, ui) {$("#msg").show();$("#msg").html($(txtBox + ', li').length); $("#msg").dialog();}
     //Tie up events to toggle dropdown images
     , open: function(event, ui) { toggleDDimg(ddSpan, true); $("#msg").hide(); } //$(txtBox).find('li').length

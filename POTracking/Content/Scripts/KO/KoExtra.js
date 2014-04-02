@@ -127,55 +127,58 @@ function doRequiredChk(ctrl)
 
 ko.bindingHandlers.datepicker = {
     init: function (element, valueAccessor, allBindingsAccessor) {
-        try{
-        //initialize datepicker with some optional options
-        var options = allBindingsAccessor().datepickerOptions || {};
+        try {
+            //initialize datepicker with some optional options
+            var options = allBindingsAccessor().datepickerOptions || {};
 
-        var funcOnSelectdate = function () {
-            var observable = valueAccessor();
-            observable($(element).datepicker("getDate"));
-        }
+            var funcOnSelectdate = function () {
+                var observable = valueAccessor();
+                observable($(element).datepicker("getDate"));
 
-        options.onSelect = funcOnSelectdate;
+                // explicitly trigger change for alt field which stored the text date
+                try { $($(element).datepicker("option", 'altField')).change(); } 
+                catch (e) { ; } 
+            }
 
-        $(element).datepicker(options);
+            options.onSelect = funcOnSelectdate;
+            $(element).datepicker(options);
 
-        //handle the field changing
-        ko.utils.registerEventHandler(element, "change", funcOnSelectdate);
+            //handle the field changing
+            ko.utils.registerEventHandler(element, "change", funcOnSelectdate);
 
-        //handle disposal (if KO removes by the template binding)
-        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-            $(element).datepicker("destroy");
-        });
+            //handle disposal (if KO removes by the template binding)
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                $(element).datepicker("destroy");
+            });
 
         } catch (ex) { alert(ex); }
     },
     update: function (element, valueAccessor) {
-    try{
-        var value = ko.utils.unwrapObservable(valueAccessor());
+        try {
+            var value = ko.utils.unwrapObservable(valueAccessor());
 
-        //handle date data coming via json from Microsoft
-        if (String(value).indexOf('/Date(') == 0) {
-            value = new Date(parseInt(value.replace(/\/Date\((.*?)\)\//gi, "$1")));
-        }
+            //handle date data coming via json from Microsoft
+            if (String(value).indexOf('/Date(') == 0) {
+                value = new Date(parseInt(value.replace(/\/Date\((.*?)\)\//gi, "$1")));
+            }
 
-        current = $(element).datepicker("getDate");
+            current = $(element).datepicker("getDate");
 
-        if (value - current !== 0) {
-            $(element).datepicker("setDate", value);
-        }
+            if (value - current !== 0) {
+                $(element).datepicker("setDate", value);
+            }
 
-        /* For string data passed as yy-mm-dd
-        if (typeof (value) === "string") { // JSON string from server
-        value = value.split("T")[0]; // Removes time
-        }
+            /* For string data passed as yy-mm-dd
+            if (typeof (value) === "string") { // JSON string from server
+            value = value.split("T")[0]; // Removes time
+            }
 
-        var current = $(element).datepicker("getDate");
+            var current = $(element).datepicker("getDate");
 
-        if (value - current !== 0) {
-        var parsedDate = $.datepicker.parseDate('yy-mm-dd', value);
-        $(element).datepicker("setDate", parsedDate);
-        } */
+            if (value - current !== 0) {
+            var parsedDate = $.datepicker.parseDate('yy-mm-dd', value);
+            $(element).datepicker("setDate", parsedDate);
+            } */
 
         } catch (ex) { alert(ex); }
     }

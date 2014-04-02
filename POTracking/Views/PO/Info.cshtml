@@ -22,6 +22,7 @@
                         @Html.TextBox("PoPlacedDate", Model.Info.PoPlacedDate,
                         new { data_bind = string.Format(Defaults.bindKOdatepicker, "PoPlacedDate") })
                         @*"datepicker:PoPlacedDate, datepickerOptions: { minDate: minSQLDate, maxDate: maxSQLDate }"*@
+                        @Html.Hidden("PoPlacedDateStr", Model.Info.PoPlacedDateStr, new { data_bind = "value:PoPlacedDateStr" })
                     </td>
                     <td align="right" nowrap="nowrap">
                         BL Number :&nbsp;
@@ -37,12 +38,14 @@
                     </td>
                     <td align="left" nowrap="nowrap">
                         @Html.TextBox("DateLcOpened", Model.Info.DateLcOpened, new { data_bind = string.Format(Defaults.bindKOdatepicker, "DateLcOpened") })
+                        @Html.Hidden("DateLcOpenedStr", Model.Info.DateLcOpenedStr, new { data_bind = "value:DateLcOpenedStr" })
                     </td>
                     <td align="right" nowrap="nowrap">
                         BL Date :&nbsp;
                     </td>
                     <td align="left" nowrap="nowrap">
                         @Html.TextBox("BLDate", Model.Info.BLDate, new { data_bind = string.Format(Defaults.bindKOdatepicker, "BLDate") })
+                        @Html.Hidden("BLDateStr", Model.Info.BLDateStr, new { data_bind = "value:BLDateStr" })
                     </td>
                 </tr>
                 <tr>
@@ -83,8 +86,8 @@
                         ETD :&nbsp;
                     </td>
                     <td align="left" nowrap="nowrap">
-                        @Html.TextBox("Etd", Model.Info.Etd,
-                        new { data_bind = string.Format(Defaults.bindKOdatepicker, "Etd") })
+                        @Html.TextBox("Etd", Model.Info.Etd, new { data_bind = string.Format(Defaults.bindKOdatepicker, "Etd") })
+                        @Html.Hidden("EtdStr", Model.Info.EtdStr, new { data_bind = "value:EtdStr" })
                     </td>
                     <td align="right" nowrap="nowrap">
                         Container No :&nbsp;
@@ -99,8 +102,8 @@
                         ETA :&nbsp;
                     </td>
                     <td align="left" nowrap="nowrap">
-                        @Html.TextBox("Eta", Model.Info.Eta,
-                        new { data_bind = string.Format(Defaults.bindKOdatepicker, "Eta") })
+                        @Html.TextBox("Eta", Model.Info.Eta, new { data_bind = string.Format(Defaults.bindKOdatepicker, "Eta") })
+                        @Html.Hidden("EtaStr", Model.Info.EtaStr, new { data_bind = "value:EtaStr" })
                     </td>
                     <td align="right" nowrap="nowrap">
                         Seal No :&nbsp;
@@ -251,7 +254,7 @@
              
             ko.applyBindings(viewModelPOInfo, document.getElementById("divPOInfo"));        
 
-            @*// Otherwise dtp will be overwritten
+            @*// below dtp will be overwritten by : ko.bindingHandlers.datepicker so don't try
             createjQDTP("PoPlacedDate");
             createjQDTP("DateLcOpened");
             createjQDTP("Etd");

@@ -50,13 +50,41 @@ namespace POT.DAL
         public List<POFile> aFiles { get; set; }
 
         public string AssignToVal { get; set; }
+
+        /*[JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime PODate { get; set; }
+        public string PODateStr { get { return Defaults.formattedDate(PODate); } }*/
+
+        // HT: Make sure this is a global neutral format like : dd-M-yy (i.e. 12-Mar-2014)
+        public string PODateStr { get; set; }
+        public string DateLcOpenedStr { get; set; }
+        public string EtaStr { get; set; }
+        public string EtdStr { get; set; }
+        public string PoPlacedDateStr { get; set; }
+        public string BLDateStr { get; set; }
         
-        public string PODateStr { get { return Defaults.formattedDate(PODate); } }
-        public string DateLcOpenedStr { get { return Defaults.formattedDate(DateLcOpened); } }
-        public string EtaStr { get { return Defaults.formattedDate(Eta); } }
-        public string EtdStr { get { return Defaults.formattedDate(Etd); } }
-        public string PoPlacedDateStr { get { return Defaults.formattedDate(PoPlacedDate); } }
-        public string BLDateStr { get { return Defaults.formattedDate(BLDate); } }        
+        #region Extra dates for timezone handling
+        public void setDatesFromStr()
+        {
+            //if (!string.IsNullOrEmpty(PODateStr) && this.PODate.HasValue) 
+            //try { this.PODate = DateTime.Parse(PODateStr); }            catch (Exception ex) { ;}
+            DateTime dt = DateTime.Today;
+            if (PODate.HasValue && DateTime.TryParse(PODateStr, out dt)) PODate = dt;
+            if (DateLcOpened.HasValue && DateTime.TryParse(DateLcOpenedStr, out dt)) DateLcOpened = dt;
+            if (Eta.HasValue && DateTime.TryParse(EtaStr, out dt)) Eta = dt;
+            if (Etd.HasValue && DateTime.TryParse(EtdStr, out dt)) Etd = dt;
+            if (PoPlacedDate.HasValue && DateTime.TryParse(PoPlacedDateStr, out dt)) PoPlacedDate = dt;
+            if (BLDate.HasValue && DateTime.TryParse(BLDateStr, out dt)) BLDate = dt;
+        }
+        /*
+        public string PODate1 { get { return Defaults.formattedDate(PODate); } }
+        public string DateLcOpened1 { get { return Defaults.formattedDate(DateLcOpened); } }
+        public string Eta1 { get { return Defaults.formattedDate(Eta); } }
+        public string Etd1 { get { return Defaults.formattedDate(Etd); } }
+        public string PoPlacedDate1 { get { return Defaults.formattedDate(PoPlacedDate); } }
+        public string BLDate1 { get { return Defaults.formattedDate(BLDate); } }
+        */
+        #endregion
 
         public int? OrderStatusIDold { get; set; }
         public int? AssignToIDold { get; set; }

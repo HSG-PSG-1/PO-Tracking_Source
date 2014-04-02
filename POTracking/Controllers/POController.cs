@@ -96,6 +96,8 @@ namespace POT.Controllers
             //HT: Note the following won't work now as we insert a record in DB then get it back in edit mode for Async edit
             //bool isAddMode = (poObj.ID <= Defaults.Integer); 
 
+            poObj.setDatesFromStr(); // ensure that the timezone & cultural neutral dates are set as expected
+
             #region Perform operation proceed and set result
 
             string result = new PAWPO(false).AsyncBulkAddEditDelKO(poObj, poObj.OrderStatusIDold ?? -1 /*OrderStatusIDold*/, comments, files);
