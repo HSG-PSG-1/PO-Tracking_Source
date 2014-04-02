@@ -417,9 +417,12 @@ function createToFromjQDTP(FromDtpID, ToDtpID) {
         numberOfMonths: 3,
         altField: FromDtpID, altFormat: 'dd M yy',
         onSelect: function (selectedDate) { $(FromDtpID).trigger("change"); }, // DON'T : .val(selectedDate)
-        onClose: function (selectedDate) {
+        onClose: function (selectedDate, inst) {
             $(ToDtpID1).datepicker("option", "minDate", selectedDate);
-            $(FromDtpID1).trigger("change"); // Specially for KO
+            if (selectedDate == '') { // special case SO : http://bugs.jqueryui.com/ticket/5734
+                $(inst.settings["altField"]).val(selectedDate);
+            }
+            $(FromDtpID).trigger("change"); // Specially for KO (not FromDtpID1)
         }
     });
     $(ToDtpID1).datepicker({
@@ -428,9 +431,13 @@ function createToFromjQDTP(FromDtpID, ToDtpID) {
         numberOfMonths: 3,
         altField: ToDtpID, altFormat: 'dd M yy',
         onSelect: function (selectedDate) { $(ToDtpID).trigger("change"); }, // DON'T : .val(selectedDate)        
-        onClose: function (selectedDate) {
+        onClose: function (selectedDate, inst) {
             $(FromDtpID1).datepicker("option", "maxDate", selectedDate);
-            $(ToDtpID1).trigger("change"); // Specially for KO
+
+            if (selectedDate == '') { // special case SO : http://bugs.jqueryui.com/ticket/5734
+                $(inst.settings["altField"]).val(selectedDate);
+            }
+            $(ToDtpID).trigger("change"); // Specially for KO (not ToDtpID1)
         }
     });
 

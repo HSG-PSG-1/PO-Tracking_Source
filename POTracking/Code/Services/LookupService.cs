@@ -62,9 +62,17 @@ namespace POT.Services
                     break;
                 case Source.Internal:
                 case Source.Vendor:
+
+                    #region Special case for Asia Vendor & Asia Operations user
                     if (_Session.IsOnlyVendor)
                         results = new List<POT.Models.Lookup>(){new Lookup(){ id = _SessionUsr.OrgID.ToString(),
                             value = _SessionUsr.OrgName }}.AsQueryable();
+                    else if (_Session.IsAsiaVendor)
+                        results = new List<POT.Models.Lookup>(){
+                            new Lookup(){ id = Config.VendorIDSvizz.ToString(), value = "Svizz-One Corporation Ltd." },
+                            new Lookup(){ id = Config.VendorIDDeestone.ToString(), value = "Deestone" }
+                        }.AsQueryable();
+                    #endregion
                     else
                         results = new OrgService().GetOrgs(src, term);
                     break;

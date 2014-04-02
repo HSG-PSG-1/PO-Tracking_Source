@@ -158,7 +158,7 @@ namespace POT.Controllers
 
             #region Check explicit Security (Only for Customer)
 
-            if (_Session.IsAsiaVendor)
+            if (_Session.IsOnlyVendor)
             {//Exclusive checks for Vendor user
                 switch (enumObj)
                 {//Because Vendor does not have access to any of this

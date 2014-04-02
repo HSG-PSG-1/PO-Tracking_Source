@@ -136,11 +136,19 @@ ko.bindingHandlers.datepicker = {
                 observable($(element).datepicker("getDate"));
 
                 // explicitly trigger change for alt field which stored the text date
-                try { $($(element).datepicker("option", 'altField')).change(); } 
-                catch (e) { ; } 
+                try { $($(element).datepicker("option", 'altField')).change(); }
+                catch (e) { ; }
             }
 
             options.onSelect = funcOnSelectdate;
+            
+            // NEW : special case SO : http://bugs.jqueryui.com/ticket/5734
+            options.onClose = function (selectedDate, inst) {
+                if (selectedDate == '') {
+                    $(inst.settings["altField"]).val(selectedDate);
+                }
+             };
+
             $(element).datepicker(options);
 
             //handle the field changing

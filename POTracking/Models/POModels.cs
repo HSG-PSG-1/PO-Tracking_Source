@@ -70,6 +70,8 @@ namespace POT.DAL
             //try { this.PODate = DateTime.Parse(PODateStr); }            catch (Exception ex) { ;}
             DateTime dt = DateTime.Today;
             if (PODate.HasValue && DateTime.TryParse(PODateStr, out dt)) PODate = dt;
+            //HT: Now that we've ensured that if date is set to null / empty so will the dateStr so the below will do but still for precaution
+            //if (DateTime.TryParse(PODateStr, out dt)) PODate = dt; 
             if (DateLcOpened.HasValue && DateTime.TryParse(DateLcOpenedStr, out dt)) DateLcOpened = dt;
             if (Eta.HasValue && DateTime.TryParse(EtaStr, out dt)) Eta = dt;
             if (Etd.HasValue && DateTime.TryParse(EtdStr, out dt)) Etd = dt;
