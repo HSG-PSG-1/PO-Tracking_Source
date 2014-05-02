@@ -8,7 +8,7 @@
    string poPrintKOopenWindow = "openWinScrollable('" + Url.Action("PrintPO", "PO", new { POID = Model.ID }) + "',648,838);";      
 }
 @section HeadContent {
-    <script type="text/javascript">        
+    <script type="text/javascript">
         var skipCommitChk = false;
         @* *********** Make sure common.js is included*********** *@
         $().ready(function() {
@@ -181,7 +181,7 @@
                                     @if (!isNewPO)
                                     { //&& !IsAsiaVendor
                                         <input type="button" value="Print" class="button" onclick="return checkAndPrint(this, event);" />@Html.Raw("&nbsp;")}
-@*if (_Session.IsInternal && !isNewPO)
+@*if (_Session.IsAdmin && !isNewPO)
                                     {
                                         <a href='@Url.Action("PrintPDF")' target="_blank">PDF</a>@Html.Raw("&nbsp;")@Html.Raw("&nbsp;")
                                     }*@

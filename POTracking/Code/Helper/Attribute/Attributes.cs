@@ -319,7 +319,8 @@ namespace HSG.Helper
         public bool IsPOAccessible(int POId)
         {//Check only for Vendors (for now)
             if (POId > Defaults.Integer)
-                return (!_Session.IsAsiaVendor || (POId <= HSG.Helper.Defaults.Integer) ||
+                //return (!_Session.IsAsiaVendor || (POId <= HSG.Helper.Defaults.Integer) ||
+                return (_Session.IsAdmin || (POId <= HSG.Helper.Defaults.Integer) ||
                     new POService().IsPOAccessible(POId, _SessionUsr.ID, _SessionUsr.OrgID));
             else
                 return true;

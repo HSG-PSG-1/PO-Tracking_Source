@@ -181,9 +181,15 @@ namespace POT.Services
         internal bool IsPOAccessible(int POId, int UserId, int OrgId)
         {
             if (_Session.IsAsiaVendor) // Special Case for Asia Vendor
-                return (dbc.POHeaders.Where(c => 
+                return (dbc.POHeaders.Where(c =>
                     (c.VendorID == Config.VendorIDDeestone || c.VendorID == Config.VendorIDSvizz) && c.ID == POId).Count() > 0);
-            else
+            else if (_Session.IsAsiaOperations) // Special Case for Asia Operations
+                return (dbc.POHeaders.Where(c =>
+                    (c.VendorID != Config.VendorIDDeestone && c.VendorID != Config.VendorIDSvizz) && c.ID == POId).Count() > 0);
+            // HT: Make sure this is AFTER AsiaOperations
+            else if (_Session.IsOrgInternal) // It can be an OrgType = Internal (but NONE of the above)
+                return true; // Because Org will be "Admin"
+            else // For separate Vendor!
                 return (dbc.POHeaders.Where(c => c.VendorID == OrgId && c.ID == POId).Count() > 0);
         }
 

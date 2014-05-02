@@ -73,7 +73,7 @@ namespace HSG.Helper
 
         #region Security objects
 
-        public static bool IsInternal
+        public static bool IsOrgInternal
         {
             get
             {
@@ -86,27 +86,27 @@ namespace HSG.Helper
         {
             get
             {
-                try { return (_SessionUsr.OrgTypeId == (int)OrgService.OrgType.Internal); }
+                try { return (_SessionUsr.RoleID == (int)SecurityService.Roles.Admin); }
                 catch { return false; }
             }
         }
 
-        public static bool IsVendor
+        /*public static bool IsVendor
         {
             get
             {
                 try { return IsAdmin || (_SessionUsr.RoleID == (int)SecurityService.Roles.AsiaVendor); }
                 catch { return false; }
             }
-        }
+        }*/
 
         public static bool IsOnlyVendor
         {
             get
             {
-               /* try { return (_SessionUsr.RoleID == (int)SecurityService.Roles.Vendor); }
+                try { return (_SessionUsr.OrgTypeId == (int)OrgService.OrgType.Vendor && !IsAsiaVendor); }
                 catch { return false; }
-                */return false;
+                //return false;
             }
         }
 

@@ -19,7 +19,7 @@ namespace POT.Services
 
         public enum Roles
         {//HT:CAUTION: Must match with that of the existing DB
-            Internal = 2,
+            Admin = 2,
             AsiaVendor,
             AsiaOperations // Make sure th Id matches and also make it CanDelete = false
             //,Vendor = 19
