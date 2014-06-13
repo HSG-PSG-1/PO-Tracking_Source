@@ -207,7 +207,7 @@
                                     <td nowrap="nowrap">@item.ItemCode
                                     </td>
                                     <td>
-                                        &nbsp;@item.Description
+                                        &nbsp;@Html.Raw(item.Description)
                                     </td>
                                     <td nowrap="nowrap">@((item.QtyOrdered ?? 0.0M).ToString("#0"))
                                     </td>

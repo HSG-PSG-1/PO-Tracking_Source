@@ -213,7 +213,7 @@
                         </thead>
                         <tbody align="center" data-bind="foreach: Lines()" id="tblLines" class="thinBorder">
                             <td data-bind="text:ItemCode()"></td>
-                            <td data-bind="text:Description()"></td>
+                            <td data-bind="html:Description()"></td>
                             @*<td align="right" data-bind="text:QtyOrdered() != null ? QtyOrdered() : 0"></td>*@
                             <td align="right" data-bind="text:QtyOrdered() > 0 ? QtyOrdered() : ''"></td>
                             @*<td align="right" data-bind="text:'$' + (UnitCost() != null ? UnitCost() : 0.00).toFixed(2)"></td>*@

@@ -202,6 +202,9 @@
     <Content Include="Content\Site.css" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Browsers\BrowserFile.browser">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Code\POTracking.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>POTracking.designer.cs</LastGenOutput>

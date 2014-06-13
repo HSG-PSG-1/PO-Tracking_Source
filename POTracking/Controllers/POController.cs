@@ -169,8 +169,11 @@ namespace POT.Controllers
             return View(printView);
         }
 
-        public ActionResult PrintPO(int POID)
+        public ActionResult PrintPO(int POID, string PONumber)
         {
+            //Log Activity
+            new ActivityLogService(ActivityLogService.Activity.POPrint).Add(new ActivityHistory() { POID = POID, PONumber = PONumber });
+            //Handled in KO
             return View();
         }
 
