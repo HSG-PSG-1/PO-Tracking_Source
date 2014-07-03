@@ -9,46 +9,46 @@ var commentsViewModel = function () {
     self.allComments = ko.observableArray();
     self.AssignTo = ko.observable();
     self.AssignToVal = ko.observable();
-    
+
     self.setEdited = function (comment) {
         comment._Edited(!comment._Added());
-        comment.PostedOn(Date111); 
+        comment.PostedOn(Date111);
     };
     self.setEditedFlag = function (comment) {
         comment._Edited(!comment._Added());
         comment.LastModifiedDate(Date111);
-        comment.PostedOn(Date111); 
+        comment.PostedOn(Date111);
     };
     self.addComment = function (comment) {
-        if (comment.Comment1 == null || comment.Comment1 == "")            
-            {/* http://knockoutjs.com/documentation/event-binding.html */
-                alert("Comment is a required field"); 
-                return false; 
-            }
+        if (comment.Comment1() == null || comment.Comment1 == "") {/* http://knockoutjs.com/documentation/event-binding.html */
+            alert("Comment is a required field");
+            return false;
+        }
         else {
             if (!IsCCEditMode) {
-                comment.ID = NextNewCommentID;
-                self.allComments.push(ko.mapping.fromJS(cloneObservable(comment)));
+                //comment.ID(NextNewCommentID);
+                self.allComments.push(cloneObservable(comment));
+                //self.allComments.push(ko.mapping.fromJS(cloneObservable(comment)));
 
                 self.sendEmailPost(comment);
 
                 NextNewCommentID = NextNewCommentID - 1;
                 self.emptyComment.ID = NextNewCommentID; // NOT WORKING as expected
-                    
-                self.cancelComment(comment);//commentToAdd(cloneObservable(self.emptyCommment));
-            } 
+
+                self.cancelComment(comment); //commentToAdd(cloneObservable(self.emptyCommment));
+            }
             else {//HT: if observable is set correctly nothing needs to be done
                 /*var index = self.allComments.indexOf(comment);
                 self.allComments.remove(comment);
                 self.allComments.splice(index, 0, comment);*/
-            ;}
+                ;
+            }
         }
         return true; /* because we need to ajax submit the form */
-    };        
+    };
 
     self.removeSelected = function (comment) {
-        if (comment != null)
-        {
+        if (comment != null) {
             comment._Deleted(true);
             if (comment._Added()) {
                 comment._Added(false);
@@ -67,8 +67,9 @@ var commentsViewModel = function () {
 
     self.cancelComment = function (comment) {
         IsCCEditMode = false;
-        self.commentToAdd(cloneObservable(self.emptyComment));
-        //self.commentToAdd = ko.mapping.fromJS(self.emptyComment); // HT: After making it an observable
+        self.commentToAdd.ID(self.emptyComment.ID); //NextNewCommentID
+        self.commentToAdd.Comment1(self.emptyComment.Comment1);
+        // WON'T work !self.commentToAdd = ko.mapping.fromJS(self.emptyComment);        
     };
 
     self.sendEmailPost = function (comment) {
@@ -76,18 +77,22 @@ var commentsViewModel = function () {
         var _PONumber = $("#PONumber").val();
         var proceed = false;
         proceed = !(comment == null || _AssignTo == null || _PONumber == null);
-            
-        if(proceed){
+
+        if (proceed) {
             $.post(commentsEmailURL, /*@Url.Action("CommentsKOEmail", "PO", new { POGUID = ViewData["POGUID"] })*/
-                    { 
+                    {
                     CommentObj: ko.mapping.toJSON(comment),
                     AssignTo: _AssignTo,
-                    PONumber : _PONumber
-                    },  
-                    function (result) {   
-                    //alert(result); HT: we can notify user if a succesful email was sent
-                        if(result)
-                            $("#AssignToIDold").val(_AssignTo).trigger("change");
+                    PONumber: _PONumber
+                },
+                    function (result) {
+                        //alert(result); HT: we can notify user if a succesful email was sent                        
+                        if (result) {
+                            var spn = '#emailResult'; $(spn).html($(spn).attr("title"));
+                            showOprResult(spn, 1);
+
+                            $("#AssignToOLD").val(_AssignTo).trigger("change");
+                        }
                     }
             );
         }
@@ -109,8 +114,8 @@ function createCommentsKO(data, AssignTo)
     viewModelComments.AssignTo(data.AssignTo);   $("#AssignToOLD").val(data.AssignTo);
     viewModelComments.AssignToVal("");
 
-    viewModelComments.commentToAdd(data.CommentToAdd); /* var mapping = {'ignore': ["PostedOn"]};*/
-    //viewModelComments.commentToAdd = ko.mapping.fromJS(data.CommentToAdd); /*  HT: NEW required for better observable based binding*/
+    //viewModelComments.commentToAdd(data.CommentToAdd); /* var mapping = {'ignore': ["PostedOn"]};*/
+    viewModelComments.commentToAdd = ko.mapping.fromJS(data.CommentToAdd); /*  HT: NEW required for better observable based binding*/
     viewModelComments.allComments = ko.mapping.fromJS(data.AllComments); //, mapping);
     viewModelComments.Users = ko.mapping.fromJS(data.Users);
              

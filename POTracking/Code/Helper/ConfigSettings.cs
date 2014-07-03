@@ -182,7 +182,7 @@ namespace HSG.Helper
             get
             {
                 try { return ConfigSettings[SettingService.settings.Contact_Email.ToString()].ToString(); }
-                catch (Exception ex) { return "contact@aot.com";/* Special use case for forgot pwd? */ }
+                catch (Exception ex) { return "contact@american-omni.com";/* Special use case for forgot pwd? */ }
             }
         }
 

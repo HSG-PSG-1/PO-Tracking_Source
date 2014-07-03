@@ -10,13 +10,13 @@
                     <tr>
                         <td colspan="4" align="center">
                             <div id="cmtOprMsg" style="text-align: center">
-                                &nbsp;</div>
+                            <span id='emailResult' title="Email queued for new comment"></span></div>
                             <div style="display: none">
                                 <input type="checkbox" data-bind="checked:_Added" />
-                                ID: <span data-bind="text:ID"></span>                                
-                                PO ID: <span data-bind="text:POID"></span>                                
-                                PostedOn:<input class="button" type="text" data-bind="date: PostedOn" />
-                                CommentBy:<input class="button" type="text" data-bind="value:CommentBy" />
+                                ID: <input type="text" data-bind="value:ID" />
+                                PO ID: <span data-bind="html:POID"></span>                                
+                                PostedOn:<input type="text" data-bind="date: PostedOn" />
+                                CommentBy:<input type="text" data-bind="value:CommentBy" />
                             </div>
                         </td>
                     </tr>
@@ -27,22 +27,23 @@
                         <td rowspan="2" width="60%">
                             <textarea data-bind="value:Comment1" class="textbox required" cols="60" id="Comment1"
                                 name="Comment1" onblur="return trimTextAreaMaxLen(this,4000);" rows="3" style="width: 98%"
-                                onkeyup='setSubmitBtn(this,"btnCmtAdd")'></textarea>
+                                onkeyup1='setSubmitBtn(this,"btnCmtAdd");setSubmitBtn(this,"AssignTo");'></textarea>
                         </td>
                         <td valign="top" nowrap="nowrap" align="right" width="5%">
                             Assign To :
                         </td>
                         <td valign="top" align="right" width="30%">
-                            <select id="AssignTo" class="dropbox" name="AssignTo" style="width: 350px;" data-bind="options: $parent.Users, value:$parent.AssignTo, optionsText: 'value', optionsValue:'id'"
+                            <select id="AssignTo" class="dropbox" name="AssignTo" style="width: 350px;" 
+                            data-bind="options: $parent.Users, value:$parent.AssignTo, optionsText: 'value', optionsValue:'id', enable: ($data.Comment1() != null && $data.Comment1().length > 0)"
                              onchange="setAssignTo(this)">
-                            </select><br /><!-- , enable: ($data.Comment1() != null && $data.Comment1().length > 0) -->
+                            </select><br /><!--  -->
                             <input id="AssignToVal" name="AssignToVal" type="hidden" data-bind="value:$parent.AssignToVal" />
                             <input id="AssignToOLD" name="AssignToOLD" type="hidden" />
                         </td>
                     </tr>
                     <tr>
                         <td align="right" nowrap="nowrap" colspan="2" valign="top">
-                            <input id="btnCmtAdd" type="button" data-bind="click:$parent.addComment" value="Add"
+                            <input id="btnCmtAdd" type="button" data-bind="click:$parent.addComment, enable: ($data.Comment1() != null && $data.Comment1().length > 0)" value="Add"
                                 class="button" />@*, enable: (Comment1 != null)*@
                             <input id="btnCmtReset" data-bind="click:$parent.cancelComment" type="reset" value="Cancel"
                                 class="button" />
