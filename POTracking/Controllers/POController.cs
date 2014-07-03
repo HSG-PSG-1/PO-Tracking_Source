@@ -119,9 +119,9 @@ namespace POT.Controllers
             if (success)
                 TempData["printPOAfterSave"] = printPOAfterSave.HasValue && printPOAfterSave.Value;
 
-            #region Send AssignTo email if Old value is other then the new one
-            if (poObj.AssignTo > 0 && poObj.AssignTo != poObj.AssignToIDold)
-                CommentService.SendEmail(POID, poObj.AssignTo.Value, poObj.PONumber, new POComment() { Comment1 = "(no comment)" });
+            #region Send AssignTo email if Old value is other then the new one (on hold / obsolete)
+            //if (poObj.AssignTo > 0 && poObj.AssignTo != poObj.AssignToIDold)
+            //    CommentService.SendEmail(POID, poObj.AssignTo.Value, poObj.PONumber, new POComment() { Comment1 = "(no comment)" });
             #endregion
 
             return RedirectToAction("Manage", new { POID = poObj.ID, activeTab = activeTab });

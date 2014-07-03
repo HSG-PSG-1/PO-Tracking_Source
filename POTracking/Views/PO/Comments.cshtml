@@ -13,15 +13,10 @@
                                 &nbsp;</div>
                             <div style="display: none">
                                 <input type="checkbox" data-bind="checked:_Added" />
-                                ID: <span data-bind="text:ID"></span>
-                                <br />
-                                PO ID: <span data-bind="text:POID"></span>
-                                <br />
-                                PostedOn:
-                                <input class="button" type="text" data-bind="date: PostedOn" /><br />
-                                CommentBy:
-                                <input class="button" type="text" data-bind="value:CommentBy" /><br />
-                                <br />
+                                ID: <span data-bind="text:ID"></span>                                
+                                PO ID: <span data-bind="text:POID"></span>                                
+                                PostedOn:<input class="button" type="text" data-bind="date: PostedOn" />
+                                CommentBy:<input class="button" type="text" data-bind="value:CommentBy" />
                             </div>
                         </td>
                     </tr>
@@ -39,8 +34,8 @@
                         </td>
                         <td valign="top" align="right" width="30%">
                             <select id="AssignTo" class="dropbox" name="AssignTo" style="width: 350px;" data-bind="options: $parent.Users, value:$parent.AssignTo, optionsText: 'value', optionsValue:'id'"
-                                onchange="setAssignTo(this)">
-                            </select><br />
+                             onchange="setAssignTo(this)">
+                            </select><br /><!-- , enable: ($data.Comment1() != null && $data.Comment1().length > 0) -->
                             <input id="AssignToVal" name="AssignToVal" type="hidden" data-bind="value:$parent.AssignToVal" />
                             <input id="AssignToOLD" name="AssignToOLD" type="hidden" />
                         </td>

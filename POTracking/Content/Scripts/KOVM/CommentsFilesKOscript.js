@@ -66,8 +66,9 @@ var commentsViewModel = function () {
 
 
     self.cancelComment = function (comment) {
-        IsCCEditMode = false;        
+        IsCCEditMode = false;
         self.commentToAdd(cloneObservable(self.emptyComment));
+        //self.commentToAdd = ko.mapping.fromJS(self.emptyComment); // HT: After making it an observable
     };
 
     self.sendEmailPost = function (comment) {
@@ -107,8 +108,9 @@ function createCommentsKO(data, AssignTo)
     viewModelComments.emptyComment = data.EmptyComment; /* THIS SHUD NOT BE AN OBSERVABLE*/
     viewModelComments.AssignTo(data.AssignTo);   $("#AssignToOLD").val(data.AssignTo);
     viewModelComments.AssignToVal("");
-             
+
     viewModelComments.commentToAdd(data.CommentToAdd); /* var mapping = {'ignore': ["PostedOn"]};*/
+    //viewModelComments.commentToAdd = ko.mapping.fromJS(data.CommentToAdd); /*  HT: NEW required for better observable based binding*/
     viewModelComments.allComments = ko.mapping.fromJS(data.AllComments); //, mapping);
     viewModelComments.Users = ko.mapping.fromJS(data.Users);
              
