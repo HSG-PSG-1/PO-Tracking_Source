@@ -116,7 +116,7 @@ namespace POT.Controllers
             //HttpContext context = ControllerContext.HttpContext.CurrentHandler;
             //Essense of : http://stephenwalther.com/blog/archive/2008/06/16/asp-net-mvc-tip-2-create-a-custom-action-result-that-returns-microsoft-excel-documents.aspx
             this.Response.Clear();
-            this.Response.AddHeader("content-disposition", "attachment;filename=" + "Dashboard_" + _SessionUsr.ID + ".xls");
+            this.Response.AddHeader("Content-Disposition", "attachment;filename=" + "Dashboard_" + _SessionUsr.ID + ".xls");
             this.Response.Charset = "";
             this.Response.Cache.SetCacheability(HttpCacheability.NoCache);
             this.Response.ContentType = "application/vnd.ms-excel";
