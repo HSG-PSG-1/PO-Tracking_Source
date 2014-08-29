@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Principal;
-using AdamTibi.Web.Security;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -37,8 +36,8 @@ namespace POT.Controllers
             if (authCookie != null)
             {
                 try
-                {// Set data as per cookie
-                    authCookie = HttpSecureCookie.Decode(authCookie);//HT: decode the encoded cookie
+                {// Set data as per cookie                    
+                    authCookie = new HttpCookie(Defaults.cookieName, Crypto.EncodeStr(authCookie.Value, false)); //authCookie = HttpSecureCookie.Decode(authCookie, CookieProtection.None);//HT: decode the encoded cookie
                     loginM.Email = authCookie.Values[Defaults.emailCookie];
                     loginM.Password = Crypto.EncodeStr(authCookie.Values[Defaults.passwordCookie], false);
                     loginM.RememberMe = true;
@@ -93,7 +92,11 @@ namespace POT.Controllers
                         return RedirectToAction("List", "Dashboard");
                 }
                 else // Login failed
-                    ModelState.AddModelError("", "The email and/or password provided is incorrect.");
+                {
+                    ModelState.AddModelError("", Defaults.InvalidEmailPWD);
+                    ViewData["oprSuccess"] = false;
+                    ViewData["err"] = Defaults.InvalidEmailPWD;
+                }
             }
 
             LogOff();// To make sure no session is set until Login (or it'll go in Login HttpGet instead of Post)            
@@ -116,9 +119,9 @@ namespace POT.Controllers
                 
                 ViewData["oprSuccess"] = oprSuccess;//Err msg handled in View
                 if (oprSuccess)//Send email
-                {
                     MailManager.ForgotPwdMail(Email, Pwd, new SettingService().GetContactEmail());
-                }
+                else
+                    ViewData["err"] = Defaults.ForgotPWDInvalidEmail;
             }
             #endregion
 
@@ -141,7 +144,10 @@ namespace POT.Controllers
             authRememberCookie.Values[Defaults.passwordCookie] = remember?Crypto.EncodeStr(model.Password, true):"";
             authRememberCookie.Expires = remember ? DateTime.Now.AddHours(Config.RememberMeHours) 
                 : DateTime.Now.AddYears(-1);//to avoid any datetime diff
-            Response.Cookies.Add(HttpSecureCookie.Encode(authRememberCookie));//HT: encode the cookie            
+            /*HT: encode the cookie // Can't because of machine specific machine key - http://msdn.microsoft.com/en-us/library/ff649308.aspx#paght000007_webfarmdeploymentconsiderations
+            authRememberCookie.Value = Encoding.Unicode.GetString(MachineKey.Protect(Encoding.Unicode.GetBytes(authRememberCookie.Value)));*/
+            authRememberCookie.Value = Crypto.EncodeStr(authRememberCookie.Value, true);
+            Response.Cookies.Add(authRememberCookie);
         }
         
         //[CacheControl(HttpCacheability.NoCache), HttpGet]

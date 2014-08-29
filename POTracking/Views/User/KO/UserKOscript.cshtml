@@ -1,6 +1,6 @@
 ﻿@using POT.Services
 @using HSG.Helper
-<script language="javascript" type="text/javascript" defer="defer">
+<script type="text/javascript">
 var loading = '<div style="text-align:center;display:block;"><img src=" @Url.Content("~/Content/Images/loading.gif")" title="" alt="Loading" /></div>';
        
 function gotoUser(UserId)
@@ -270,7 +270,7 @@ var viewModel = function(){
             var url = '@Url.Action("UserKODelete", "User", new { ID = "" })';
             $.post(url, data);
 
-            usrIDToDel = txtVal;            
+            usrIDToDel = txtVal;
 
             return false; // prevent any postback
         }

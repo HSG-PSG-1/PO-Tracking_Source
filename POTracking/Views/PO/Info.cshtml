@@ -125,7 +125,7 @@
                         Weight/Kilos :&nbsp;
                     </td>
                     <td align="left" nowrap="nowrap">
-                        @Html.CustomTextBoxKOFor(m => m.Info.Weight, new { data_bind = "value:Weight", @class = "number" })
+                        @Html.CustomTextBoxKOFor(m => m.Info.Weight, new { data_bind = "value:Weight", @class = "integer" })
                         @Html.ValidationMessageFor(model => model.Info.Weight)
                     </td>
                 </tr>
@@ -164,7 +164,7 @@
                                     </tbody>
                                 </table>
                             </div> @*Show Status dialog*@
-                            <script type="text/Javascript" language="javascript" defer="defer">
+                            <script type="text/javascript">
                                 function showDialog (containerID)
                                 {// Can't create and then open / close - because of issues with KO
                                     $(containerID).dialog({
@@ -187,7 +187,7 @@
                         Pieces :&nbsp;
                     </td>
                     <td align="left" nowrap="nowrap">
-                        @Html.CustomTextBoxKOFor(m => m.Info.Pieces, new { data_bind = "value:Pieces", @class = "number" })
+                        @Html.CustomTextBoxKOFor(m => m.Info.Pieces, new { data_bind = "value:Pieces", @class = "integer" })
                         @Html.ValidationMessageFor(model => model.Info.Pieces)
                     </td>
                 </tr>
@@ -203,7 +203,7 @@
         </fieldset>        
     }
 </div>
-<script language="javascript" type="text/javascript"> 
+<script type="text/javascript">
     var poInfoViewModel = function () {
         var self = this;
         self.Info = ko.observable();

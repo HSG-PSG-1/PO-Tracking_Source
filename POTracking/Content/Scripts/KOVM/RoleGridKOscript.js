@@ -18,12 +18,12 @@
             record.LastModifiedDate(Date111);
 
             var code = record.Code();
-            if (code == "") { alert("This field is required"); }
+            if (code == "") { showNOTY("This field is required", false); }
             else if ($.grep(self.allRecords(), function (el) {
                 return (!el.IsDeleted() && el.Code().toLowerCase() === code.toLowerCase());
             }
                ).length > 1)
-            { alert("Duplicate entry found"); }
+            { showNOTY("Duplicate entry found", false);  }
             else
             { record.CodeOLD(code); return; }
 
@@ -75,7 +75,7 @@
                 success: function (data) {
                     if (data != null && data.length > 0) {
                         showDlg(false);
-                        alert(data);
+                        showNOTY(data, true);
                         $("input[type=button]").removeAttr('disabled');
                     }
                     else {

@@ -18,8 +18,10 @@ namespace POT.Controllers
         [HttpPost]
         public JsonResult CommentsKOEmail(int POID, /*string POGUID,*/ int AssignTo, string PONumber, [FromJson] POComment CommentObj)        
         {
-            bool sendMail = CommentService.SendEmail(POID, AssignTo, PONumber, CommentObj);
-            return Json(sendMail, JsonRequestBehavior.AllowGet); ;
+            string msg = "Email queued for new comment";
+            bool sendMail = CommentService.SendEmail(POID, AssignTo, PONumber, CommentObj, ref msg);
+            HttpContext.Response.Clear(); // to avoid debug email content from rendering !
+            return Json(new { sendMail, msg }, JsonRequestBehavior.AllowGet);
         }
 
         public CommentVM GetCommentKOModel(int POID, string POGUID, int AssignTo)

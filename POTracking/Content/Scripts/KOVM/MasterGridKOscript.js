@@ -17,12 +17,12 @@ var recordsViewModel = function () {
         record.LastModifiedDate(Date111);
         
         var titl = record.Code();
-        if(titl == "") { alert("This field is required");}
+        if(titl == "") { showNOTY("This field is required", false);}
         else if($.grep(self.allRecords(), function(el)
                 {
                     return (!el.IsDeleted() && el.Code().toLowerCase() === titl.toLowerCase());}
                ).length > 1)
-            { alert("Duplicate entry found"); }
+        { showNOTY("Duplicate entry found", false);  }
         else
            { record.CodeOLD(titl); return;}
 
@@ -76,7 +76,7 @@ var recordsViewModel = function () {
             success: function(data) {
                 if(data != null && data.length > 0)
                 {
-                    alert(data);
+                    showNOTY(data, true);
                     $("input[type=button]").removeAttr('disabled');
                 }
                 else

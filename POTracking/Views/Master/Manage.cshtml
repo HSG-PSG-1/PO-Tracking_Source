@@ -28,12 +28,7 @@
         new { @class = "dropDown", @onchange = "changeMaster(this, this.value);" }))
             </td>
             <td align="center">
-                @* For debug<%= Html.ValidationSummary(true)%>*@
-                @{bool? oprSuccess = ((bool?)ViewData["oprSuccess"]);
-                  string oprResult = (!oprSuccess.HasValue) ? "" :
-                                     Defaults.getOprResult(oprSuccess.Value, (ViewData["err"] ?? "").ToString());}
-                @if (oprSuccess.HasValue)
-                { <span>@Html.Raw(oprResult) </span> }
+                &nbsp;
             </td>
             <td align="right" class="sqz">
                 <input type="button" id="btnAddNew" value="Add New" data-bind="click:addNewRecord"
@@ -55,7 +50,7 @@
     </table>
     <span></span>
 }
-<script type="text/javascript" defer="defer">
+<script type="text/javascript">
 setFocus("ddlMaster");
     
     var manageKOVMURL = "@Html.Raw(Url.Action("ManageKOVM", "Master"))";

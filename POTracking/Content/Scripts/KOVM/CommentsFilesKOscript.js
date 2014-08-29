@@ -21,7 +21,7 @@ var commentsViewModel = function () {
     };
     self.addComment = function (comment) {
         if (comment.Comment1() == null || comment.Comment1 == "") {/* http://knockoutjs.com/documentation/event-binding.html */
-            alert("Comment is a required field");
+            showNOTY("Comment is a required field", false);
             return false;
         }
         else {
@@ -86,11 +86,9 @@ var commentsViewModel = function () {
                     PONumber: _PONumber
                 },
                     function (result) {
-                        //alert(result); HT: we can notify user if a succesful email was sent                        
-                        if (result) {
-                            var spn = '#emailResult'; $(spn).html($(spn).attr("title"));
-                            showOprResult(spn, 1);
-
+                        //alert(result); HT: we can notify user if a successful email was sent
+                        showNOTY(result.msg, result.sendMail);
+                        if (result.sendMail) {                            
                             $("#AssignToOLD").val(_AssignTo).trigger("change");
                         }
                     }
@@ -166,7 +164,7 @@ var IsFHEditMode = false;
         self.addFile = function (file) {
             if (file.FileName == null || file.FileName == "") {
                 //http://knockoutjs.com/documentation/event-binding.html
-                alert("Please select a file to upload"); return false;
+                showNOTY("Please select a file to upload", false);  return false;
             }
             else {
                 // SO: 857618/javascript-how-to-extract-filename-from-a-file-input-control

@@ -72,13 +72,34 @@ function roundNumber(rnum, rlength) { // Arguments: number to round, number of d
 }
 
 function confirmDeleteM(evt, msg) {
-    var GoAhead = window.confirm(msg);
+    var GoAhead = window.confirm(msg);    
     return stopEvent(evt, GoAhead);
 }
 
 function confirmDelete(evt) {
-    var GoAhead = window.confirm("Are you sure you want to delete this record?");
-    return stopEvent(evt, GoAhead);
+    return confirmDeleteM(evt, "Are you sure you want to delete this record?");
+    //var GoAhead = window.confirm("Are you sure you want to delete this record?");    return stopEvent(evt, GoAhead);
+}
+
+function notyConfirm(msg)
+{ // for future (instead try - http://www.projectshadowlight.org/jquery-easy-confirm-dialog/)
+    var n = noty({
+        text: msg,
+        dismissQueue: true,
+        layout: 'center',
+        theme: 'defaultTheme',
+        killer: true,
+        type: 'warning',
+        model: true,
+        buttons: [
+            {
+                addClass: 'btn btn-primary', text: 'Ok', onClick: function ($noty) { $noty.close();}
+            },
+            {
+                addClass: 'btn btn-danger', text: 'Cancel', onClick: function ($noty) { $noty.close();}
+            }
+        ]
+    });
 }
 
 function stopEvent(e, GoAhead) {
@@ -308,7 +329,7 @@ function setFocus(elemID) {
         elem = document.getElementsByName(elemID); //special case for MVC who don't render id!
         if (elem.length > 0) elem = elem[0];//If its a checkbox it'll have 2 of same name
     }
-    try { elem.focus(); return; } catch (ex) { /*alert(elem + ":" + elemID + ":" + ex);*/ } //skip if id is wrong
+    try { elem.focus(); return; } catch (ex) { /*alert(elem + ":" + elemID + ":" + ex.message);*/ } //skip if id is wrong
 }
 
 function toggleTbody(tbod) {//http://bytes.com/topic/javascript/answers/147170-how-hide-table-rows-grouping-them-into-div//id
@@ -348,12 +369,30 @@ return (val.attr('checked') != null)? val.attr('checked'): val.val(); //checkbox
 function doFurtherProcessing() { };//override in the child view-script
 function showOprResult(spanId, success) {   
     // Highlight, fadeOut and finally REMOVE!
-    $(spanId).effect('highlight', {}, 4000).fadeOut((success == 1) ? 1000 : 8000, function () { $(spanId).html("&nbsp;").show(); /* remove();*/ });
+    $(spanId).effect('highlight', {}, 4000).fadeOut((success == 1) ? 1000 : 8000, function () { $(spanId).html("&nbsp;").remove(); /* show();*/ });
     
     //Special case for forms which need to do post processing        
     //doFurtherProcessing(); HT: Handled at the end of effect call back    
     try {DisableSubmitButtons(false); /*$.unblockUI();*/ } catch (e) { }
 }
+function showNOTY(msg, success) {
+    // Highlight, fadeOut and finally REMOVE!
+    //$(spanId).effect('highlight', {}, 4000).fadeOut((success == 1) ? 1000 : 8000, function () { $(spanId).html("&nbsp;").remove(); /* show();*/ });
+    noty({
+        text: msg,
+        type: success ? "success" : "error",
+        dismissQueue: true,
+        timeout: success ? 2000 : 7000,
+        layout: 'topCenter',
+        theme: 'defaultTheme',
+        killer: true
+    });
+
+    //Special case for forms which need to do post processing        
+    //doFurtherProcessing(); HT: Handled at the end of effect call back    
+    try { DisableSubmitButtons(false); /*$.unblockUI();*/ } catch (e) { }
+}
+
 
 function setDefaultIfEmpty(txt, defaultStr) {// use with onblur (don't use with jQuery.validate class = "required"
     if ($(txt).val() == '') $(txt).val(defaultStr).trigger("change"); // make sure defaultStr is a string

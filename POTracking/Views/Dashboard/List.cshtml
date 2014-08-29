@@ -161,7 +161,7 @@
 </table>
 @*HT: Set min width required by Dashboard*@
 <img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="900px" />
-<script language="javascript" type="text/javascript" defer="defer">
+<script type="text/javascript">
     // For future manipulation: $('div.pager').children('a').click(function () {@Defaults.chkCollapse }); // Add event to each page link to check & persist collapse search panel
    var autocompleteURL = "@Defaults.commonRoot/Lookup?id=";
    var dashboardURL = '@Url.Content("~/Dashboard/")'; 
@@ -203,5 +203,4 @@
     var isVendor = @isVendor.ToString().ToLower();    
 </script>
 <script src="@Url.Content("~/Content/Scripts/KOVM/DashboardKOscript.js")" type="text/javascript" ></script>
-<script src="@Url.Content("~/Content/Scripts/jquery.taconite.js")" type="text/javascript" ></script>
 <script src="@Url.Content("~/Content/Scripts/KO/KoExtra.js")" type="text/javascript"></script>

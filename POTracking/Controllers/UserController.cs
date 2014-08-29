@@ -210,7 +210,7 @@ namespace POT.Controllers
                 new ActivityLogService(ActivityLogService.Activity.UserDelete).Add();
             }
             //base.operationSuccess = proceed; HT: DON'T
-            return this.Content(Defaults.getTaconite(proceed,
+            return this.Content(Defaults.getTaconiteRemoveTR(proceed,
                 Defaults.getOprResult(proceed, err), null, true), "text/xml");
         }
 
