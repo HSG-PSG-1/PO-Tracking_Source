@@ -189,6 +189,7 @@
     <Content Include="Content\jQUI\css\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\jQUI\css\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jQUI\css\jquery-ui.min.css" />
+    <Content Include="Content\jQUI\min\jquery-1.11.1.min.js" />
     <Content Include="Content\jQUI\min\jquery-2.1.1.min.js" />
     <Content Include="Content\jQUI\min\jquery-migrate-1.2.1.min.js" />
     <Content Include="Content\jQUI\min\jquery-ui.1.11.0.min.js" />
