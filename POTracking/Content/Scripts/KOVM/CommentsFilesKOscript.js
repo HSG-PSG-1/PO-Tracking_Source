@@ -1,7 +1,7 @@
 ﻿var IsCCEditMode = false;
 var NextNewCommentID = -1;
-
-var commentsViewModel = function () {
+var commentsViewModel = function ()
+{
     var self = this;
     self.emptyComment = "";
 
@@ -43,6 +43,8 @@ var commentsViewModel = function () {
                 self.allComments.splice(index, 0, comment);*/
                 ;
             }
+            $('#tblComments').tableNav(); // for newly created TR
+            setFocusEditableGrid("tblComments", false);
         }
         return true; /* because we need to ajax submit the form */
     };
@@ -81,14 +83,14 @@ var commentsViewModel = function () {
         if (proceed) {
             $.post(commentsEmailURL, /*@Url.Action("CommentsKOEmail", "PO", new { POGUID = ViewData["POGUID"] })*/
                     {
-                    CommentObj: ko.mapping.toJSON(comment),
-                    AssignTo: _AssignTo,
-                    PONumber: _PONumber
-                },
+                        CommentObj: ko.mapping.toJSON(comment),
+                        AssignTo: _AssignTo,
+                        PONumber: _PONumber
+                    },
                     function (result) {
                         //alert(result); HT: we can notify user if a successful email was sent
                         showNOTY(result.msg, result.sendMail);
-                        if (result.sendMail) {                            
+                        if (result.sendMail) {
                             $("#AssignToOLD").val(_AssignTo).trigger("change");
                         }
                     }
@@ -112,12 +114,11 @@ function createCommentsKO(data, AssignTo)
     viewModelComments.AssignTo(data.AssignTo);   $("#AssignToOLD").val(data.AssignTo);
     viewModelComments.AssignToVal("");
 
-    //viewModelComments.commentToAdd(data.CommentToAdd); /* var mapping = {'ignore': ["PostedOn"]};*/
-    viewModelComments.commentToAdd = ko.mapping.fromJS(data.CommentToAdd); /*  HT: NEW required for better observable based binding*/
+    viewModelComments.commentToAdd = ko.mapping.fromJS(data.CommentToAdd);
     viewModelComments.allComments = ko.mapping.fromJS(data.AllComments); //, mapping);
     viewModelComments.Users = ko.mapping.fromJS(data.Users);
-             
-    ko.applyBindings(viewModelComments, document.getElementById("divComments"));      
+
+    ko.applyBindings(viewModelComments, document.getElementById("divComments"));
 }
 
 /*function doCmtDelPost(comment) {
@@ -127,12 +128,12 @@ function createCommentsKO(data, AssignTo)
     return false; // prevent any postback
 }*/
 
-function setAssignTo(ddl)
-{
+/* HT:CAUTION - using document.ready causes duplicate call which replicates the binding! */
+function setAssignedTo(ddl) {
     var ddlID = $(ddl).val();
     var ddlTXT = $(ddl).children("option").filter(":selected").text();
         
-    $(ddl).parent().children("input:first").val(ddlTXT).trigger("change");        
+    $(ddl).parent().children("input:first").val(ddlTXT).trigger("change");
 
     $("#AssignToVal").val(ddlTXT).trigger("change");
     //Special case for the field in Info tab
@@ -140,95 +141,93 @@ function setAssignTo(ddl)
 }
 /* -------------------------- */
 var IsFHEditMode = false;
-    var NextNewFileID = -1;
-    var filesHeaderModel = function () {
-        var self = this;
+var NextNewFileID = -1;
+var filesHeaderModel = function () {
+    var self = this;
 
-        self.emptyFile = "";
+    self.emptyFile = "";
 
-        self.fileToAdd = ko.observable();
-        self.allFiles = ko.observableArray(); // Initial items
+    self.fileToAdd = ko.observable();
+    self.allFiles = ko.observableArray(); // Initial items
 
-        self.TriggerOpenWin = function (fileFH) {
-            openWin(FileGetURL + fileFH.CodeStr(), 1, 1);
+    self.TriggerOpenWin = function (fileFH) {
+        openWin(FileGetURL + fileFH.CodeStr(), 1, 1);
+    }
+
+    self.setEdited = function (file) {
+        file._Edited(!file._Added()); //alert(ko.mapping.toJSON(ko.mapping.fromJS(new Date())()));
+        file.LastModifiedDate(Date111); //UploadDate Date111 ko.mapping.fromJS(new Date())
+    }
+    self.setEditedFlag = function (file) {
+        file._Edited(!file._Added());
+        file.LastModifiedDate(Date111);
+    }
+    self.addFile = function (file) {
+        if (file.FileName == null || file.FileName == "") {
+            //http://knockoutjs.com/documentation/event-binding.html
+            showNOTY("Please select a file to upload", false); return false;
         }
-
-        self.setEdited = function (file) {
-            file._Edited(!file._Added()); //alert(ko.mapping.toJSON(ko.mapping.fromJS(new Date())()));
-            file.LastModifiedDate(Date111); //UploadDate Date111 ko.mapping.fromJS(new Date())
+        else {
+            // SO: 857618/javascript-how-to-extract-filename-from-a-file-input-control
+            file.FileName = file.FileName.split(/(\\|\/)/g).pop(); //file.FileName.replace("C:\\fakepath\\","");
+            if (!IsFHEditMode) {
+                file.ID = NextNewFileID;
+                self.allFiles.push(ko.mapping.fromJS(cloneObservable(file)));
+                NextNewFileID = NextNewFileID - 1;
+                self.emptyFile.ID = NextNewFileID; // NOT WORKING as expected
+            }
+            else { /* Editmode Handled by KO */; }
+            $('#tblFilesH').tableNav(); // for newly created TR
+            setFocusEditableGrid("tblFilesH", false);
         }
-        self.setEditedFlag = function (file) {
-            file._Edited(!file._Added());
-            file.LastModifiedDate(Date111);
+        return true; // for ajax submit
+    };
+
+    self.removeSelected = function (file) {
+        if (file == null) return false;
+
+        if (!file._Added()) { file._Deleted(true); return false; }
+
+        var data = {}; data["delFH"] = ko.mapping.toJSON(file);
+        //var url = FileDeleteURL + 'POGUID=' + POGUID;
+        $.post(FileDeleteURL, data, function (data, textStatus, jqXHR) {
+            file._Deleted(true);
+            file._Added(false);
+            self.allFiles.remove(file);
         }
-        self.addFile = function (file) {
-            if (file.FileName == null || file.FileName == "") {
-                //http://knockoutjs.com/documentation/event-binding.html
-                showNOTY("Please select a file to upload", false);  return false;
-            }
-            else {
-                // SO: 857618/javascript-how-to-extract-filename-from-a-file-input-control
-                file.FileName = file.FileName.split(/(\\|\/)/g).pop(); //file.FileName.replace("C:\\fakepath\\","");
-                if (!IsFHEditMode) {
-                    file.ID = NextNewFileID;
-                    self.allFiles.push(ko.mapping.fromJS(cloneObservable(file)));
-                    NextNewFileID = NextNewFileID - 1;
-                    self.emptyFile.ID = NextNewFileID; // NOT WORKING as expected
-                }
-                else { /* Editmode Handled by KO */; }
-            }
-            return true; // for ajax submit
-        };
+        );
+    };
 
-        self.removeSelected = function (file) {
-            if (file == null) return false;
-
-            if (!file._Added()) { file._Deleted(true); return false; }
-
-            var data = {}; data["delFH"] = ko.mapping.toJSON(file);
-            //var url = FileDeleteURL + 'POGUID=' + POGUID;
-            $.post(FileDeleteURL, data, function (data, textStatus, jqXHR) {
-                ; file._Deleted(true);
-                file._Added(false);
-                self.allFiles.remove(file);
-            }
-            );
-        };
-
-        self.unRemoveSelected = function (file) {
-            if (file != null) {
-                file._Deleted(false);
-            }
-        };
-
-
-        self.cancelFile = function (file) {
-            IsFHEditMode = false;
-            self.fileToAdd(cloneObservable(self.emptyFile));
-        };
-
-        self.saveToServer = function () {
-            ko.utils.postJson(location.href, { files: ko.mapping.toJS(self.allFiles) }); //ko.toJSON(self.allFiles)
-            return false;
+    self.unRemoveSelected = function (file) {
+        if (file != null) {
+            file._Deleted(false);
         }
     };
 
- var viewModelFH = new filesHeaderModel();
- function createFilesHeaderKO(data)
- {        
+
+    self.cancelFile = function (file) {
+        IsFHEditMode = false;
+        self.fileToAdd(cloneObservable(self.emptyFile));
+    };
+
+    self.saveToServer = function () {
+        ko.utils.postJson(location.href, { files: ko.mapping.toJS(self.allFiles) }); //ko.toJSON(self.allFiles)
+        return false;
+    }
+};
+
+var viewModelFH = new filesHeaderModel();
+ function createFilesHeaderKO(data) {
     if (data.FileToAdd.ID != -1) data.FileToAdd.ID = NextNewFileID;
 
     viewModelFH.emptyFile = data.EmptyFileHeader; // THIS SHUD NOT BE AN OBSERVABLE
-    viewModelFH.fileToAdd(data.FileToAdd);             
-             
-    if(data.AllFiles != null)
-        viewModelFH.allFiles = ko.mapping.fromJS(data.AllFiles);
-    else
-        viewModelFH.allFiles = ko.observableArray();
+    viewModelFH.fileToAdd(data.FileToAdd);
 
-    viewModelFH.FileTypes = ko.mapping.fromJS(data.FileTypes);
-             
-    ko.applyBindings(viewModelFH, document.getElementById("divFiles"));
+     if (data.AllFiles != null)
+         viewModelFH.allFiles = ko.mapping.fromJS(data.AllFiles);
+     else
+         viewModelFH.allFiles = ko.observableArray();
 
-    setFocus("Comment"); // FileNameNEW         
+     viewModelFH.FileTypes = ko.mapping.fromJS(data.FileTypes);
+     ko.applyBindings(viewModelFH, document.getElementById("divFiles"));
  }

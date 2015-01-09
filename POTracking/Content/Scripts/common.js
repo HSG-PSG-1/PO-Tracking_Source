@@ -10,7 +10,8 @@ var delTR = ""; // Required tohold te deleted TR fopas using taconite plugin
 function checkReq(ctrl, impactCtrl) { if (!($(ctrl).val().toString().length > 0)) $(impactCtrl).val('').trigger("change"); }
 // Log the selected item.id or empty into id textbox
 function log(item, idBox, txtBox) {
-    $(idBox).val(item ? item.id : '').trigger("change");    
+    $(idBox).val(item ? item.id : '').trigger("change"); /*"#ItemID" */
+    //$(txtBox).trigger("change"); /* IE 10+ doesn't trigger the change value */
     //try { $(txtBox).validate().valid(); } catch (e) { }
 }
 //Toggle the display of the two images in parent (make sure you follow the sequence)
@@ -497,4 +498,17 @@ function createjQDTP(DtpID) {
     // Set format to be used by alt date field
     $(DtpID1).datepicker("option", "altField", "#" + DtpID);
     $(DtpID1).datepicker("option", "altFormat", 'dd-M-yy');
+}
+function setAutofocus() { $('[autofocus]:not(:focus)').eq(0).focus(); }
+String.prototype.Ufloat = function () {
+    var val = parseFloat(this);
+    return parseFloat(((val > 0) ? val : 0.00).toFixed(2));
+}
+String.prototype.Uint = function () {
+    return parseInt((this > 0) ? this : 0); // DON'T as it might affect calculation .toFixed(2);
+}
+function setFocusEditableGrid(tableID, isFirstTROrLast) {
+    var trPosition = isFirstTROrLast ? "tr:first" : "tr:last";    
+    tableID = "#" + tableID;
+    $(tableID).find(trPosition).find('input[class=editableTX],textarea,select').filter(':visible:first').focus();
 }

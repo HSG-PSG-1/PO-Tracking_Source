@@ -156,13 +156,14 @@ namespace HSG.Helper
             catch { return -1; }
         }
 
+        //public static POs POsInMemory { get { return new POs(); } }
 
-        public static void ResetPOInSessionAndEmptyTempUpload(string POGUID)
-        { // Use POGUID to find the exact po from
-            if (!string.IsNullOrEmpty(POGUID)) // HT: ENSURE POGUID is present
-                FileIO.EmptyDirectory(System.IO.Path.Combine(Config.UploadPath, POGUID));
-            
-            //POs.Remove(POGUID); // Remove the PO from session
+        public static void ResetPOInSessionAndEmptyTempUpload(int POID, string POGUID)
+        { // Use POGUID to find the exact claim from
+            if (!string.IsNullOrEmpty(POGUID)) // HT: ENSURE ClaimGUID is present
+                FileIO.CleanTempUpload(POID, POGUID);
+
+            //POsInMemory.Remove(POGUID); // Remove the PO from session
             //HttpContext.Current.Session.Remove("POObj");
         }
 
@@ -267,8 +268,6 @@ namespace HSG.Helper
     }
 
     /* Kept for future ref
-    public static POs POs { get { return new POs(); } }
-
     public class POs
     {
         //http://stackoverflow.com/questions/287928/how-do-i-overload-the-square-bracket-operator-in-c
@@ -302,7 +301,8 @@ namespace HSG.Helper
         {
             HttpContext.Current.Session.Remove(POGUID);
         }
-    }*/
+    }
+*/
 
     [Serializable]
     public class Filters

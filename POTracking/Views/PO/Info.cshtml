@@ -13,7 +13,7 @@
     {@Html.Hidden("ID", Model.Info.ID, new { data_bind = "value:ID" })
         <fieldset class="fieldSet">
             <legend class="SubHeading">Order Detail</legend>
-            <table align="left" cellpadding="2" cellspacing="2" width="100%" class="wideTX">
+            <table align="left" cellpadding="2" cellspacing="2" width="100%" class="wideTX" id="tblnfo">
                 <tr>
                     <td align="right" nowrap="nowrap">
                         Date PO Placed :&nbsp;
@@ -28,7 +28,7 @@
                         BL Number :&nbsp;
                     </td>
                     <td align="left" nowrap="nowrap">
-                        @Html.CustomTextBoxKOFor(m => m.Info.BLNumber, new { data_bind = "value:BLNumber" })
+                        @Html.CustomTextBoxKOFor(m => m.Info.BLNumber, new { data_bind = "value:BLNumber", @autofocus = "autofocus" })
                         @Html.ValidationMessageFor(model => model.Info.BLNumber)
                     </td>
                 </tr>
@@ -53,7 +53,8 @@
                         Filler Size :&nbsp;
                     </td>
                     <td align="left" nowrap="nowrap">
-                        @Html.TextBox("FillerSize", Model.Info.FillerSize, new { data_bind = "value:FillerSize" })
+                        @*Html.TextBox("FillerSize", Model.Info.FillerSize, new { data_bind = "value:FillerSize" })*@
+                        @Html.CustomTextBoxKOFor(m => m.Info.FillerSize,new { data_bind = "value:FillerSize" })
                     </td>
                     <td align="right" nowrap="nowrap">
                         Carrier :&nbsp;
@@ -139,10 +140,11 @@
                         @Html.Hidden("AssignToIDold", Model.Info.AssignToIDold, new { data_bind = "value:AssignToIDold" })
                         @Html.Hidden("OrderStatusIDold", Model.Info.OrderStatusIDold, new { data_bind = "value:OrderStatusIDold" })
                         @Html.ValidationMessageFor(model => model.Info.OrderStatusID)
+                        &nbsp;
                         @if (!isNewPO)
                         { 
                             <div class="dDialog uline" onclick="showDialog('#ddlg');">
-                                Status History</div>@Html.Raw("&nbsp;")
+                               Status History</div>@Html.Raw("&nbsp;")
                             <div id="ddlg" style="text-align: right; ">
                                 <table class="thinBorder" align="center" width="99%" 
                                 style="display:none; padding-top: 10px" id="tblStatusHistory">
@@ -173,6 +175,7 @@
                                             $("#tblStatusHistory").show();
                                             @*$(this).html(loading);
                                             $(this).load('@Url.Content("~/PO/")@(Model.Info.ID)/Status?IsReadOnly=true');*@
+                                            setTimeout(function () { $('.ui-dialog-titlebar-close').blur(); }, 1);
                                         },
                                         close: function (){$("#tblStatusHistory").hide();},
                                         height: 360,
@@ -244,8 +247,7 @@
     $.getJSON('@Html.Raw(Url.Action("POInfoKOVM", "PO", new { POGUID = ViewData["POGUID"] }))',
         function (data) {*@
             
-            setFocus("Info_BLNumber");
-            
+            setFocus("Info_BLNumber"); // required because this is the first focus !      
             viewModelPOInfo.Info = ko.mapping.fromJS(data.Info);
             viewModelPOInfo.Carrier = ko.mapping.fromJS(data.Carrier);
             viewModelPOInfo.ContainerType = ko.mapping.fromJS(data.ContainerType);
@@ -260,6 +262,8 @@
             createjQDTP("Etd");
             createjQDTP("Eta");
             createjQDTP("BLDate");*@
+
+            $("#tblnfo").tableNav();
 
         return true;
       }

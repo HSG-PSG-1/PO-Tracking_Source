@@ -43,10 +43,10 @@ namespace POT.Models
         [Column(Name = "Category")]
         public string Category { get; set; }
 
-        public bool IsUpdated { get; set; }
+        public bool _Updated { get; set; }
         
-        public bool IsAdded { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool _Added { get; set; }
+        public bool _Deleted { get; set; }
 
         public const string delRefChkMsg = "One or more entry marked for delete is being referred by another entity. So cannot delete it.";
         public const string insCodeDuplicateMsg = "One or more new entries have duplicate code.";
@@ -79,9 +79,9 @@ namespace POT.Models
     {
         public POT.DAL.UserRole RoleData { get; set; }
         //Delete after further review for future: public bool rightsChanged { get; set; }
-        public new bool IsUpdated
+        public new bool _Updated
         {
-            get { return base.IsUpdated /*|| rightsChanged*/; }
+            get { return base._Updated /*|| rightsChanged*/; }
         }
         
         //DON'T forget to set CodeOLD and SortOrderOLD in FetchAll because it won't be bound using [Column(Name =

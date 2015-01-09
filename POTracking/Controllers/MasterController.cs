@@ -69,7 +69,7 @@ namespace POT.Controllers
             //Make sure If there's any DELETE - it is NOT being referred
             CanCommit = !isDeletedBeingReferred(records, false, ref err);
             //Check duplicates among New records only
-            if (CanCommit && records != null && records.ToList<Master>().Exists(r => r.IsAdded))
+            if (CanCommit && records != null && records.ToList<Master>().Exists(r => r._Added))
                 CanCommit = !hasDuplicateInNewEntries(records, ref err);
 
             #region All OK so go ahead
@@ -100,18 +100,18 @@ namespace POT.Controllers
         public static bool isDeletedBeingReferred(IEnumerable<Master> items, bool isSecurity, ref string err)
         {
             if (items == null || items.Count() < 1) return false;
-            items = items.Where(m => m.IsDeleted && !m.IsAdded).ToList();//reformat the list with only required items
+            items = items.Where(m => m._Deleted && !m._Added).ToList();//reformat the list with only required items
             bool refFound = false;
             foreach (Master item in items)
             {
-                if (item.IsDeleted && !refFound)//MAke sure the overridded method is called!
+                if (item._Deleted && !refFound)//MAke sure the overridded method is called!
                 {
-                    #region HT:CAUTION: item.IsDeleted = false; won't work because of the following:
+                    #region HT:CAUTION: item._Deleted = false; won't work because of the following:
                     //http://stackoverflow.com/questions/2329329/mvc2-checkbox-problem
                     //http://iridescence.no/post/Mapping-a-Checkbox-To-a-Boolean-Action-Parameter-in-ASPNET-MVC.aspx
                     //http://stackoverflow.com/questions/4615494/textbox-reverts-to-old-value-while-modelstate-is-valid-on-postback
                     //http://forums.asp.net/t/1597366.aspx/1
-                    //item.IsDeleted = false;//Reset so that it is visible to the user
+                    //item._Deleted = false;//Reset so that it is visible to the user
                     #endregion
                     refFound = isSecurity ? new SecurityService().IsReferred(item) : new MasterService(_Session.MasterTbl).IsReferred(item);
                 }
@@ -129,8 +129,8 @@ namespace POT.Controllers
         public static bool hasDuplicateInNewEntries(IEnumerable<Master> changes, ref string err)
         {
             //IMP: For consistency make sure that the Delete Ref check is done before this (as we ignore deleted records)
-            List<Master> inserts = changes.Where(r => r.IsAdded && !r.IsDeleted).ToList();// new inserts & not deleted
-            List<Master> validEntries = changes.Where(r => !r.IsDeleted).ToList();// fetch valid entries - r.ID > 0 &&
+            List<Master> inserts = changes.Where(r => r._Added && !r._Deleted).ToList();// new inserts & not deleted
+            List<Master> validEntries = changes.Where(r => !r._Deleted).ToList();// fetch valid entries - r.ID > 0 &&
             bool hasDuplicate = false;
             // check case-in-sensitive Code duplication among all the records
             foreach (Master m in inserts)

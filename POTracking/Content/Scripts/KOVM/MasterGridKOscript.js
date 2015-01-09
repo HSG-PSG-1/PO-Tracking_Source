@@ -8,21 +8,22 @@ var recordsViewModel = function () {
     self.newRecord = ko.observable();
     
     self.setEdited = function (record) {
-        record.IsUpdated(!record.IsAdded());
+        record._Updated(!record._Added());
         record.LastModifiedDate(Date111); 
     }
     
     self.setEditedFlag = function (record) {
-        record.IsUpdated(!record.IsAdded());
+        record._Updated(!record._Added());
         record.LastModifiedDate(Date111);
         
         var titl = record.Code();
         if(titl == "") { showNOTY("This field is required", false);}
         else if($.grep(self.allRecords(), function(el)
                 {
-                    return (!el.IsDeleted() && el.Code().toLowerCase() === titl.toLowerCase());}
+                    return (!el._Deleted() && el.Code().toLowerCase() === titl.toLowerCase());
+                }
                ).length > 1)
-        { showNOTY("Duplicate entry found", false);  }
+        { showNOTY("Duplicate entry found", false); }
         else
            { record.CodeOLD(titl); return;}
 
@@ -39,23 +40,25 @@ var recordsViewModel = function () {
         NextNewrecordID = NextNewrecordID - 1;
         self.newRecord.ID(NextNewrecordID);        
         
+        $("#sortable").tableNav(); // for newly created TR
+        setFocusEditableGrid("sortable", false);
         return true;
     };
     
     self.removeSelected = function (record) {
         if (record != null)
         {
-            record.IsDeleted(true);
-            if (record.IsAdded()) {                
+            record._Deleted(true);
+            if (record._Added()) {                
                 self.allRecords.remove(record);
-                //record.IsAdded(false);
+                //record._Added(false);
             }
         }
     };
 
     self.unRemoveSelected = function (record) {
         if (record != null) // Prevent blanks and duplicates
-            record.IsDeleted(false);        
+            record._Deleted(false);        
     };
 
     self.cancelrecord = function (record) {
@@ -76,7 +79,7 @@ var recordsViewModel = function () {
             success: function(data) {
                 if(data != null && data.length > 0)
                 {
-                    showNOTY(data, true);
+                    showNOTY(data, false);
                     $("input[type=button]").removeAttr('disabled');
                 }
                 else
@@ -91,27 +94,26 @@ var recordsViewModel = function () {
     }
 };
 var vmMaster = new recordsViewModel();
-
 function createRecordsKO()
 {
     showDlg(true);
     $.getJSON(manageKOVMURL + '?masterTbl=' + getSelMaster(),
-        function (data) { showDlg(false);
+        function (data) {
+            showDlg(false);
              var newRec;
              if(data != null && data.length > 0)
-               {newRec = data.pop(); newRec.IsAdded = true;}
+             { newRec = data.pop(); newRec._Added = true; }
             
             vmMaster.allRecords = ko.mapping.fromJS(data);// Make sure the last record is removed
             vmMaster.newRecord = ko.mapping.fromJS(newRec);            
             ko.applyBindings(vmMaster);
 
-            setFocus("ddlMaster");
+            $("#sortable").tableNav();
         });
 }
 
 $(document).ready(function () {
-    createRecordsKO();
-    //setFocus("record1");
+    createRecordsKO();    
 });
 
 function getSelMaster()

@@ -19,7 +19,7 @@ namespace POT.Controllers
     {
         #region Login/off Send password
 
-        [HttpGet]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
         //[ValidateInput(false)] // SO: 2673850/validaterequest-false-doesnt-work-in-asp-net-4
         public ActionResult Login(string from, string email, string pwd, bool remember = false)
         {

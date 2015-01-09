@@ -96,14 +96,10 @@ function editable(ctrl, show)
     else $(ctrl).removeClass('note').addClass('noBorder');//.attr('readOnly', true)
 }
 
-function doEditable(editDiv) {
-    // http://api.jquery.com/first/
-    try { $(editDiv).closest('tr').find("td input[class='noBorder']").first().focus().trigger("click"); } catch (e) { alert(e.message); }
-    //editDiv.parentElement.parentElement.children[4].click();
-}
-
-function doEditableTA(td) {
-    try { $(td).closest('tr').find("td textarea[class='noBorder']").focus().trigger("click"); } catch (e) { alert(e.message); }
+function doEditable(editDiv)
+{
+    var selector = "td input[class='editableTX'], textarea[class='editableTX']";
+    try { $(editDiv).closest('tr').find(selector).eq(0).focus().trigger("click"); } catch (e) { alert(e.message); }
     //editDiv.parentElement.parentElement.children[4].click();
 }
 

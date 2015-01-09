@@ -15,15 +15,6 @@ namespace POT.Controllers
     //[IsAuthorize(IsAuthorizeAttribute.Rights.NONE)]//Special case for some dirty session-abandoned pages and hacks
     public partial class POController : BaseController
     {
-        bool IsAsync
-        {
-            get { return true; }
-            /* until we upgrade code in future for Sync mode where changes will take place on the go instead of waiting until final commit */
-            set { ;}
-        }
-
-        FileIO.mode HeaderFM { get { return (IsAsync ? FileIO.mode.asyncHeader : FileIO.mode.header); } }
-        
         #region File Header Actions
 
         [HttpPost]
@@ -38,9 +29,7 @@ namespace POT.Controllers
 
             if ((FileHdrObj.FileNameNEW ?? FileHdrObj.FileName) != null)
             {//HT Delete old\existing file? For Async need to wait until final commit
-                //HT:IMP: Set Async so that now the file maps to Async file-path
-                FileHdrObj.IsAsync = true;
-                
+
                 #region Old code (make sure the function 'ChkAndSavePOFile' does all of it)
                 //string docName = string.Empty;
                 //FileIO.result uploadResult = SavePOFile(Request.Files["FileNameNEW"], ref docName, POID, true);
@@ -51,8 +40,8 @@ namespace POT.Controllers
                 //    else
                 //        ModelState.AddModelError("FileName", "Unable to upload file");
                 #endregion
-
-                FileHdrObj.FileName = ChkAndSavePOFile("FileNameNEW", POID, HeaderFM, FileHdrObj.POGUID);
+                // FileHdrObj.FileName = NOT required now
+                ChkAndSavePOFile("FileNameNEW", POID, FileHdrObj.POGUID);
                 success = (ModelState["FileName"].Errors.Count() < 1);
             }
 
@@ -72,23 +61,8 @@ namespace POT.Controllers
         {//Call this ONLY when you need to actually delete the file
             bool proceed = false;
             if (delFH != null)
-            {
-                #region Delete File
-
-                //If its Async - we can delete the TEMP file, if its sync the file is not present in TEMP folder so delete is not effective
-                // HT: infer: send async because the file resides in the temp folder
-                if (FileIO.DeletePOFile(delFH.FileName, POGUID, null, FileIO.mode.asyncHeader))
-                {
-                    //HT: INFER: Delete file for Async, Sync and (existing for Async - 
-                    //the above delete will cause no effect coz path is diff)
-                    //new CAWFile(IsAsync).Delete(new FileHeader() { ID = FileHeaderID, POGUID = POGUID });
-                    proceed = true;
-                }
-                else
-                    proceed = false;
-
-                #endregion
-            }
+                proceed = FileIO.DeletePOFile(POID, POGUID, delFH.FileName);
+            
             //Taconite XML
             return this.Content(Defaults.getTaconiteRemoveTR(proceed,
                 Defaults.getOprResult(proceed, "Unable to delete file"), "fileOprMsg"), "text/xml");
@@ -137,12 +111,11 @@ namespace POT.Controllers
         /// <param name="PODetailId">PO Detail Id</param>
         /// <param name="upMode">FileIO.mode (Async or Sync & Header  or Detail)</param>
         /// <returns>File upload name</returns>
-        string ChkAndSavePOFile(string hpFileKey, int POId, FileIO.mode upMode, string POGUID, int? PODetailId = null)
+        void ChkAndSavePOFile(string hpFileKey, int POId, string POGUID, int? PODetailId = null)
         {
             HttpPostedFileBase hpFile = Request.Files[hpFileKey];
 
-            string docName = string.Empty;
-            FileIO.result uploadResult = FileIO.UploadAndSave(hpFile, ref docName, POGUID, PODetailId, upMode);
+            FileIO.result uploadResult = FileIO.UploadAndSave(hpFile, POId, POGUID, PODetailId);
 
             #region Add error in case of an Upload issue
 
@@ -160,8 +133,6 @@ namespace POT.Controllers
             }
 
             #endregion
-
-            return docName;
         }
 
         // Get Header File
@@ -186,24 +157,25 @@ namespace POT.Controllers
                     filename = data[0];
                 }
                 #endregion
-                string POId = data[1];
-                bool Async = bool.Parse(data[2]);//This must parse correctly
+                int POID = int.Parse(data[1]);
+                string POGUID = (POID > 0 && data.Length < 3)? "" : data[2];//This must parse correctly (if ID > 0 means existingso no need for GUID)
+                
                 //Send file stream for download
-                return SendFile(POId, null, (Async ? FileIO.mode.asyncHeader : FileIO.mode.header), filename);
+                return SendFile(POID, POGUID, filename);
             }
             catch (Exception ex) { ViewData["Message"] = "File not found"; return View("DataNotFound"); }
         }
         
         // Send file stream for download
-        private ActionResult SendFile(string POGUID, int? poDetailId, FileIO.mode fMode, string filename)
+        private ActionResult SendFile(int POID, string POGUID, string filename, int? poDetailId = null)
         {
             try
             {
-                string filePath = FileIO.GetPOFilePath(POGUID, fMode, filename, true);
+                string filePath = FileIO.GetPOFilePath(POID, POGUID, filename, poDetailId, false);
 
-                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + filePath))
-                    /*System.IO.Path.GetFileName(filePath)*/
-                    return File("~/" + filePath, "Content-Disposition: attachment;", filename);
+                if (System.IO.File.Exists(filePath))//AppDomain.CurrentDomain.BaseDirectory 
+                    /*System.IO.Path.GetFileName(filePath)//return File("~/" + filePath, "Content-Disposition: attachment;", filename); */
+                    return File(filePath, "Content-Disposition: attachment;", filename);
                 else/*Invalid or deleted file (from Log)*/
                 { ViewData["Message"] = "File not found"; return View("DataNotFound"); }
 
@@ -219,8 +191,7 @@ namespace POT.Controllers
         private string[] DecodeQSforFile(string code)
         {
             if (string.IsNullOrEmpty(code)) return new string[] { };
-
-            // decode URL (first is done by us and second by browser
+            // IMP: Make sure to encode & decode URL otherwise browser will try to do it and might parse wrong
             code = HttpUtility.UrlDecode(code); // Decoding twice creates issue for certain codes
             return Crypto.EncodeStr(code, false).Split(new char[] { POFile.sep[0] });
         }

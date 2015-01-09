@@ -1,6 +1,6 @@
-﻿$().ready(function () {
-    setFocus("PONumbers");
-    doCollapse(); //If url has collapse
+﻿$().ready(function ()
+{
+    doCollapse(); //If url has collapse        
 
     renderAutoComplete(autocompleteURL + "Brand", "#BrandID", "#BrandName");
     renderAutoComplete(autocompleteURL + "Vendor", "#VendorID", "#VendorName");
@@ -60,7 +60,8 @@ function showDialog(action, poID) {
         modal: false,
         open: function () {
             $(this).html(loading);
-            $(this).load(dashboardURL + action + '?POID=' + poID); //+ '&Archived=' + archived
+            $(this).load(dashboardURL + action + '?POID=' + poID, function () { $("#NewStatusID").focus(); }); //+ '&Archived=' + archived
+            /*setTimeout(function () { $('.ui-dialog-titlebar-close').blur(); }, 1);*/
         },
         height: 360,
         width: 650,
@@ -101,12 +102,10 @@ function updateStatusHistory() {
     $(oldStatID).val($(newStatID).val());
     $(oldStat).val($(newStatID).children("option:selected").text());
     
-    /*update in Grid (NOTE: make sure 'poObj' is set when td is clicked
-    $(poObj).html($(oldStat).val()); $(poObj).effect('highlight', {}, 2000); //highlight
-    $("#status" + poObj.ID).val($(oldStat).val()).trigger("change"); $("#statusID" + poObj.ID).val($(newStatID).val()).trigger("change");*/
+    /*update in Grid (NOTE: make sure 'poObj' is set when td is clicked*/
     
     $("#statusDIV" + poObj.ID).text($(oldStat).val()).trigger("change").effect('highlight', {}, 2000);
-    poObj.Status = $(oldStat).val(); poObj.OrderStatusID = $(newStatID).val();
+    poObj.Status = $(oldStat).val(); poObj.OrdStat = $(newStatID).val();
 }
 
 function excelPostback(e) {
@@ -121,21 +120,21 @@ function excelPostback(e) {
     });
     return false; // to cause form postback
 }
-
-function openPrintDialog(POId) { if (POId > 0)  return openWinScrollable(printPOURL.replace('-99', POId), 648, 838);}
+function openPrintDialog(POId) {
+	if (POId > 0)  return openWinScrollable(printPOURL.replace('-99', POId), 648, 838);
+}
 
 function doAJAXSubmit(frm) {    vm_D.invokeSearch(1);    return false; }
 
-
 /* ============== ============== ============== ============== */
 
-var viewModel = function () {
+var vmDashboard = function () {
     var self = this;
     self.fields = ko.observableArray(); //jsondata
-    self.pageSize = ko.observable(100);
+    self.pageSize = ko.observable(gridPageSize);
     self.pageIndex = ko.observable(0);
     self.cachedPagesTill = ko.observable(0);
-    self.sortField = ko.observable("PONumber");
+    self.sortField = ko.observable("POno");
     self.sortOrderNxtAsc = ko.observable(true);
     self.search = ko.observable();
     self.invokeSearch = ko.observable(2);
@@ -183,21 +182,21 @@ var viewModel = function () {
 
         return ko.utils.arrayFilter(self.fields(), function (rec) {
             return (
-                    (PONumbers == null || rec.PONumber.toLowerCase().toString().indexOf(PONumbers) > -1) &&
-                    (OrderStatusID < 1 || rec.OrderStatusID == OrderStatusID) &&
+                    (PONumbers == null || rec.POno.toLowerCase().toString().indexOf(PONumbers) > -1) &&
+                    (OrderStatusID < 1 || rec.OrdStat == OrderStatusID) &&
                     (AssignTo < 1 || rec.AssignTo == AssignTo) && /*|| rec.AssignTo == null */
 
-            (VendorName == null || (rec.VendorName != null && rec.VendorName.toLowerCase().indexOf(VendorName) > -1)) &&
+            (VendorName == null || (rec.Vndr != null && rec.Vndr.toLowerCase().indexOf(VendorName) > -1)) &&
                     //(VendorID < 1 || rec.VendorID == VendorID) &&
 
-                    (BrandName == null || rec.BrandName.toLowerCase().indexOf(BrandName) > -1) &&
-                    (ShipToCity == null || rec.ShipToCity.toLowerCase().indexOf(ShipToCity) > -1) &&
-                    (PODateFrom == null || new Date(rec.PODateOnly) >= new Date(PODateFrom)) &&
-                    (PODateTo == null || new Date(rec.PODateOnly) <= new Date(PODateTo)) &&
-                    (ETAFrom == null || new Date(rec.ETAOnly) >= new Date(ETAFrom)) &&
-                    (ETATo == null || new Date(rec.ETAOnly) <= new Date(ETATo)) &&
-                    (ETDFrom == null || new Date(rec.ETDOnly) >= new Date(ETDFrom)) &&
-                    (ETDTo == null || new Date(rec.ETDOnly) <= new Date(ETDTo))
+                    (BrandName == null || rec.Brand.toLowerCase().indexOf(BrandName) > -1) &&
+                    (ShipToCity == null || rec.Ship.toLowerCase().indexOf(ShipToCity) > -1) &&
+                    (PODateFrom == null || new Date(rec.POdt) >= new Date(PODateFrom)) &&
+                    (PODateTo == null || new Date(rec.POdt) <= new Date(PODateTo)) &&
+                    (ETAFrom == null || new Date(rec.ETA) >= new Date(ETAFrom)) &&
+                    (ETATo == null || new Date(rec.ETA) <= new Date(ETATo)) &&
+                    (ETDFrom == null || new Date(rec.ETD) >= new Date(ETDFrom)) &&
+                    (ETDTo == null || new Date(rec.ETD) <= new Date(ETDTo))
                 );
         });
         /*
@@ -228,35 +227,35 @@ var viewModel = function () {
 
         /*"click: function(data,event){fields.sort(function (l, r) { return l.Status > r.Status ? 1 : -1 })}"*/
         switch (sort) {
-            case "PONumber":
-                self.fields.sort(function (l, r) { return l.PONumber > r.PONumber ? 1 * sortOrder : -1 * sortOrder });
+            case "POno":
+                self.fields.sort(function (l, r) { return l.POno > r.POno ? 1 * sortOrder : -1 * sortOrder });
                 break;
-            case "PODateOnly":
-                self.fields.sort(function (l, r) { return new Date(l.PODateOnly) > new Date(r.PODateOnly) ? 1 * sortOrder : -1 * sortOrder }); // PODate
+            case "POdt":
+                self.fields.sort(function (l, r) { return new Date(l.POdt) > new Date(r.POdt) ? 1 * sortOrder : -1 * sortOrder }); // PODate
                 break;
-            case "VendorName": // Need to convert into string while comparison
-                self.fields.sort(function (l, r) { return l.VendorName + "" > r.VendorName + "" ? 1 * sortOrder : -1 * sortOrder });
+            case "Vndr": // Need to convert into string while comparison
+                self.fields.sort(function (l, r) { return $.trim(l.Vndr) + "" > $.trim(r.Vndr) + "" ? 1 * sortOrder : -1 * sortOrder });
                 break;
-            case "ShipToCity":
-                self.fields.sort(function (l, r) { return l.ShipToCity > r.ShipToCity ? 1 * sortOrder : -1 * sortOrder });
+            case "Ship":
+                self.fields.sort(function (l, r) { return $.trim(l.Ship) > $.trim(r.Ship) ? 1 * sortOrder : -1 * sortOrder });
                 break;
-            case "ETAOnly":
-                self.fields.sort(function (l, r) { return new Date(l.ETAOnly) > new Date(r.ETAOnly) ? 1 * sortOrder : -1 * sortOrder });
+            case "ETA":
+                self.fields.sort(function (l, r) { return new Date(l.ETA) > new Date(r.ETA) ? 1 * sortOrder : -1 * sortOrder });
                 break;
-            case "ETDOnly":
-                self.fields.sort(function (l, r) { return new Date(l.ETDOnly) > new Date(r.ETDOnly) ? 1 * sortOrder : -1 * sortOrder });
+            case "ETD":
+                self.fields.sort(function (l, r) { return new Date(l.ETD) > new Date(r.ETD) ? 1 * sortOrder : -1 * sortOrder });
                 break;
-            case "BrandName":
-                self.fields.sort(function (l, r) { return l.BrandName > r.BrandName ? 1 * sortOrder : -1 * sortOrder });
+            case "Brand":
+                self.fields.sort(function (l, r) { return $.trim(l.Brand) > $.trim(r.Brand) ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Status":
-                self.fields.sort(function (l, r) { return l.Status > r.Status ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return $.trim(l.Status) > $.trim(r.Status) ? 1 * sortOrder : -1 * sortOrder });
                 break;
-            case "CommentsExist":
-                self.fields.sort(function (l, r) { return l.CommentsExist > r.CommentsExist ? 1 * sortOrder : -1 * sortOrder });
+            case "Cmts":
+                self.fields.sort(function (l, r) { return l.Cmts > r.Cmts ? 1 * sortOrder : -1 * sortOrder });
                 break;
-            case "FilesHExist":
-                self.fields.sort(function (l, r) { return l.FilesHExist > r.FilesHExist ? 1 * sortOrder : -1 * sortOrder });
+            case "Files":
+                self.fields.sort(function (l, r) { return l.Files > r.Files ? 1 * sortOrder : -1 * sortOrder });
                 break;
         }
 
@@ -273,10 +272,11 @@ var viewModel = function () {
     }
 };
 
-var vm_D = new viewModel();
+var vm_D;
 function createKO() {
-    showDlg(true);
-    $.getJSON(ListURL, function (data) {
+showDlg(true);
+$.getJSON(ListURL, function (data) {
+vm_D = new vmDashboard();
         showDlg(false);
         //vm_D.POs = ko.observableArray(data); // Initial items
         vm_D.fields(data.records);
@@ -288,8 +288,6 @@ function createKO() {
 
         //pagedGrid.DisplayFields(data);            
         setDTPdateForKO();
-
-        setFocus("PONumbers");
     });
 }
 
@@ -299,8 +297,8 @@ function updatePagedRows(vm) {// Starts with : index=0
     showDlg(true);
     $.getJSON(ListURL, function (data) {
         showDlg(false);
-        //viewModel.POs = ko.observableArray(data); // Initial items
-        //ko.applyBindings(viewModel);
+        //vm_D.POs = ko.observableArray(data); // Initial items
+        //ko.applyBindings(vm_D);
         if (data != null)
             ko.utils.arrayForEach(data, function (item) {
                 vm_D.fields.push(item);

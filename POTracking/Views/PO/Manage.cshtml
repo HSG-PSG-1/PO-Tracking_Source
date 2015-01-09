@@ -6,80 +6,89 @@
    bool printPOAfterSave = (bool)ViewData["printPOAfterSave"];
    string poPrintopenWindow = "openWinScrollable('" + Url.Action("Print", "PO", new { POID = Model.ID }) + "',648,838);";
    string poPrintKOopenWindow = "openWinScrollable('" + Url.Action("PrintPO", "PO", new { POID = Model.ID, PONumber = Model.PONumber }) + "',648,838);";
-   //bool? oprSuccess = ((bool?)ViewData["oprSuccess"]); - Handled in master page !
+    //bool? oprSuccess = ((bool?)ViewData["oprSuccess"]); - Handled in master page !
 }
 @section HeadContent {
     <script type="text/javascript">
         var skipCommitChk = false;
         @* *********** Make sure common.js is included*********** *@
         $().ready(function() { 
-            @if (printPOAfterSave) {@Html.Raw(poPrintopenWindow)}            
+            @if (printPOAfterSave)
+            {@Html.Raw(poPrintopenWindow)}            
             try{DisableSubmitButtons(false);/*$.unblockUI();*/}catch(e){}
             
         @************ Render tabs *********** SO: 5246558/jquery-tabs-caching-to-be-disabled-temporary-for-switching-tab-and-refreshing-oth*@
-        $("#tabs").tabs({
+            $("#tabs").tabs({
          @* cache: true, spinner: 'Loading...', ajaxOptions: { cache: false}, http://jqueryui.com/upgrade-guide/1.9/#deprecated-ajaxoptions-and-cache-options-added-beforeload-event *@
-         beforeLoad: function( event, ui ) {
-            ui.ajaxSettings.cache = false;
-            if ( ui.tab.data( "loaded" ) ) {  event.preventDefault();  return;  } 
-            ui.jqXHR.success(function() {   ui.tab.data( "loaded", true ); });
-           },
-        activate: function(event, ui) { setFocus1(event, ui) },
-        active: @ViewBag.activeTab.ToString() 
+            beforeLoad: function( event, ui ) {
+                ui.ajaxSettings.cache = false;
+                if ( ui.tab.data( "loaded" ) ) {  event.preventDefault();  return;  } 
+                ui.jqXHR.success(function() {   ui.tab.data( "loaded", true ); });
+            },
+            activate: function(event, ui) { setFocus1(event, ui) },
+            active: @ViewBag.activeTab.ToString() 
         }); @*//HT: cache: true - to prevent reload on each tab select!*@
         
-        @*$("#tabs").tabs({ active: 2 });*@
+            @*$("#tabs").tabs({ active: 2 });*@
         @*//bind event to check po commit*@
-        window.onbeforeunload = chkCommit;
+            window.onbeforeunload = chkCommit;
         
-        LoadKOAndOther();
+            LoadKOAndOther();
         @*// Add client side validation*@
-        var validator = $("#frmPO").validate({@Defaults.validatorJQsetting,ignore: [], focusCleanup: false});
+            var validator = $("#frmPO").validate({ignore: [], focusCleanup: false, @Defaults.validatorJQsetting});
         @*// Set blockUI for all forms (SO: 10753584)*@
-        $('form').submit(function () {            
-             if($(this).valid())
+            $('form').submit(function () {            
+                if($(this).valid())
                 { try{DisableSubmitButtons(true);@*$.blockUI();*@}catch(e){}}
         });        
         
-       });
+        });
 
-       function gotoPO(POId)
-        {
-            var activeTab = $( "#tabs" ).tabs( "option", "active" );
-            if(POId > 0)
-            window.location.href = 
-            "@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new { POId = -99 }))".replace('-99',POId) + 'activeTab=' + activeTab;
-        }
+     function gotoPO(POId)
+     {
+         var activeTab = $( "#tabs" ).tabs( "option", "active" );
+         if(POId > 0)
+             window.location.href = 
+             "@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new { POId = -99 }))".replace('-99',POId) + 'activeTab=' + activeTab;
+    }
 
-        var commentsEmailURL = '@Url.Action("CommentsKOEmail", "PO", new { POGUID = Model.POGUID })';
+    var commentsEmailURL = '@Url.Action("CommentsKOEmail", "PO", new { POGUID = Model.POGUID })';
         @*var CommentDeleteURL = '@Html.Raw(Url.Action("CommentKODelete", "PO", new { POGUID = Model.POGUID }))';*@
 
         var FileGetURL = '@Url.Action("GetFile", "PO")?';
         var FileDeleteURL = '@Url.Action("FileKODelete", "PO", new { POGUID = Model.POGUID })';        
     </script>
     <style>
-        table.wideTX tr td input[type=text], select
+        table.wideTX tr td input[type=text]
         {
             width: 250px;
         }
+
+        table.wideTX tr td select
+        {
+            width: 254px;
+        }
+
         table.wideTXR tr td input[type=text]
         {
             width: 100%;
             background-color: #C0C0C0;
             color: #333333;
         }
+
         .autocomp
         {
             width: 270px;
         }
+
         fieldset
         {
             background-color: #f5f5f5;
         }
-    </style>    
+    </style>
 }
 @{ bool isNewPO = (Model.ID <= Defaults.Integer);
-   string cancelorDelete = isNewPO ? "Cancel" : "Delete";   
+   string cancelorDelete = isNewPO ? "Cancel" : "Delete";
    string PONumber = isNewPO ? "(new)" : Model.PONumber.ToString();
 
    bool hasPOIDs = false;
@@ -102,11 +111,8 @@
    catch (Exception ex)
    { hasPOIDs = false; }
 }
-<script src="@Url.Content("~/Content/Scripts/KO/knockout-2.2.0.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/Scripts/KO/knockout.mapping-latest.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/Scripts/KO/KoExtra.js")" type="text/javascript"></script>
 
-<table width="99%" align="center" border="0">    
+<table width="99%" align="center" border="0">
     <tr>
         <td>
             <table width="100%" border="0">
@@ -171,7 +177,8 @@
                                         <input type="submit" value="Delete" title="Delete this po" class="button" onclick="if(confirmDeleteM
         (event, 'Are you sure you want to delete this po and all the data related with this po?'))skipCommitChk=true; else return false;" />@Html.Raw("&nbsp;")}
                                     }
-                                    <input type="reset" value="Cancel" class="button" onclick="try{window.location.href='@Url.Action("Cancel", new { POID = Model.ID, POGUID = Model.POGUID })'}catch(ex){;}"/>&nbsp;
+@*<input type="reset" value="Cancel" class="button" onclick="try{window.location.href='@Url.Action("Cancel", new { POID = Model.ID, POGUID = Model.POGUID })'}catch(ex){;}"/>*@
+                                    <input type="reset" value="Cancel" class="button" onclick="try{window.location.href='@Url.Action("List", "Dashboard")        ';}catch(ex){;}"/>&nbsp;
                                     @if (!isNewPO)
                                     { //&& !IsAsiaVendor
                                         <input type="button" value="Print" class="button" onclick="return checkAndPrint(this, event);" />@Html.Raw("&nbsp;")}
@@ -199,11 +206,11 @@
                     <li><a href="#tabs-4" href1='@Url.Action("Comments", new { POGUID = Model.POGUID })'>
                         <span class="blue">4.Comments</span></a></li>
                     <li><a href="#tabs-5" href1='@Url.Action("Files", new { POGUID = Model.POGUID })'>
-                        <span class="blue">5.Files</span></a></li>                    
+                        <span class="blue">5.Files</span></a></li>
                 </ul>
                 <div id="tabs-1" name="tabs-1">
                     <div id="divHdr" data-bind="with: header">
-                        <table align="center" border="0" cellpadding="1" cellspacing="2" width="100%" class="wideTXR">
+                        <table align="center" border="0" cellpadding="1" cellspacing="2" width="100%" class="wideTXR" id="tblHdr">
                             <tr align="center" style="display: none">
                                 <td>
                                     <span class="error">Error (if any)</span>
@@ -218,8 +225,7 @@
                                                 <td width="48%">
                                                     <table width="100%">
                                                         <tr>
-                                                            <td align="right" nowrap="nowrap" width="5%">
-                                                                Order Date :&nbsp;
+                                                            <td align="right" nowrap="nowrap" width="5%">Order Date :&nbsp;
                                                             </td>
                                                             <td>
                                                                 <input type="text" id="PODate" name="PODate" data-bind="date:PODate" readonly="readonly" />
@@ -228,14 +234,13 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td align="right" nowrap="nowrap">
-                                                                Terms :&nbsp;
+                                                            <td align="right" nowrap="nowrap">Terms :&nbsp;
                                                             </td>
-                                                            <td><input type="text" id="Term" name="Term" data-bind="value:Term" readonly="readonly" /></td>
+                                                            <td>
+                                                                <input type="text" id="Term" name="Term" data-bind="value:Term" readonly="readonly" /></td>
                                                         </tr>
                                                         <tr>
-                                                            <td align="right" nowrap="nowrap">
-                                                                Ship Via :&nbsp;
+                                                            <td align="right" nowrap="nowrap">Ship Via :&nbsp;
                                                             </td>
                                                             <td>
                                                                 <input type="text" id="ShipVia" name="ShipVia" data-bind="value:ShipVia" readonly="readonly" />
@@ -243,33 +248,28 @@
                                                         </tr>
                                                     </table>
                                                 </td>
-                                                <td width="4%">
-                                                    &nbsp;&nbsp;&nbsp;
+                                                <td width="4%">&nbsp;&nbsp;&nbsp;
                                                 </td>
                                                 <td width="48%">
                                                     <table width="99%">
                                                         <tr>
-                                                            <td align="right" nowrap="nowrap" width="5%">
-                                                                FOB :&nbsp;
+                                                            <td align="right" nowrap="nowrap" width="5%">FOB :&nbsp;
                                                             </td>
-                                                            <td align="left" nowrap="nowrap">                                                            
+                                                            <td align="left" nowrap="nowrap">
                                                                 <input type="text" id="FOB" name="FOB" data-bind="value:FOB" readonly="readonly" />
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td align="right" nowrap="nowrap">
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attn :&nbsp;
+                                                            <td align="right" nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attn :&nbsp;
                                                             </td>
                                                             <td align="left" nowrap="nowrap">
                                                                 <input type="text" id="ConfirmTo" name="ConfirmTo" data-bind="value:ConfirmTo" readonly="readonly" />
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td>
-                                                                &nbsp;
+                                                            <td>&nbsp;
                                                             </td>
-                                                            <td>
-                                                                &nbsp;
+                                                            <td>&nbsp;
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -285,173 +285,149 @@
                                         <legend class="SubHeading">Vendor Address</legend>
                                         <table width="99%">
                                             <tr>
-                                                <td align="right" nowrap="nowrap" width="5%">
-                                                    Code :&nbsp;
+                                                <td align="right" nowrap="nowrap" width="5%">Code :&nbsp;
                                                 </td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="VendorNumber" name="VendorNumber" data-bind="value:VendorNumber" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="right" nowrap="nowrap">
-                                                    Name :&nbsp;
+                                                <td align="right" nowrap="nowrap">Name :&nbsp;
                                                 </td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="VendorName" name="VendorName" data-bind="value:VendorName" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="right" nowrap="nowrap">
-                                                    Address :&nbsp;
+                                                <td align="right" nowrap="nowrap">Address :&nbsp;
                                                 </td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="VendorAddress1" name="VendorAddress1" data-bind="value:VendorAddress1" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
-                                                </td>
+                                                <td></td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
-                                                    <input type="text" id="VendorAddress2" name="VendorAddress2" data-bind="value:VendorAddress2"readonly="readonly" />
+                                                    <input type="text" id="VendorAddress2" name="VendorAddress2" data-bind="value:VendorAddress2" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
-                                                </td>
+                                                <td></td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="VendorAddress3" name="VendorAddress3" data-bind="value:VendorAddress3" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="left" nowrap="nowrap">
-                                                    &nbsp;&nbsp;ZIP Code :&nbsp;
+                                                <td align="left" nowrap="nowrap">&nbsp;&nbsp;ZIP Code :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
                                                     <input type="text" id="VendorZipCode" name="VendorZipCode" data-bind="value:VendorZipCode" readonly="readonly" />
                                                     &nbsp;
                                                 </td>
-                                                <td align="right" nowrap="nowrap">
-                                                    City :&nbsp;
+                                                <td align="right" nowrap="nowrap">City :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
                                                     <input type="text" id="VendorCity" name="VendorCity" data-bind="value:VendorCity" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="right" nowrap="nowrap">
-                                                    State :&nbsp;
+                                                <td align="right" nowrap="nowrap">State :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
                                                     <input type="text" id="VendorState" name="VendorState" data-bind="value:VendorState" readonly="readonly" />
                                                 </td>
-                                                <td align="right" nowrap="nowrap">
-                                                    Country :&nbsp;
+                                                <td align="right" nowrap="nowrap">Country :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
                                                     <input type="text" id="VendorCountryName" name="VendorCountryName" data-bind="value:VendorCountryName" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="right" nowrap="nowrap">
-                                                    Fax :&nbsp;
+                                                <td align="right" nowrap="nowrap">Fax :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
-                                                    <input type="text" id="FaxNumber" name="FaxNumber" data-bind="value:FaxNumber"  readonly="readonly"/>
+                                                    <input type="text" id="FaxNumber" name="FaxNumber" data-bind="value:FaxNumber" readonly="readonly" />
                                                 </td>
-                                                <td align="right" nowrap="nowrap">
-                                                </td>
-                                                <td align="left" nowrap="nowrap">
-                                                </td>
+                                                <td align="right" nowrap="nowrap"></td>
+                                                <td align="left" nowrap="nowrap"></td>
                                             </tr>
                                             <tr>
                                             </tr>
                                         </table>
                                     </fieldset>
                                 </td>
-                                <td width="2%">
-                                    &nbsp;&nbsp;&nbsp;
+                                <td width="2%">&nbsp;&nbsp;&nbsp;
                                 </td>
                                 <td align="left" valign="top" width="49%">
                                     <fieldset class="fieldSet">
                                         <legend class="SubHeading">Ship To Address</legend>
                                         <table width="99%">
                                             <tr>
-                                                <td align="right" nowrap="nowrap" width="5%">
-                                                    Code :&nbsp;
+                                                <td align="right" nowrap="nowrap" width="5%">Code :&nbsp;
                                                 </td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="ShipToCode" name="ShipToCode" data-bind="value:(ShipToCode() != 0)?ShipToCode():''" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="right" nowrap="nowrap">
-                                                    Name :&nbsp;
+                                                <td align="right" nowrap="nowrap">Name :&nbsp;
                                                 </td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="ShipToName" name="ShipToName" data-bind="value:ShipToName" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="right" nowrap="nowrap">
-                                                    Address :&nbsp;
+                                                <td align="right" nowrap="nowrap">Address :&nbsp;
                                                 </td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="ShipToAddress1" name="ShipToAddress1" data-bind="value:ShipToAddress1" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
-                                                </td>
+                                                <td></td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="ShipToAddress2" name="ShipToAddress2" data-bind="value:ShipToAddress2" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
-                                                </td>
+                                                <td></td>
                                                 <td align="left" colspan="3" nowrap="nowrap">
                                                     <input type="text" id="ShipToAddress3" name="ShipToAddress3" data-bind="value:ShipToAddress3" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="right" nowrap="nowrap">
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;ZIP Code :&nbsp;
+                                                <td align="right" nowrap="nowrap">&nbsp;&nbsp;&nbsp;&nbsp;ZIP Code :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
                                                     <input type="text" id="ShipToZipCode" name="ShipToZipCode" data-bind="value:ShipToZipCode" readonly="readonly" />
                                                 </td>
-                                                <td align="right" nowrap="nowrap">
-                                                    City :&nbsp;
+                                                <td align="right" nowrap="nowrap">City :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
                                                     <input type="text" id="ShipToCity" name="ShipToCity" data-bind="value:ShipToCity" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="right" nowrap="nowrap">
-                                                    State :&nbsp;
+                                                <td align="right" nowrap="nowrap">State :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
                                                     <input type="text" id="ShipToState" name="ShipToState" data-bind="value:ShipToState" readonly="readonly" />
                                                 </td>
-                                                <td align="right" nowrap="nowrap">
-                                                    Country :&nbsp;
+                                                <td align="right" nowrap="nowrap">Country :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
                                                     <input type="text" id="ShipToCountryCode" name="ShipToCountryCode" data-bind="value:ShipToCountryCode" readonly="readonly" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td height="23">
-                                                </td>
+                                                <td height="23"></td>
                                             </tr>
                                         </table>
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="height: 5px">
-                                </td>
+                                <td style="height: 5px"></td>
                             </tr>
                             <tr runat="server" id="trLastModified">
                                 <td align="left" colspan="3" valign="top" width="48%">
@@ -461,7 +437,7 @@
                                                 <td align="left" nowrap="nowrap">
                                                     <i>Last Modified By</i> :&nbsp;
                                                     <i><span data-bind="text:LastModifiedBy()"></span>
-                                                      (<span data-bind="date: LastModifiedDate()"></span>)
+                                                        (<span data-bind="date: LastModifiedDate()"></span>)
                                                     </i>
                                                 </td>
                                                 @*<td width="171">
@@ -490,16 +466,17 @@
                 <div id="tabs-5">
                     @* SO: 607985 - pass multiple viewdata*@
                     @{Html.RenderPartial("Files", new ViewDataDictionary { { "Archived", Model.Archived }, { "POGUID", Model.POGUID } }); }
-                </div>                
+                </div>
             </div>
         </td>
     </tr>
 </table>
 <div id="taco_niteDIV1" name="taco_niteDIV1" style1="display:none">
-    &nbsp;</div>
-<script src="@Url.Content("~/Content/Scripts/KOVM/CommentsFilesKOscript.js?new")" type="text/javascript"></script>
+    &nbsp;
+</div>
+<script src="@Url.Content("~/Content/Scripts/KOVM/CommentsFilesKOscript.js")" type="text/javascript"></script>
 <script type="text/javascript"> 
-var headerViewModel = function () {
+    var headerViewModel = function () {
         var self = this;
         self.header = ko.observable();
     }
@@ -510,69 +487,85 @@ var headerViewModel = function () {
         if (hdr != null) ko.applyBindings(viewModelheader, document.getElementById("divHdr"));
     }
 
-      function LoadKOAndOther() {
-      $.getJSON('@Html.Raw(Url.Action("POEditKOViewModel", "PO", new { POGUID = Model.POGUID }))',
-        function (jsonData) { doTabLoadWithKOCallback(jsonData); });
-     }
-     var LinesOrderExtTotal, OrderTotal;
-     function doTabLoadWithKOCallback(POVM) {
+    function LoadKOAndOther() {
+        $.getJSON('@Html.Raw(Url.Action("POEditKOViewModel", "PO", new { POGUID = Model.POGUID }))',
+          function (jsonData) { doTabLoadWithKOCallback(jsonData); });
+    }
+    var LinesOrderExtTotal, OrderTotal;
+    function doTabLoadWithKOCallback(POVM) {
             
-            LinesOrderExtTotal = POVM.LinesOrderExtTotal;//TotalAmtInvoiced;
-            OrderTotal = POVM.OrderTotal;
+        LinesOrderExtTotal = POVM.LinesOrderExtTotal;//TotalAmtInvoiced;
+        OrderTotal = POVM.OrderTotal;
 
-            //POGUID = POVM.Header.POGUID;
+        //POGUID = POVM.Header.POGUID;
 
            @if (!printPOAfterSave)
            {<text>setFocus("PODate");</text>} @* Set focus will hide the print window - if invoked *@
            
-            createHeaderKO(POVM.Header); // KO for headerViewModel tab
+         createHeaderKO(POVM.Header); // KO for headerViewModel tab
 
             @*Pre-Load tabs*@
-            createLinesKO(POVM.Lines, POVM.LinesOrderExtTotal, POVM.OrderTotal); @* loaded as Html.RenderPartial("Lines")*@
+         createLinesKO(POVM.Lines, POVM.LinesOrderExtTotal, POVM.OrderTotal); @* loaded as Html.RenderPartial("Lines")*@
             @*reloadWithCallback('@Url.Action("Lines", new { POGUID = Model.POGUID })','',"#tabs-2", 
                 function(){ createLinesKO(POVM.Lines, POVM.LinesOrderExtTotal) } );*@
 
-            reloadWithCallback('@Url.Action("Info", new { POGUID = Model.POGUID })','',"#tabs-3", 
-                function(){createPOInfoKO(POVM);});  
+         reloadWithCallback('@Url.Action("Info", new { POGUID = Model.POGUID })','',"#tabs-3", 
+             function(){createPOInfoKO(POVM);});  
                 
-            createCommentsKO(POVM.Comments, POVM.Comments.AssignTo);
+         createCommentsKO(POVM.Comments, POVM.Comments.AssignTo);
             @*reloadWithCallback('@Html.Raw(Url.Action("Comments", new { POGUID = Model.POGUID, AssignTo = Model.AssignTo }))',
             '',"#tabs-4", function(){createCommentsKO(POVM.Comments, POVM.Comments.AssignTo);});*@
 
-            createFilesHeaderKO(POVM.Files);
+         createFilesHeaderKO(POVM.Files);
             @*reloadWithCallback('@Url.Action("Files", new { POGUID = Model.POGUID })','',"#tabs-5", 
                 function(){createFilesHeaderKO(POVM.Files);});*@
-      }       
+     }       
     function setFocus1(evt, ui) {
         // Objects available in the function context:
         // ui.tab     // anchor element of the selected (clicked) tab
         // ui.newPanel   // element, that contains the selected/clicked tab contents
         // ui.newPanel.index()   // non-zero-based index of the selected (clicked) tab
+        var hdrTableNavDone = false, infoTableNavDone = false, cmtsTableNavDone = false, filsTableNavDone = false;
         switch (ui.newPanel.index()) {
-            case 1: //Header
-                setFocus("PODate"); break;
-            @*case 2:break; //Lines*@                
-            case 3: //Info
-                setFocus("Info_BLNumber"); break; // PoPlacedDate
-            case 4: //Comments
-                setFocus("Comment1"); break;
-            case 5: // Files
-                setFocus("Comment"); break;  //FileNameNEW
+            case 1: //Header                
+                if(!hdrTableNavDone) { $("#tblHdr").tableNav(); hdrTableNavDone = true; }
+                setFocus("PODate"); 
+                break;
+                @*case 2:break; //Lines*@
+            case 3: //Info                
+                if(!infoTableNavDone) { $("#tblnfo").tableNav(); infoTableNavDone = true; }
+                setFocus("Info_BLNumber"); 
+                break; // PoPlacedDate
+            case 4: //Comments                
+                if(!cmtsTableNavDone) { $("#tblComments").tableNav(); cmtsTableNavDone = true; }
+                setFocus("Comment1");
+                break;
+            case 5: // Files                
+                if(!filsTableNavDone) { $("#tblFilesH").tableNav(); filsTableNavDone = true; }
+                setFocus("Comment");
+                break;  //FileNameNEW
         }
     }
     // Check and prompt if the user is getting away from the page without
-        function chkCommit(e) {
-            if (skipCommitChk) { skipCommitChk = false; return; }//Special case
+    function chkCommit(e) {
+        if (skipCommitChk) { return; }//Special case (skipCommitChk = false; done in unload)
             
-            if (!e) e = window.event;
-            //e.cancelBubble is supported by IE - this will kill the bubbling process.
-            e.cancelBubble = true;
-            e.returnValue = 'Make sure you have saved the PO or all the changes will be lost. Do you want to leave now?'; 
-            //Above is displayed on the dialog
+        if (!e) e = window.event;
+        //e.cancelBubble is supported by IE - this will kill the bubbling process.
+        e.cancelBubble = true;
+        e.returnValue = 'Make sure you have saved the PO or all the changes will be lost. Do you want to leave now?'; 
+        //Above is displayed on the dialog
 
-            //e.stopPropagation works in Firefox.
-            if (e.stopPropagation) {e.stopPropagation();e.preventDefault();}
-        }
+        //e.stopPropagation works in Firefox.
+        if (e.stopPropagation) {e.stopPropagation();e.preventDefault();}
+    }
+    // A jQuery event , which is triggered after "onbeforeunload" 
+    $(window).unload(function(){ // SO : 19179514            
+        // trigger the final cleanup 
+        if (skipCommitChk) { skipCommitChk = false; return; }
+        $.post('@Url.Action("CleanupTempUpload")', { POGUID : '@Model.POGUID'});            
+            return true;
+        });
 
         var printPOAfterSave = false;
         var printWindow;
@@ -587,12 +580,12 @@ var headerViewModel = function () {
                 printWindow = @Html.Raw(poPrintKOopenWindow)
                 //child.window.initChildFrame(ko, viewModelheader, viewModelLines);
                 @*openWinScrollable('@Url.Action("Print", "PO", new { POID = Model.Info.ID })',648,838);*@
-            }
+                }
         }
 
         function invokeBinding(child)
         { //SO:13953321 (KO doesn't work for IE < 9)
-           if(printWindow != null && printWindow.closed == false)
-            printWindow.initChildFrame(viewModelheader, viewModelLines, LinesOrderExtTotal, OrderTotal);
+            if(printWindow != null && printWindow.closed == false)
+                printWindow.initChildFrame(viewModelheader, viewModelLines, LinesOrderExtTotal, OrderTotal);
         }
 </script>
