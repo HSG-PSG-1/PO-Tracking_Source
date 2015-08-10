@@ -47,10 +47,12 @@ namespace POT.Services
                  c1.PO = null; c1.POID1 = poID; */
             });
         }
-                
-        public static bool SendEmail(int POID, int AssignTo, string PONumber, POComment CommentObj)
+
+        public static bool SendEmail(int POID, int AssignTo, string PONumber, POComment CommentObj, ref string Err)
         {
-            bool sendMail = (POID > Defaults.Integer && AssignTo != _SessionUsr.ID);// No need to send mail if its current user
+            bool isSelfNotification = (AssignTo == _SessionUsr.ID);
+            bool sendMail = (POID > Defaults.Integer && !isSelfNotification);// No need to send mail if its current user
+            Err = isSelfNotification ? "Self notification : No email queued" : Err;
             try
             {
                 #region Check and send email
@@ -61,9 +63,13 @@ namespace POT.Services
                 }
                 #endregion
             }
-            catch (Exception ex) { sendMail = false; }
+            catch (Exception ex)
+            {
+                sendMail = false; Err = ex.Message + "<br/>" +
+(ex.InnerException ?? new Exception()).Message;
+            }
 
-            return sendMail;
+            return sendMail;            
         }
 
         #endregion
