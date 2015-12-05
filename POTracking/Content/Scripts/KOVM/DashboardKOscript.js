@@ -1,6 +1,6 @@
-﻿$().ready(function ()
-{
-    doCollapse(); //If url has collapse        
+﻿$().ready(function () {
+    setFocus("PONumbers");
+    doCollapse(); //If url has collapse
 
     renderAutoComplete(autocompleteURL + "Brand", "#BrandID", "#BrandName");
     renderAutoComplete(autocompleteURL + "Vendor", "#VendorID", "#VendorName");
@@ -60,8 +60,7 @@ function showDialog(action, poID) {
         modal: false,
         open: function () {
             $(this).html(loading);
-            $(this).load(dashboardURL + action + '?POID=' + poID, function () { $("#NewStatusID").focus(); }); //+ '&Archived=' + archived
-            /*setTimeout(function () { $('.ui-dialog-titlebar-close').blur(); }, 1);*/
+            $(this).load(dashboardURL + action + '?POID=' + poID); //+ '&Archived=' + archived
         },
         height: 360,
         width: 650,
@@ -102,7 +101,9 @@ function updateStatusHistory() {
     $(oldStatID).val($(newStatID).val());
     $(oldStat).val($(newStatID).children("option:selected").text());
     
-    /*update in Grid (NOTE: make sure 'poObj' is set when td is clicked*/
+    /*update in Grid (NOTE: make sure 'poObj' is set when td is clicked
+    $(poObj).html($(oldStat).val()); $(poObj).effect('highlight', {}, 2000); //highlight
+    $("#status" + poObj.ID).val($(oldStat).val()).trigger("change"); $("#statusID" + poObj.ID).val($(newStatID).val()).trigger("change");*/
     
     $("#statusDIV" + poObj.ID).text($(oldStat).val()).trigger("change").effect('highlight', {}, 2000);
     poObj.Status = $(oldStat).val(); poObj.OrdStat = $(newStatID).val();
@@ -120,18 +121,18 @@ function excelPostback(e) {
     });
     return false; // to cause form postback
 }
-function openPrintDialog(POId) {
-	if (POId > 0)  return openWinScrollable(printPOURL.replace('-99', POId), 648, 838);
-}
+
+function openPrintDialog(POId) { if (POId > 0)  return openWinScrollable(printPOURL.replace('-99', POId), 648, 838);}
 
 function doAJAXSubmit(frm) {    vm_D.invokeSearch(1);    return false; }
 
+
 /* ============== ============== ============== ============== */
 
-var vmDashboard = function () {
+var viewModel = function () {
     var self = this;
     self.fields = ko.observableArray(); //jsondata
-    self.pageSize = ko.observable(gridPageSize);
+    self.pageSize = ko.observable(100);
     self.pageIndex = ko.observable(0);
     self.cachedPagesTill = ko.observable(0);
     self.sortField = ko.observable("POno");
@@ -234,10 +235,10 @@ var vmDashboard = function () {
                 self.fields.sort(function (l, r) { return new Date(l.POdt) > new Date(r.POdt) ? 1 * sortOrder : -1 * sortOrder }); // PODate
                 break;
             case "Vndr": // Need to convert into string while comparison
-                self.fields.sort(function (l, r) { return $.trim(l.Vndr) + "" > $.trim(r.Vndr) + "" ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return l.Vndr + "" > r.Vndr + "" ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Ship":
-                self.fields.sort(function (l, r) { return $.trim(l.Ship) > $.trim(r.Ship) ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return l.Ship > r.Ship ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "ETA":
                 self.fields.sort(function (l, r) { return new Date(l.ETA) > new Date(r.ETA) ? 1 * sortOrder : -1 * sortOrder });
@@ -246,10 +247,10 @@ var vmDashboard = function () {
                 self.fields.sort(function (l, r) { return new Date(l.ETD) > new Date(r.ETD) ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Brand":
-                self.fields.sort(function (l, r) { return $.trim(l.Brand) > $.trim(r.Brand) ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return l.Brand > r.Brand ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Status":
-                self.fields.sort(function (l, r) { return $.trim(l.Status) > $.trim(r.Status) ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return l.Status > r.Status ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Cmts":
                 self.fields.sort(function (l, r) { return l.Cmts > r.Cmts ? 1 * sortOrder : -1 * sortOrder });
@@ -272,11 +273,10 @@ var vmDashboard = function () {
     }
 };
 
-var vm_D;
+var vm_D = new viewModel();
 function createKO() {
-showDlg(true);
-$.getJSON(ListURL, function (data) {
-vm_D = new vmDashboard();
+    showDlg(true);
+    $.getJSON(ListURL, function (data) {
         showDlg(false);
         //vm_D.POs = ko.observableArray(data); // Initial items
         vm_D.fields(data.records);
@@ -288,6 +288,8 @@ vm_D = new vmDashboard();
 
         //pagedGrid.DisplayFields(data);            
         setDTPdateForKO();
+
+        setFocus("PONumbers");
     });
 }
 
@@ -297,8 +299,8 @@ function updatePagedRows(vm) {// Starts with : index=0
     showDlg(true);
     $.getJSON(ListURL, function (data) {
         showDlg(false);
-        //vm_D.POs = ko.observableArray(data); // Initial items
-        //ko.applyBindings(vm_D);
+        //viewModel.POs = ko.observableArray(data); // Initial items
+        //ko.applyBindings(viewModel);
         if (data != null)
             ko.utils.arrayForEach(data, function (item) {
                 vm_D.fields.push(item);

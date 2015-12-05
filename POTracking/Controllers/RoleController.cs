@@ -50,7 +50,7 @@ namespace POT.Controllers
             //Make sure If there's any DELETE - it is NOT being referred
             CanCommit = !MasterController.isDeletedBeingReferred(changes, true, ref err);//.Cast<Master>().ToList()
             //Check duplicates among New records only
-            if (CanCommit && changes != null && changes.ToList<Master>().Exists(r => r._Added))
+            if (CanCommit && changes != null && changes.ToList<Master>().Exists(r => r.IsAdded))
                 CanCommit = !MasterController.hasDuplicateInNewEntries(changes, ref err);
 
             #region All OK so go ahead

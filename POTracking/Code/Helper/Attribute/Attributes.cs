@@ -157,7 +157,7 @@ namespace HSG.Helper
 
             POT.Models.Master mObj = (POT.Models.Master)value;
 
-            if (mObj._Deleted || !(mObj._Added || mObj._Updated))
+            if (mObj.IsDeleted || !(mObj.IsAdded || mObj.IsUpdated))
             {
                 return true;//Record will NOT be processed
             }

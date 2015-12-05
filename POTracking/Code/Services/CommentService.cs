@@ -47,7 +47,7 @@ namespace POT.Services
                  c1.PO = null; c1.POID1 = poID; */
             });
         }
-                
+
         public static bool SendEmail(int POID, int AssignTo, string PONumber, POComment CommentObj, ref string Err)
         {
             bool isSelfNotification = (AssignTo == _SessionUsr.ID);
@@ -63,10 +63,13 @@ namespace POT.Services
                 }
                 #endregion
             }
-            catch (Exception ex) { sendMail = false; Err = ex.Message + "<br/>" +
-                (ex.InnerException??new Exception()).Message; }
+            catch (Exception ex)
+            {
+                sendMail = false; Err = ex.Message + "<br/>" +
+(ex.InnerException ?? new Exception()).Message;
+            }
 
-            return sendMail;
+            return sendMail;            
         }
 
         #endregion

@@ -194,7 +194,16 @@ namespace POT.Services
         }
 
         #endregion
-    
+    }
+
+    public class PAWPO : _ServiceBase //: CAWBase - not needed because here we've kept the bulk Add, Edit & del function
+    {
+        #region Variables & Constructor
+        public bool IsAsync { get; set; }/*return true;for testing */
+        
+        public PAWPO(bool Async){IsAsync = Async; }
+        #endregion
+
         #region Add / Edit / Delete & Bulk
         
         public string AsyncBulkAddEditDelKO(POHeader poObj, int StatusIDold, 
@@ -247,12 +256,10 @@ namespace POT.Services
                     if (files != null && files.Count() > 0)
                         new POFileService(dbc).BulkAddEditDel(files.ToList(), poObj, doSubmit, dbc);
                     Progress = "POdetails";//Process lines (and internally also process files(details)
-
-                    // No need to cleanup the GUID folder or similar because now we rename
-                    /*NOTE: For Async the Details files will have to be handled internally in the above function
+                    
                     if (poObj.ID.ToString() != poObj.POGUID && !string.IsNullOrEmpty(poObj.POGUID))//ensure there's NO confusion
                         FileIO.EmptyDirectory(System.IO.Path.Combine(Config.UploadPath, poObj.POGUID.ToString()));
-                    */
+
                     if (!doSubmit) dbc.SubmitChanges();//Make a FINAL submit instead of periodic updates
                     txn.Commit();//Commit
                 }
@@ -261,9 +268,6 @@ namespace POT.Services
                 {
                     txn.Rollback();
                     Exception exMore = new Exception(ex.Message + " After " + Progress);
-                    // Make sure the temp files are also deleted
-                    _Session.ResetPOInSessionAndEmptyTempUpload(poObj.ID, poObj.POGUID);
-
                     throw exMore;
                 }
                 finally

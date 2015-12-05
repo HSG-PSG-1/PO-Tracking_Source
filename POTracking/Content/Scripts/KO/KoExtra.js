@@ -53,6 +53,7 @@ function ParseJSONdate(jsonDate) {
     if (jsonDate != null && jsonDate != Date111) {
         try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e.message + ":" + jsonDate + "."); }
     }
+    value = makeDateTimezoneNeutral(value); // HT: DON'T forget
     return value.getMonth() + 1 + "/" + value.getDate() + "/" + value.getFullYear();
 }
 
@@ -96,10 +97,14 @@ function editable(ctrl, show)
     else $(ctrl).removeClass('note').addClass('noBorder');//.attr('readOnly', true)
 }
 
-function doEditable(editDiv)
-{
-    var selector = "td input[class='editableTX'], textarea[class='editableTX']";
-    try { $(editDiv).closest('tr').find(selector).eq(0).focus().trigger("click"); } catch (e) { alert(e.message); }
+function doEditable(editDiv) {
+    // http://api.jquery.com/first/
+    try{$(editDiv).closest('tr').find("td input[class='noBorder']").first().focus().trigger("click");}catch(e){alert(e);}
+    //editDiv.parentElement.parentElement.children[4].click();
+}
+
+function doEditableTA(td) {
+    try { $(td).closest('tr').find("td textarea[class='noBorder']").focus().trigger("click"); } catch (e) { alert(e); }
     //editDiv.parentElement.parentElement.children[4].click();
 }
 
@@ -112,7 +117,7 @@ function doRequiredChk(ctrl)
 {
     var val = $(ctrl).val();
     if (val == null || val.length < 1) {
-        showNOTY("This field is required", false);
+        alert("This field is required")
         $(ctrl).focus();
         return false;
     }
@@ -169,6 +174,7 @@ ko.bindingHandlers.datepicker = {
             current = $(element).datepicker("getDate");
 
             if (value - current !== 0) {
+                value = makeDateTimezoneNeutral(value); // HT: DON'T forget
                 $(element).datepicker("setDate", value);
             }
 
@@ -188,3 +194,12 @@ ko.bindingHandlers.datepicker = {
     }
 };
 /* <input data-bind="datepicker: myDate, datepickerOptions: { minDate: new Date() }" /> */
+function makeDateTimezoneNeutral(dt) {
+    console.log(dt);
+    // HT: SPECIAL CASE - some time zone client browsers will show upto 1 day offset based on the UTC time diff
+    //DOESN'T work - dt = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000);
+    dt.setHours(dt.getHours() + dt.getTimezoneOffset() / 60);
+    // ^^^ this shud nullify that difference as per SO : 1486476 (works),  26028466 (nope)
+    console.log(dt);
+    return dt;
+}

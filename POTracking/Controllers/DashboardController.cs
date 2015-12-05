@@ -77,9 +77,8 @@ namespace POT.Controllers
                              Ship = vw_u.ShipToCity
                          };
              
-            //return Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
-            System.Web.Script.Serialization.JavaScriptSerializer jsSerializer =
-                new System.Web.Script.Serialization.JavaScriptSerializer { MaxJsonLength = Int32.MaxValue }; //Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
+            System.Web.Script.Serialization.JavaScriptSerializer jsSerializer = new System.Web.Script.Serialization.JavaScriptSerializer
+            { MaxJsonLength = Int32.MaxValue}; //Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
             var jsonDataSet = new ContentResult
             {
                 Content = jsSerializer.Serialize(new { records = result, search = oldSearchOpts }),
@@ -98,10 +97,9 @@ namespace POT.Controllers
             populateData(false);// Populate ddl Viewdata
 
             //Ensure that Orderby has the correcy field (not the custom field so need to replace)
-            //Ensure that Orderby has the correcy field (not the custom field so need to replace)
             orderBy = orderBy.Replace("POno", "PONumber").Replace("OrdStat", "OrderStatus").Replace("Vndr", "VendorName").Replace("Brand", "BrandName")
                 .Replace("Cmts", "CommentsExist").Replace("Files", "FilesHExist").Replace("POdt", "PODate").Replace("Ship", "ShipToCity");
-            //orderBy = orderBy.Replace("PODateOnly", "PODate").Replace("ETDOnly", "ETD").Replace("ETAOnly", "ETA");
+                //.Replace("ETD", "ETD").Replace("ETA", "ETA");
 
             _Session.POIDs = new DashboardService().SearchPOIDKO(searchObj, orderBy); 
 
@@ -129,7 +127,7 @@ namespace POT.Controllers
             //HttpContext context = ControllerContext.HttpContext.CurrentHandler;
             //Essense of : http://stephenwalther.com/blog/archive/2008/06/16/asp-net-mvc-tip-2-create-a-custom-action-result-that-returns-microsoft-excel-documents.aspx
             this.Response.Clear();
-            this.Response.AddHeader("content-disposition", "attachment;filename=" + "Dashboard_" + _SessionUsr.ID + ".xls");
+            this.Response.AddHeader("Content-Disposition", "attachment;filename=" + "Dashboard_" + _SessionUsr.ID + ".xls");
             this.Response.Charset = "";
             this.Response.Cache.SetCacheability(HttpCacheability.NoCache);
             this.Response.ContentType = "application/vnd.ms-excel";

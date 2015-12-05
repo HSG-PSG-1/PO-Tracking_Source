@@ -4,14 +4,16 @@
 @using HSG.Helper
 @using System.Collections
 @{ ViewBag.Title = "Dashboard"; Layout = Defaults.masterLayout;}
-@*section HeadContent {    
+@section HeadContent {
+    <script src="@Url.Content("~/Content/Scripts/KO/knockout-2.2.0.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/Scripts/KO/knockout.mapping-latest.js")" type="text/javascript"></script>
     <style type="text/css">
         select, input[type="text"]
         {
             width: 200px;
         }
     </style>
-}*@
+}
 @{ POT.DAL.vw_PO_Dashboard dSearch = ((POT.DAL.vw_PO_Dashboard)(ViewData["SearchData"]));
    object routeValues = new { qData = Request["qData"] };
    Dictionary<string, object> txtAttr = new Dictionary<string, object>();
@@ -48,8 +50,7 @@
                             @Html.TextBox("PONumbers", dSearch.PONumbers, new
                        {
                            title1 = "Enter single or comma separated multiple values",
-                           data_bind = "value:search.PONumbers",
-                           @autofocus = "autofocus"
+                           data_bind = "value:search.PONumbers"
                        })
                         </td>
                         <td nowrap="nowrap" width="5%">
@@ -160,12 +161,15 @@
 </table>
 @*HT: Set min width required by Dashboard*@
 <img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="900px" />
-<script type="text/javascript">
+<script language="javascript" type="text/javascript" defer="defer">
     // For future manipulation: $('div.pager').children('a').click(function () {@Defaults.chkCollapse }); // Add event to each page link to check & persist collapse search panel
    var autocompleteURL = "@Defaults.commonRoot/Lookup?id=";
    var dashboardURL = '@Url.Content("~/Dashboard/")'; 
    
    var ChangePOStatusURL =  "@Url.Action("ChangePOStatus", "Dashboard", new { POID = -99 })";
+   var usrName = "@_SessionUsr.UserName";
+   var todayDT = "@DateTime.Now.ToString(Defaults.dtFormat, Defaults.ci)";
+
    var ListURL = "@Html.Raw(@Url.Action("POListKO", "Dashboard", new { index = 0, fetchAll = true }))";
    var setSearchOptsURL = "@Html.Raw(@Url.Action("SetSearchOpts", "Dashboard"))";
    var printPOURL = "@HttpUtility.UrlDecode(Url.Action("Print", "PO", new { POID = -99 }))";
@@ -186,20 +190,18 @@
             url: ListURL + ((orderBy!="")?("&orderBy=" + orderBy) : "")
             ,async : false // SO: 14645011 (for FF to ensure the postback is not
             @*,success: function (data) {
-                if (data != null) {//vm_D.fields.removeAll();
+                if (data != null) {/*//vm_D.fields.removeAll();
                     vm_D.pageIndex(0);  vm_D.cachedPagesTill(0);
-                    vm_D.fields(data.records);
-		    vm_D.search(data.search);
-                    document.getElementById('doReset').checked = false;
+                    vm_D.fields(data.records);vm_D.search(data.search);
+                    document.getElementById('doReset').checked = false;*/             
                 }
             }*@
         });  
          
         };
-       $("#tblSearch").tableNav();
     });        
     var isVendor = @isVendor.ToString().ToLower();    
 </script>
-<script src="@Url.Content("~/Content/Scripts/KOVM/DashboardKOscript.js")" type="text/javascript" ></script>
-@*HT: Set min width required by Dashboard*@
-<img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="900px" />
+<script src="@Url.Content("~/Content/Scripts/KOVM/DashboardKOscript.js?new")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/jquery.taconite.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Content/Scripts/KO/KoExtra.js")" type="text/javascript"></script>

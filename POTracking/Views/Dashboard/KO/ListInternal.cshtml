@@ -12,7 +12,7 @@
             <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'POno')}">           
             @Html.Raw(HttpUtility.HtmlDecode(Html.SortableColumn("PO #", "POno", reload, routeValues, true, false))) </th>
             <th nowrap="nowrap" data-bind="click: function(data,event){$root.sortData(data, event,'POdt')}">
-            @Html.Raw(Html.SortableColumn("PO Date", "POdt", reload, routeValues))            
+            @Html.Raw(Html.SortableColumn("PO Date", "POdt", reload, routeValues))
             </th>
             @if (!isVendor)
             { 
@@ -53,7 +53,7 @@
         <td align="center" data-bind="text:ETA"></td>        
         <td align="center" nowrap="nowrap">
         <div data-bind="attr: {id : 'dialog' + $data.ID}"></div>
-        <div class="noBorder dDialog uline" data-bind="click: function(data,event){showDialog('Status',$data.ID);poObj = this;},html:$data.Status, attr:{id:'statusDIV' + $data.ID}"></div>        
+        <div class="noBorder dDialog uline" data-bind="click: function(data,event){showDialog('Status',$data.ID);poObj = this;},html:$data.Status, attr:{id:'statusDIV' + $data.ID}"></div>
         </td>
         @if (!isVendor)
         {

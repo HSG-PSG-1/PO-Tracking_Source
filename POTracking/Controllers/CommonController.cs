@@ -36,7 +36,7 @@ namespace POT.Controllers
             if (authCookie != null)
             {
                 try
-                {// Set data as per cookie                    
+                {// Set data as per cookie
                     authCookie = new HttpCookie(Defaults.cookieName, Crypto.EncodeStr(authCookie.Value, false)); //authCookie = HttpSecureCookie.Decode(authCookie, CookieProtection.None);//HT: decode the encoded cookie
                     loginM.Email = authCookie.Values[Defaults.emailCookie];
                     loginM.Password = Crypto.EncodeStr(authCookie.Values[Defaults.passwordCookie], false);
@@ -92,11 +92,7 @@ namespace POT.Controllers
                         return RedirectToAction("List", "Dashboard");
                 }
                 else // Login failed
-                {
-                    ModelState.AddModelError("", Defaults.InvalidEmailPWD);
-                    ViewData["oprSuccess"] = false;
-                    ViewData["err"] = Defaults.InvalidEmailPWD;
-                }
+                    ModelState.AddModelError("", "The email and/or password provided is incorrect.");
             }
 
             LogOff();// To make sure no session is set until Login (or it'll go in Login HttpGet instead of Post)            
@@ -119,9 +115,9 @@ namespace POT.Controllers
                 
                 ViewData["oprSuccess"] = oprSuccess;//Err msg handled in View
                 if (oprSuccess)//Send email
+                {
                     MailManager.ForgotPwdMail(Email, Pwd, new SettingService().GetContactEmail());
-                else
-                    ViewData["err"] = Defaults.ForgotPWDInvalidEmail;
+                }
             }
             #endregion
 
@@ -212,7 +208,7 @@ namespace POT.Controllers
         public bool RedirectFromLogin(ref string ReturnUrl)
         {
             char[] slash = new char[] { '/' };
-            string[] obsoletURLtokens = new string[] { "login", "poguid", "files", "filesdetail", "getfile" }; 
+            string[] obsoletURLtokens = new string[] { "login", "poguid", "files", "filesdetail", "getfile", "excel" }; 
 
             //HT : CAUTION: if url contains "POGUID" - DO NOT proceed with that url because it'll be INVALID
             if (string.IsNullOrEmpty(ReturnUrl) ||
@@ -259,7 +255,7 @@ namespace POT.Controllers
             return View();// Will return the default view
         }
 
-        public ActionResult NotFound()
+        public ActionResult DataNotFound()
         {
             return View();// Will return the default view
         }

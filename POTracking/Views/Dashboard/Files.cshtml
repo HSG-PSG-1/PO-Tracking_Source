@@ -21,10 +21,9 @@
             <td>@item.UploadDate.ToString(Defaults.dtFormat, Defaults.ci)</td>
             <td>
                @if (!string.IsNullOrEmpty(item.FileName) && item.POID > 0){
-                   string codeStr = FileIO.getFileDownloadCode(item.FileName, item.POID, item.POGUID);
+                   string codeStr = FileIO.getFileDownloadCode(item.FileName, item.POGUID);
                    string clipImgLink = string.Format(Defaults.clipImgLink,
-                       //HttpUtility.UrlDecode(Url.Action("GetFile?" + codeStr, "PO", new { POID = item.POID }))
-                       Url.Action("GetFile", "PO") + "?" + item.CodeStr
+                       HttpUtility.UrlDecode(Url.Action("GetFile?" + codeStr, "PO", new { POID = item.POID }))
                        );
                         @Html.Raw(clipImgLink)                        
                }            

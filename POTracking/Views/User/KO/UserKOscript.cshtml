@@ -1,6 +1,6 @@
 ﻿@using POT.Services
 @using HSG.Helper
-<script type="text/javascript">
+<script language="javascript" type="text/javascript" defer="defer">
 var loading = '<div style="text-align:center;display:block;"><img src=" @Url.Content("~/Content/Images/loading.gif")" title="" alt="Loading" /></div>';
        
 function gotoUser(UserId)
@@ -27,7 +27,7 @@ function updatePagedRows(vm)
 }
 var oldEmail;
 var undoCache;
-var vmUser = function(){        
+var viewModel = function(){        
         var self = this;
         self.AllUsers =  ko.observableArray();//jsondata
         self.pageSize = ko.observable(@ViewData["gridPageSize"]);
@@ -270,7 +270,7 @@ var vmUser = function(){
             var url = '@Url.Action("UserKODelete", "User", new { ID = "" })';
             $.post(url, data);
 
-            usrIDToDel = txtVal;
+            usrIDToDel = txtVal;            
 
             return false; // prevent any postback
         }

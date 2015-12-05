@@ -10,8 +10,7 @@ var delTR = ""; // Required tohold te deleted TR fopas using taconite plugin
 function checkReq(ctrl, impactCtrl) { if (!($(ctrl).val().toString().length > 0)) $(impactCtrl).val('').trigger("change"); }
 // Log the selected item.id or empty into id textbox
 function log(item, idBox, txtBox) {
-    $(idBox).val(item ? item.id : '').trigger("change"); /*"#ItemID" */
-    //$(txtBox).trigger("change"); /* IE 10+ doesn't trigger the change value */
+    $(idBox).val(item ? item.id : '').trigger("change");    
     //try { $(txtBox).validate().valid(); } catch (e) { }
 }
 //Toggle the display of the two images in parent (make sure you follow the sequence)
@@ -73,34 +72,13 @@ function roundNumber(rnum, rlength) { // Arguments: number to round, number of d
 }
 
 function confirmDeleteM(evt, msg) {
-    var GoAhead = window.confirm(msg);    
+    var GoAhead = window.confirm(msg);
     return stopEvent(evt, GoAhead);
 }
 
 function confirmDelete(evt) {
-    return confirmDeleteM(evt, "Are you sure you want to delete this record?");
-    //var GoAhead = window.confirm("Are you sure you want to delete this record?");    return stopEvent(evt, GoAhead);
-}
-
-function notyConfirm(msg)
-{ // for future (instead try - http://www.projectshadowlight.org/jquery-easy-confirm-dialog/)
-    var n = noty({
-        text: msg,
-        dismissQueue: true,
-        layout: 'center',
-        theme: 'defaultTheme',
-        killer: true,
-        type: 'warning',
-        model: true,
-        buttons: [
-            {
-                addClass: 'btn btn-primary', text: 'Ok', onClick: function ($noty) { $noty.close();}
-            },
-            {
-                addClass: 'btn btn-danger', text: 'Cancel', onClick: function ($noty) { $noty.close();}
-            }
-        ]
-    });
+    var GoAhead = window.confirm("Are you sure you want to delete this record?");
+    return stopEvent(evt, GoAhead);
 }
 
 function stopEvent(e, GoAhead) {
@@ -331,7 +309,7 @@ function setFocus(elemID) {
         elem = document.getElementsByName(elemID); //special case for MVC who don't render id!
         if (elem.length > 0) elem = elem[0];//If its a checkbox it'll have 2 of same name
     }
-    try { elem.focus(); return; } catch (ex) { /*alert(elem + ":" + elemID + ":" + ex.message);*/ } //skip if id is wrong
+    try { elem.focus(); return; } catch (ex) { /*alert(elem + ":" + elemID + ":" + ex);*/ } //skip if id is wrong
 }
 
 function toggleTbody(tbod) {//http://bytes.com/topic/javascript/answers/147170-how-hide-table-rows-grouping-them-into-div//id
@@ -371,30 +349,12 @@ return (val.attr('checked') != null)? val.attr('checked'): val.val(); //checkbox
 function doFurtherProcessing() { };//override in the child view-script
 function showOprResult(spanId, success) {   
     // Highlight, fadeOut and finally REMOVE!
-    $(spanId).effect('highlight', {}, 4000).fadeOut((success == 1) ? 1000 : 8000, function () { $(spanId).html("&nbsp;").remove(); /* show();*/ });
+    $(spanId).effect('highlight', {}, 4000).fadeOut((success == 1) ? 1000 : 8000, function () { $(spanId).html("&nbsp;").show(); /* remove();*/ });
     
     //Special case for forms which need to do post processing        
     //doFurtherProcessing(); HT: Handled at the end of effect call back    
     try {DisableSubmitButtons(false); /*$.unblockUI();*/ } catch (e) { }
 }
-function showNOTY(msg, success) {
-    // Highlight, fadeOut and finally REMOVE!
-    //$(spanId).effect('highlight', {}, 4000).fadeOut((success == 1) ? 1000 : 8000, function () { $(spanId).html("&nbsp;").remove(); /* show();*/ });
-    noty({
-        text: msg,
-        type: success ? "success" : "error",
-        dismissQueue: true,
-        timeout: success ? 2000 : 7000,
-        layout: 'topCenter',
-        theme: 'defaultTheme',
-        killer: true
-    });
-
-    //Special case for forms which need to do post processing        
-    //doFurtherProcessing(); HT: Handled at the end of effect call back    
-    try { DisableSubmitButtons(false); /*$.unblockUI();*/ } catch (e) { }
-}
-
 
 function setDefaultIfEmpty(txt, defaultStr) {// use with onblur (don't use with jQuery.validate class = "required"
     if ($(txt).val() == '') $(txt).val(defaultStr).trigger("change"); // make sure defaultStr is a string
@@ -498,17 +458,4 @@ function createjQDTP(DtpID) {
     // Set format to be used by alt date field
     $(DtpID1).datepicker("option", "altField", "#" + DtpID);
     $(DtpID1).datepicker("option", "altFormat", 'dd-M-yy');
-}
-function setAutofocus() { $('[autofocus]:not(:focus)').eq(0).focus(); }
-String.prototype.Ufloat = function () {
-    var val = parseFloat(this);
-    return parseFloat(((val > 0) ? val : 0.00).toFixed(2));
-}
-String.prototype.Uint = function () {
-    return parseInt((this > 0) ? this : 0); // DON'T as it might affect calculation .toFixed(2);
-}
-function setFocusEditableGrid(tableID, isFirstTROrLast) {
-    var trPosition = isFirstTROrLast ? "tr:first" : "tr:last";    
-    tableID = "#" + tableID;
-    $(tableID).find(trPosition).find('input[class=editableTX],textarea,select').filter(':visible:first').focus();
 }

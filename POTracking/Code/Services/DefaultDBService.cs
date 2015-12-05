@@ -27,7 +27,7 @@ namespace POT.Services
         {
             return new RoleRights()
                 {
-                    _Added = false,
+                    IsAdded = false,
                     ID = -1,
                     Code = "[Role-1]",//Required otherwise it'll be considered as ModelState error !
                     CodeOLD = "[Role-1]",

@@ -8,22 +8,21 @@ var recordsViewModel = function () {
     self.newRecord = ko.observable();
     
     self.setEdited = function (record) {
-        record._Updated(!record._Added());
+        record.IsUpdated(!record.IsAdded());
         record.LastModifiedDate(Date111); 
     }
     
     self.setEditedFlag = function (record) {
-        record._Updated(!record._Added());
+        record.IsUpdated(!record.IsAdded());
         record.LastModifiedDate(Date111);
         
         var titl = record.Code();
-        if(titl == "") { showNOTY("This field is required", false);}
+        if(titl == "") { alert("This field is required");}
         else if($.grep(self.allRecords(), function(el)
                 {
-                    return (!el._Deleted() && el.Code().toLowerCase() === titl.toLowerCase());
-                }
+                    return (!el.IsDeleted() && el.Code().toLowerCase() === titl.toLowerCase());}
                ).length > 1)
-        { showNOTY("Duplicate entry found", false); }
+            { alert("Duplicate entry found"); }
         else
            { record.CodeOLD(titl); return;}
 
@@ -40,25 +39,23 @@ var recordsViewModel = function () {
         NextNewrecordID = NextNewrecordID - 1;
         self.newRecord.ID(NextNewrecordID);        
         
-        $("#sortable").tableNav(); // for newly created TR
-        setFocusEditableGrid("sortable", false);
         return true;
     };
     
     self.removeSelected = function (record) {
         if (record != null)
         {
-            record._Deleted(true);
-            if (record._Added()) {                
+            record.IsDeleted(true);
+            if (record.IsAdded()) {                
                 self.allRecords.remove(record);
-                //record._Added(false);
+                //record.IsAdded(false);
             }
         }
     };
 
     self.unRemoveSelected = function (record) {
         if (record != null) // Prevent blanks and duplicates
-            record._Deleted(false);        
+            record.IsDeleted(false);        
     };
 
     self.cancelrecord = function (record) {
@@ -79,7 +76,7 @@ var recordsViewModel = function () {
             success: function(data) {
                 if(data != null && data.length > 0)
                 {
-                    showNOTY(data, false);
+                    alert(data);
                     $("input[type=button]").removeAttr('disabled');
                 }
                 else
@@ -94,26 +91,27 @@ var recordsViewModel = function () {
     }
 };
 var vmMaster = new recordsViewModel();
+
 function createRecordsKO()
 {
     showDlg(true);
     $.getJSON(manageKOVMURL + '?masterTbl=' + getSelMaster(),
-        function (data) {
-            showDlg(false);
+        function (data) { showDlg(false);
              var newRec;
              if(data != null && data.length > 0)
-             { newRec = data.pop(); newRec._Added = true; }
+               {newRec = data.pop(); newRec.IsAdded = true;}
             
             vmMaster.allRecords = ko.mapping.fromJS(data);// Make sure the last record is removed
             vmMaster.newRecord = ko.mapping.fromJS(newRec);            
             ko.applyBindings(vmMaster);
 
-            $("#sortable").tableNav();
+            setFocus("ddlMaster");
         });
 }
 
 $(document).ready(function () {
-    createRecordsKO();    
+    createRecordsKO();
+    //setFocus("record1");
 });
 
 function getSelMaster()

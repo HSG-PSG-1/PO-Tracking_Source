@@ -280,16 +280,18 @@ namespace POT.DAL
     public partial class POFile : Opr
     {
         #region Extra Variables & Properties
+
+        public bool IsAsync { get; set; }
         
-        /*string _POGUID;
-        public string POGUID  { get; set; }
+        string _POGUID;
+        public string POGUID
         {
             get
             { // Return _POGUID only for Async entries
                 return string.IsNullOrEmpty(_POGUID) ? POID.ToString() : _POGUID;
             }
             set { _POGUID = value; }
-        }*/
+        }
 
         public string UploadedBy { get; set; }
         public string FileNameNEW { get; set; }
@@ -298,18 +300,18 @@ namespace POT.DAL
         {
             get
             {
-                if (_Added) //string.Empty;
-                    return HttpUtility.UrlEncode(HSG.Helper.Crypto.EncodeStr(FileName + sep + POID.ToString() + sep + POGUID, true));
+                if (_Added) return string.Empty;
                 else
-                    return HttpUtility.UrlEncode(HSG.Helper.Crypto.EncodeStr(FileName + sep + POID.ToString(), true));
+                    return HttpUtility.UrlEncode(HSG.Helper.Crypto.EncodeStr(FileName + sep + POGUID.ToString() + sep + IsAsync, true));
             }
         } // Can't use HttpUtility.UrlDecode - because it'll create issues with string.format and js function calls so handle in GetFile
-        
+
         public string FilePath
         { //HT: Usage: <a href='<%= Url.Content("~/" + item.FilePath) %>' target="_blank">
             get
             {
-                return FileIO.GetPOFilePath(POID, POGUID, FileName, webURL: true);
+                return FileIO.GetPOFilePath
+                    (POGUID, (IsAsync ? FileIO.mode.asyncHeader : FileIO.mode.header), FileName, true);
             }
         }
 

@@ -58,7 +58,7 @@ namespace POT.Controllers
             //http://stephenwalther.com/blog/archive/2009/01/21/asp.net-mvc-tip-46-ndash-donrsquot-use-delete-links-because.aspx
             //Anti-FK: http://blog.codeville.net/2008/09/01/prevent-cross-site-request-forgery-csrf-using-aspnet-mvcs-antiforgerytoken-helper/
 
-            #region Delete PO & log activity
+            #region Delete po & log activity
 
             new POService().Delete(new POHeader() { ID = POID });
             //Log Activity (before directory del and sesion clearing)
@@ -68,19 +68,21 @@ namespace POT.Controllers
             #endregion
 
             // Make sure the PREMANENT files are also deleted
-            FileIO.DeleteDirectory(System.IO.Directory.GetParent(FileIO.GetPOFilesDirectory(POID, POGUID)).FullName);
-            // Reset PO in session (no GUID cleanup needed - for NEW PO)
-            //_Session.POsInMemory.Remove(POGUID); // Remove the Claim from session
-            //
+            FileIO.EmptyDirectory(FileIO.GetPODirPathForDelete(POID, null, null, false));
+            // Reset PO in session
+            _Session.ResetPOInSessionAndEmptyTempUpload(POGUID);
+
             return Redirect("~/Dashboard");
         }
-                
-        [HttpPost]
-        public JsonResult CleanupTempUpload(int POID, string POGUID)
-        {   // Unable to trigger action due to - e.returnValue = 'Make ..'; (frozen for now)
+
+        public ActionResult Cancel(int POID, string POGUID)
+        {
             // Make sure the temp files are also deleted
-            _Session.ResetPOInSessionAndEmptyTempUpload(POID, POGUID);
-            return new JsonResult() { Data = new { msg = "Temp file upload cleanup triggered." } };
+            FileIO.EmptyDirectory(FileIO.GetPOFilesTempFolder(POGUID, true));
+            FileIO.EmptyDirectory(FileIO.GetPOFilesTempFolder(POGUID, false));
+
+            _Session.ResetPOInSessionAndEmptyTempUpload(POGUID);
+            return Redirect("~/Dashboard");
         }
 
         [HttpPost]
@@ -98,7 +100,7 @@ namespace POT.Controllers
 
             #region Perform operation proceed and set result
 
-            string result = new POService().AsyncBulkAddEditDelKO(poObj, poObj.OrderStatusIDold ?? -1 /*OrderStatusIDold*/, comments, files);
+            string result = new PAWPO(false).AsyncBulkAddEditDelKO(poObj, poObj.OrderStatusIDold ?? -1 /*OrderStatusIDold*/, comments, files);
             success = !string.IsNullOrEmpty(result);
 
             if (!success) { /*return View(poObj);*/}
@@ -112,8 +114,7 @@ namespace POT.Controllers
             #endregion
 
             base.operationSuccess = success;//Set opeaon success
-            //_Session.ClaimsInMemory.Remove(claimObj.ClaimGUID); // Remove the Claim from session
-            //_Session.ResetPOInSessionAndEmptyTempUpload(poObj.POGUID); // reset because going back to Manage will automatically creat new session
+            _Session.ResetPOInSessionAndEmptyTempUpload(poObj.POGUID); // reset because going back to Manage will automatically creat new session
 
             if (success)
                 TempData["printPOAfterSave"] = printPOAfterSave.HasValue && printPOAfterSave.Value;

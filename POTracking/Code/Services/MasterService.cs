@@ -59,7 +59,7 @@ namespace POT.Services
                 #region Add an empty record for Add new
                 result.Add(new Master()
                 {
-                    _Added = false,
+                    IsAdded = false,
                     ID = -1,
                     Code = "[Code-1]",//Required otherwise it'll be considered as ModelState error !
                     SortOrder = result.Count + 1,//To make sure the js sort doesn't mess up like 0
@@ -170,7 +170,7 @@ namespace POT.Services
         public void BulkAddEditDel(List<Master> items)
         {
             // Cleanup newly added & deleted records
-            items.RemoveAll(i => (i._Added || i.ID < Defaults.Integer) && i._Deleted); // Remove newly inserted records
+            items.RemoveAll(i => (i.IsAdded || i.ID < Defaults.Integer) && i.IsDeleted); // Remove newly inserted records
             using (dbc)
             {
                 dbc.Connection.Open();
@@ -188,11 +188,11 @@ namespace POT.Services
                         item.LastModifiedBy = _SessionUsr.ID;
                         item.LastModifiedDate = DateTime.Now;
 
-                        if (item._Added && !item._Deleted) // Because we're NOT removing the deleted items
+                        if (item.IsAdded && !item.IsDeleted) // Because we're NOT removing the deleted items
                             Add(item);
-                        else if (item._Deleted && item.CanDelete)//double check the can-delete flag
+                        else if (item.IsDeleted && item.CanDelete)//double check the can-delete flag
                             Delete(item);//Make sure Ref check brfore Delete is done
-                        else if (item._Updated)//Make sure update is LAST
+                        else if (item.IsUpdated)//Make sure update is LAST
                             Update(item);
                         #endregion
                     }
