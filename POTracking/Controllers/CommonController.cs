@@ -208,7 +208,7 @@ namespace POT.Controllers
         public bool RedirectFromLogin(ref string ReturnUrl)
         {
             char[] slash = new char[] { '/' };
-            string[] obsoletURLtokens = new string[] { "login", "poguid", "files", "filesdetail", "getfile" }; 
+            string[] obsoletURLtokens = new string[] { "login", "poguid", "files", "filesdetail", "getfile", "excel" }; 
 
             //HT : CAUTION: if url contains "POGUID" - DO NOT proceed with that url because it'll be INVALID
             if (string.IsNullOrEmpty(ReturnUrl) ||
@@ -255,7 +255,7 @@ namespace POT.Controllers
             return View();// Will return the default view
         }
 
-        public ActionResult NotFound()
+        public ActionResult DataNotFound()
         {
             return View();// Will return the default view
         }
