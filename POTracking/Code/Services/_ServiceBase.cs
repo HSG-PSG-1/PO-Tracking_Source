@@ -44,15 +44,5 @@ namespace POT.Services
         public virtual bool IsReferred(Object oObj) { return true; }
 
         #endregion
-    }
-
-    public abstract class CAWBase
-    {
-        #region Variables & Constructor
-
-        public bool IsAsync { get; set; }/*return true;for testing  Async*/
-        public CAWBase(bool Async) { IsAsync = Async; }
-
-        #endregion
-    }
+    }    
 }

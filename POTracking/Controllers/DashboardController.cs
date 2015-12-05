@@ -14,6 +14,7 @@ namespace POT.Controllers
     [IsAuthorize(IsAuthorizeAttribute.Rights.NONE)]//Special case for some dirty session-abandoned pages and hacks
     public partial class DashboardController : BaseController
     {
+        const int fetchInitialPages = 2;
         string view = _Session.IsOnlyVendor ? "ListVendor" : "ListInternal";
 
         public DashboardController() : //HT: Make sure this is initialized with default constructor values!
@@ -30,18 +31,69 @@ namespace POT.Controllers
             searchOpts = _Session.Search[Filters.list.Dashboard];//new vw_PO_Dashboard();
 
             populateData(true);
-            ViewData["gridPageSize"] = gridPageSize; // Required to adjust pagesize for grid
+            ViewData["gridPageSize"] = gridPageSize; // Required to adjust pagesize for grid            
 
             // No need to return view - it'll fetched by ajax in partial rendering
+            return View((object)FetchDataAndGetFirstPage(0, String.Empty)); // SO : 5635383/illegal-characters-in-path
+        }
+
+        #region jq Grid demo
+
+        public ActionResult ListJQG()
+        {
             return View();
         }
 
+        [CacheControl(HttpCacheability.NoCache)]//Don't mention GET or post as this is required for both!
+        public ContentResult POListjqg()
+        {
+            //Make sure searchOpts is assigned to set ViewState
+            vw_PO_Dashboard oldSearchOpts = (vw_PO_Dashboard)searchOpts;
+            searchOpts = new vw_PO_Dashboard();
+            populateData(false); //Set the Vendor filter
+
+            var result = from vw_u in new DashboardService().SearchKO(
+                sortExpr, null, gridPageSize, (vw_PO_Dashboard)searchOpts, true, _Session.IsOnlyVendor)
+                         select new
+                         {
+                             ID = vw_u.ID,
+                             POno = vw_u.PONumber,
+                             OrdStat = vw_u.OrderStatusID,
+                             AssignTo = vw_u.AssignTo,
+                             //VendorID = vw_u.VendorID,
+                             Vndr = vw_u.VendorName,
+                             Brand = vw_u.BrandName,
+                             Status = vw_u.OrderStatusID,//Status,
+                             Cmts = vw_u.CommentsExist,
+                             Files = vw_u.FilesHExist,
+                             POdt = vw_u.PODateOnly,
+                             ETA = vw_u.ETAOnly,
+                             ETD = vw_u.ETDOnly,
+                             Ship = vw_u.ShipToCity
+                         };
+            
+            System.Web.Script.Serialization.JavaScriptSerializer jsSerializer =
+                new System.Web.Script.Serialization.JavaScriptSerializer { MaxJsonLength = Int32.MaxValue }; //Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
+
+            var jsonDataSet = new ContentResult
+            {
+                Content = jsSerializer.Serialize(result.Take(2900)),
+                ContentType = "application/json",
+                //ContentEncoding = 
+            };
+            // MVC 4 : jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonDataSet;
+        }
+
+        #endregion
+
         #region Will need GET (for AJAX) & Post
-        
+
         [CacheControl(HttpCacheability.NoCache)]//Don't mention GET or post as this is required for both!
         public ContentResult POListKO(int? index, string qData, bool? fetchAll)
         {
-            base.SetTempDataSort(ref index);// Set TempDate, Sort & index
+            #region Obsolete (remove after confirmation)
+            /*base.SetTempDataSort(ref index);// Set TempDate, Sort & index
             //Make sure searchOpts is assigned to set ViewState
             vw_PO_Dashboard oldSearchOpts = (vw_PO_Dashboard)searchOpts;
             searchOpts = new vw_PO_Dashboard();
@@ -77,11 +129,17 @@ namespace POT.Controllers
                              Ship = vw_u.ShipToCity
                          };
              
-            System.Web.Script.Serialization.JavaScriptSerializer jsSerializer = new System.Web.Script.Serialization.JavaScriptSerializer
-            { MaxJsonLength = Int32.MaxValue}; //Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
+            //return Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet); */
+            #endregion
+            //IEnumerable<object> result = Session[""];
+            //Make sure searchOpts is assigned to set ViewState
+            vw_PO_Dashboard oldSearchOpts = (vw_PO_Dashboard)searchOpts;
+
+            System.Web.Script.Serialization.JavaScriptSerializer jsSerializer =
+                new System.Web.Script.Serialization.JavaScriptSerializer { MaxJsonLength = Int32.MaxValue }; //Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
             var jsonDataSet = new ContentResult
             {
-                Content = jsSerializer.Serialize(new { records = result, search = oldSearchOpts }),
+                Content = jsSerializer.Serialize(new { records = Session["dashData"], search = oldSearchOpts }),
                 ContentType = "application/json",
                 //ContentEncoding = 
             };
@@ -97,11 +155,12 @@ namespace POT.Controllers
             populateData(false);// Populate ddl Viewdata
 
             //Ensure that Orderby has the correcy field (not the custom field so need to replace)
+            //Ensure that Orderby has the correcy field (not the custom field so need to replace)
             orderBy = orderBy.Replace("POno", "PONumber").Replace("OrdStat", "OrderStatus").Replace("Vndr", "VendorName").Replace("Brand", "BrandName")
                 .Replace("Cmts", "CommentsExist").Replace("Files", "FilesHExist").Replace("POdt", "PODate").Replace("Ship", "ShipToCity");
-                //.Replace("ETD", "ETD").Replace("ETA", "ETA");
+            //orderBy = orderBy.Replace("PODateOnly", "PODate").Replace("ETDOnly", "ETD").Replace("ETAOnly", "ETA");
 
-            _Session.POIDs = new DashboardService().SearchPOIDKO(searchObj, orderBy); 
+            _Session.POIDs = new DashboardService().SearchPOIDKO(searchObj, orderBy);
 
             return Json(true);// WE just need to set it in the session
         }
@@ -127,7 +186,7 @@ namespace POT.Controllers
             //HttpContext context = ControllerContext.HttpContext.CurrentHandler;
             //Essense of : http://stephenwalther.com/blog/archive/2008/06/16/asp-net-mvc-tip-2-create-a-custom-action-result-that-returns-microsoft-excel-documents.aspx
             this.Response.Clear();
-            this.Response.AddHeader("Content-Disposition", "attachment;filename=" + "Dashboard_" + _SessionUsr.ID + ".xls");
+            this.Response.AddHeader("content-disposition", "attachment;filename=" + "Dashboard_" + _SessionUsr.ID + ".xls");
             this.Response.Charset = "";
             this.Response.Cache.SetCacheability(HttpCacheability.NoCache);
             this.Response.ContentType = "application/vnd.ms-excel";
@@ -197,6 +256,43 @@ namespace POT.Controllers
                     ViewData["UserList"] = new LookupService().GetLookup(LookupService.Source.User);
                 }
             }
+        }
+
+        public string FetchDataAndGetFirstPage(int? index, string qData)
+        {
+            base.SetTempDataSort(ref index);// Set TempDate, Sort & index
+            //Make sure searchOpts is assigned to set ViewState
+            vw_PO_Dashboard oldSearchOpts = (vw_PO_Dashboard)searchOpts;
+            searchOpts = new vw_PO_Dashboard();
+            populateData(false); //Set the Vendor filter
+
+            index = (index > 0) ? index + 1 : index; // paging starts with 2
+
+            var result = from vw_u in new DashboardService().SearchKO(
+                sortExpr, index, gridPageSize, (vw_PO_Dashboard)searchOpts, true, _Session.IsOnlyVendor) // fetchAll ?? false
+                         select new
+                         {
+                             ID = vw_u.ID,
+                             POno = vw_u.PONumber,
+                             OrdStat = vw_u.OrderStatusID,
+                             AssignTo = vw_u.AssignTo,
+                             //VendorID = vw_u.VendorID,
+                             Vndr = vw_u.VendorName,
+                             Brand = vw_u.BrandName,
+                             Status = vw_u.Status,
+                             Cmts = vw_u.CommentsExist,
+                             Files = vw_u.FilesHExist,
+                             POdt = vw_u.PODateOnly,
+                             ETA = vw_u.ETAOnly,
+                             ETD = vw_u.ETDOnly,
+                             Ship = vw_u.ShipToCity
+                         };
+            Session["dashData"] = result.Skip(gridPageSize * fetchInitialPages).ToList();
+            //return Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
+            System.Web.Script.Serialization.JavaScriptSerializer jsSerializer =
+                new System.Web.Script.Serialization.JavaScriptSerializer { MaxJsonLength = Int32.MaxValue }; //Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
+
+            return jsSerializer.Serialize(new { records = result.Take(gridPageSize * fetchInitialPages), search = oldSearchOpts });
         }
 
         #endregion

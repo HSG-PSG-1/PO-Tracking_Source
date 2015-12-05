@@ -84,7 +84,7 @@
                                 @Html.LabelFor(model => model.Name)
                             </td>
                             <td width="80%">
-                                @Html.CustomTextBoxFor(model => model.Name, new { })
+                                @Html.CustomTextBoxFor(model => model.Name, new { @autofocus = "autofocus" })
                                 @Html.ValidationMessageFor(model => model.Name)
                             </td>
                         </tr>
@@ -96,7 +96,7 @@
                                 @(Html.DropDownListFor(model => model.RoleID, new SelectList((IEnumerable)ViewData["Roles"], "ID", "TEXT", Model.RoleID), new
                 {
                     @class = "dropDown required",
-                    @onchange = "fillOrgs(true);"
+                    @onmouseup = "fillOrgs(true);" // alert(this.selectedIndex + ':' + $(this).attr('oldindex'));
                 }))
                                 @Html.ValidationMessageFor(model => model.RoleID)
                                 @Html.HiddenFor(model => model.OrgType, new { @class = "ignore" })
@@ -158,7 +158,7 @@
         </tr>
     </table>
 }
-<script language="javascript" type="text/javascript" defer="defer">    setFocus("Name");
+<script type="text/javascript">
     function checkReq1(ctrl, impactCtrl) { if (!(ctrl.value.length > 0)) $("#" + impactCtrl).val(''); }
 
     function fillOrgs(reset) {
@@ -187,7 +187,6 @@
     //Caching: http://developwithstyle.com/articles/2010/05/14/jquery-ui-autocomplete-is-it-any-good.html
     $().ready(function () {
         setupValidation(); //setup validation           
-        fillOrgs(false); //setup Org dropdown
-        setFocus("Name");
+        fillOrgs(false); //setup Org dropdown        
     });     
 </script>

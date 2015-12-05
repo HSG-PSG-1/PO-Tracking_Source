@@ -1,16 +1,13 @@
 ﻿@using HSG.Helper
 @*{ int AssignTo = (int)ViewData["AssignTo"];}*@
 <div id="divComments">
-    @*<div style="text-align: right"><input type="button" data-bind="click:saveToServer" class="button" value="Submit to Server" /></div>*@
     <table style="width: 100%" border="0">
         <tr>@* Add \ Edit Comment : START *@
             <td>
-                <form action="#">
+                <form>
                 <table cellpadding="2" cellspacing="2" border="0" data-bind="with: commentToAdd">
                     <tr>
-                        <td colspan="4" align="center">
-                            <div id="cmtOprMsg" style="text-align: center">
-                            <span id='emailResult' title="Email queued for new comment"></span></div>
+                        <td colspan="4" align="center">                            
                             <div style="display: none">
                                 <input type="checkbox" data-bind="checked:_Added" />
                                 ID: <input type="text" data-bind="value:ID" />
@@ -27,16 +24,14 @@
                         <td rowspan="2" width="60%">
                             <textarea data-bind="value:Comment1" class="textbox required" cols="60" id="Comment1"
                                 name="Comment1" onblur="return trimTextAreaMaxLen(this,4000);" rows="3" style="width: 98%"
-                                onkeyup1='setSubmitBtn(this,"btnCmtAdd");setSubmitBtn(this,"AssignTo");'></textarea>
+                                onkeyup1='setSubmitBtn(this,"btnCmtAdd");'></textarea>
                         </td>
-                        <td valign="top" nowrap="nowrap" align="right" width="5%">
-                            Assign To :
-                        </td>
+                            <td valign="top" nowrap="nowrap" align="right" width="5%">Assign To</td>
                         <td valign="top" align="right" width="30%">
                             <select id="AssignTo" class="dropbox" name="AssignTo" style="width: 350px;" 
                             data-bind="options: $parent.Users, value:$parent.AssignTo, optionsText: 'value', optionsValue:'id', enable: ($data.Comment1() != null && $data.Comment1().length > 0)"
-                             onchange="setAssignTo(this)">
-                            </select><br /><!--  -->
+                             onchange="setAssignedTo(this)">
+                                </select><br />
                             <input id="AssignToVal" name="AssignToVal" type="hidden" data-bind="value:$parent.AssignToVal" />
                             <input id="AssignToOLD" name="AssignToOLD" type="hidden" />
                         </td>
@@ -44,7 +39,7 @@
                     <tr>
                         <td align="right" nowrap="nowrap" colspan="2" valign="top">
                             <input id="btnCmtAdd" type="button" data-bind="click:$parent.addComment, enable: ($data.Comment1() != null && $data.Comment1().length > 0)" value="Add"
-                                class="button" />@*, enable: (Comment1 != null)*@
+                                class="button" />
                             <input id="btnCmtReset" data-bind="click:$parent.cancelComment" type="reset" value="Cancel"
                                 class="button" />
                         </td>
@@ -57,13 +52,14 @@
         <tr>
             <td align="center">
                 @* Comments : START *@
-                <table class="thinBorder" width="99%" data-bind="visible:allComments().length > 0">
+                <table class="thinBorder" width="99%" data-bind="visible:allComments().length > 0" id="tblComments">
                     <thead class="header">
                         <tr>
                             <th align="left" nowrap="nowrap" style="display: none; width: 3%">
                                 id &nbsp;&nbsp; A &nbsp;&nbsp; E &nbsp;&nbsp; D
                             </th>
                             <th width="3%">
+                            @Html.Raw(string.Format(Defaults.tableNavImg,""))
                             </th>
                             <th nowrap="nowrap" width="10%">
                                 Comment By
@@ -77,7 +73,7 @@
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: allComments()">
-                        <tr data-bind="css:{deletedTR:_Deleted(),deletedTR_NO:!_Deleted()}">
+                        <tr data-bind="css:{deletedTR:_Deleted()}">
                             <td nowrap="nowrap" style="display: none">
                                 <span data-bind='text:ID'></span>
                                 <input type="checkbox" data-bind="checked:_Added" />
@@ -85,7 +81,7 @@
                                 <input type="checkbox" data-bind="checked:_Deleted" />
                             </td>
                             <td nowrap="nowrap">
-                                <div class="dDialog" onclick="doEditableTA(this);" data-bind="visible:!_Deleted(), click:$parent.setEdited">@Html.Raw(@Defaults.editImg)</div>
+                                <div class="dDialog" onclick="doEditable(this);" data-bind="visible:!_Deleted(), click:$parent.setEdited">@Html.Raw(@Defaults.editImg)</div>
                                 &nbsp;
                                 <div class="dDialog" data-bind="visible:!_Deleted(), click:$parent.removeSelected">@Html.Raw(@Defaults.delImgForObj("comment"))</div>
                                 &nbsp;
@@ -93,16 +89,14 @@
                                     &nbsp; &nbsp;
                                 </div>
                             </td>
-                            <td data-bind="text:CommentBy">
-                            </td>
+                            <td data-bind="text:CommentBy"></td>
                             @*<td data-bind="text:new Date(parseInt(PostedOn.substr(6)))"></td>*@
-                            <td data-bind="date: PostedOn()">
-                            </td>@*http://forums.asp.net/t/1651593.aspx/1*@
+                            <td data-bind="date: PostedOn()"></td>@*http://forums.asp.net/t/1651593.aspx/1*@
                             <td title="click to edit">
-                                <textarea class="noBorder" data-bind="value:Comment1, event:{change:$parent.setEditedFlag}"
-                                    style="border: none; width: 99%" type="text" onclick="editable(this, true);"
-                                    onblur="if(doRequiredChk(this))editable(this, false);" title="click to edit"
-                                    rows="1" ></textarea>
+                                <textarea class="editableTX" data-bind="value:Comment1, event:{change:$parent.setEditedFlag}"                                    
+                                    onblur="doRequiredChk(this); $(this).height('auto');" title="click to view full content or edit" rows="1" style="overflow:auto; resize:vertical"
+                                     onfocus="$(this).height(this.scrollHeight);" onkeyup="$(this).height(this.scrollHeight);"></textarea>
+                                 @* http://chuvash.eu/2011/12/14/the-cleanest-auto-resize-for-a-textarea/ *@
                             </td>
                             @*<td onclick="$('input:first', this).show().focus();$('span:first', this).hide();">
                                     <span data-bind="text:Comment1" onmouseover="toggleLabel(this.parentElement);"></span>

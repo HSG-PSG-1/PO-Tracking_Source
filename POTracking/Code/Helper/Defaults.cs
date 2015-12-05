@@ -31,6 +31,7 @@ namespace HSG.Helper
         public const string passwordCookie = "POTCookiePWD";
         //Validation i.e. Email, regex, etc...
         public const string EmailRegEx = @"^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\-+)|([A-Za-z0-9]+\.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+\-+)|(\w+\.))*\w{1,63}\.[a-zA-Z]{2,6}$";
+        public const string InvalidEmailPWD = "The email and/or password provided is incorrect.";
         public const string ForgotPWDInvalidEmail = "Email address does not exist.";
         public const string MaxLengthMsg = "Maximum length {1}.";
         public const string InvalidEmailMsg = "Invalid Email.";
@@ -91,6 +92,8 @@ namespace HSG.Helper
             "/Images/clip.gif' title='Click to download' border='0' target=\"_blank\"/></a>";
         public static string cancelImgOnly = "<img src='" + contentRoot + 
             "/Images/cancel.png' title='Click here to undo' border='0' style='cursor: pointer' />";
+        public static string tableNavImg = "<img src='" + contentRoot + 
+            "/Images/kbd.png' title='You can use navigation keys to move across the input fields' border='0' {0} />";
         #endregion
 
         #region Delete img / taconite, link & input
@@ -121,30 +124,30 @@ namespace HSG.Helper
         
         const string oprMsg =
         "<span id='oprResult'>{0}<span class='error'>{1}</span></span><script>$().ready(function() {{showOprResult('#oprResult',{2});}});</script>";
+        //const string oprMsgNOTY = "<eval><![CDATA[<script>$().ready(function() {{showNOTY('{0}{1}',{2});}});</script>]]></eval>";
+        const string oprMsgNOTY = "showNOTY('{0}{1}',{2});";
         
         public static string getOprResult(bool result, string msg)
         {//Two in one function - displays Opr success else displays opr unsuccessful a well as its err msg (sent as the second arg)
-            return string.Format(oprMsg,
-                result ? "Operation was successful" : "Operation was NOT successful",
+            return string.Format(oprMsgNOTY,
+                result ? "Operation was successful" : "<u>ERROR</u> : ",
                 result ? "" : (msg.Length > 0 ? "<br/>" + msg : ""),
-                result?"1":"0");
+                result ? "true" : "false");//result?"1":"0");
         }
 
-        public static string getTaconite(bool success, string msg, string msgContainer = "msg", bool doCallback = false)
+        public static string getTaconiteRemoveTR(bool success, string msg, string msgContainer = "msg", bool doCallback = false)
         {
             string callback = doCallback?",function(){doFurtherProcessing();}":"";
             string hide = success ? (".toggle(500" + callback + ")") : "";
-            return string.Format(
-     "<taconite><replaceContent select=\"#{0}\">{1}</replaceContent>" +//<slideDown select=\"#{0}\" value=\"1000\" />
-     "<eval><![CDATA[ try{{$(delTR).effect('highlight',{{}},1000){2};delTR = '';}}catch(e){{;}} ]]> </eval></taconite>", 
+            return string.Format(//"<taconite><replaceContent select=\"#{0}\">{1}</replaceContent>" +//<slideDown select=\"#{0}\" value=\"1000\" />
+     "<taconite><eval><![CDATA[ try{{{1} $(delTR).effect('highlight',{{}},1000){2};delTR = '';}}catch(e){{;}} ]]> </eval></taconite>", 
      msgContainer?? "msg", msg , hide);
         }
 
         public static string getTaconiteResult(bool success, string msg, string msgContainer, string callback)
         {
-            callback = success ? "<eval><![CDATA[ " + callback + "; ]]> </eval>" : "";
-            return string.Format("<taconite><replaceContent select=\"#{0}\">{1}</replaceContent>" + callback
-                 + "</taconite>", msgContainer ?? "msg", msg);
+            //return string.Format("<taconite><replaceContent select=\"#{0}\">{1}</replaceContent>" + callback + "</taconite>", msgContainer ?? "msg", msg);
+            return string.Format("<taconite><eval><![CDATA[ {0} {1}; ]]> </eval></taconite>", msg, success ? callback : "");
         }
 
         #endregion

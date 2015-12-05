@@ -176,8 +176,8 @@ namespace POT.Controllers
             int UserEmailCount = new UserService().UserEmailCount(usr.Email);
             bool isEdit = usr.ID > 0;
             if((isEdit && UserEmailCount > 1) || (!isEdit && UserEmailCount > 0))
-                return Json(false, JsonRequestBehavior.AllowGet);            
-            
+                return Json(false, JsonRequestBehavior.AllowGet);
+
             Users objUsr = UserService.GetObjFromVW(usr);
             int result = new UserService().AddEdit(objUsr);
             //Log Activity
@@ -210,7 +210,7 @@ namespace POT.Controllers
                 new ActivityLogService(ActivityLogService.Activity.UserDelete).Add();
             }
             //base.operationSuccess = proceed; HT: DON'T
-            return this.Content(Defaults.getTaconite(proceed,
+            return this.Content(Defaults.getTaconiteRemoveTR(proceed,
                 Defaults.getOprResult(proceed, err), null, true), "text/xml");
         }
 

@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,9 +41,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AdamTibi.Web.Security, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\ELMAH\Elmah.dll</HintPath>
@@ -80,9 +81,9 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web.WebPages" />
     <Reference Include="System.Web.Helpers" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator">
       <HintPath>Lib\WebActivator.dll</HintPath>
     </Reference>
@@ -156,6 +157,7 @@
     <Content Include="Content\Images\clip.gif" />
     <Content Include="Content\Images\del.gif" />
     <Content Include="Content\Images\edit.gif" />
+    <Content Include="Content\Images\kbd.png" />
     <Content Include="Content\Images\page\bg.gif" />
     <Content Include="Content\Images\page\page-first-disabled.gif" />
     <Content Include="Content\Images\page\page-first.gif" />
@@ -173,32 +175,40 @@
     <Content Include="Content\Images\reset.png" />
     <Content Include="Content\Images\search.gif" />
     <Content Include="Content\Images\tires_banner.gif" />
-    <Content Include="Content\jQUI\min\jquery-1.11.0.js" />
-    <Content Include="Content\jQUI\min\jquery-1.9.1.min.js" />
-    <Content Include="Content\jQUI\min\jquery-2.1.4.min.js" />
-    <Content Include="Content\jQUI\min\jquery-migrate-1.1.1.min.js" />
-    <Content Include="Content\jQUI\min\jquery-ui.1.10.2.min.js" />
-    <Content Include="Content\jQUI\smoothness\images\animated-overlay.gif" />
-    <Content Include="Content\jQUI\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\jQUI\smoothness\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\jQUI\smoothness\jquery-ui.min.css" />
+    <Content Include="Content\JQG\css\ui.multiselect.css" />
+    <Content Include="Content\JQG\ui.multiselect.js" />
+    <Content Include="Content\JQG\jqg.columnSelecter.js" />
+    <Content Include="Content\JQG\css\ui.jqgrid-4.9.2.css" />
+    <Content Include="Content\JQG\grid.locale-en-4.9.2.js" />
+    <Content Include="Content\JQG\jquery.jqgrid.src-4.9.2.js" />
+    <Content Include="Content\jQUI\css\images\animated-overlay.gif" />
+    <Content Include="Content\jQUI\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\jQUI\css\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\jQUI\css\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\jQUI\css\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\jQUI\css\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\jQUI\css\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\jQUI\css\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\jQUI\css\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\jQUI\css\jquery-ui.css" />
+    <Content Include="Content\jQUI\min\jquery-2.1.1.min.js" />
+    <Content Include="Content\jQUI\min\jquery-ui.1.11.4.min.js" />
+    <Content Include="Content\Scripts\jquery.noty.packaged.v222.js" />
     <Content Include="Content\Scripts\jquery.printElement.js" />
+    <Content Include="Content\Scripts\jquery.table.nav.1.0.js" />
     <Content Include="Content\Scripts\jquery.validate.1.11.0.min.js" />
+    <Content Include="Content\Scripts\jquery.validate.1.14.0.js" />
     <Content Include="Content\Scripts\json2.js" />
     <Content Include="Content\Scripts\KO\knockout-2.2.0.js" />
+    <Content Include="Content\Scripts\KO\knockout-3.3.0.js" />
     <Content Include="Content\Scripts\KO\knockout.mapping-latest.js" />
     <Content Include="Content\Scripts\KO\KoExtra.js" />
+    <Content Include="Content\Scripts\mousetrap.min.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Scripts\common.js" />
     <Content Include="Web.config">
@@ -260,8 +270,7 @@
     <Content Include="Views\PO\PrintInternal.cshtml" />
     <Content Include="Views\Dashboard\Status.cshtml" />
     <Content Include="Views\PO\PrintPO.cshtml" />
-    <Content Include="Content\jQUI\min\jquery-1.11.3.min.map" />
-    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
+    <Content Include="Views\Dashboard\ListJQG.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />

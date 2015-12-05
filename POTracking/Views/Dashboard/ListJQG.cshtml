@@ -1,0 +1,157 @@
+﻿@*model PagedList<POT.DAL.vw_PO_Dashboard>*@
+@using HSG.Helper;
+@{ ViewBag.Title = "JQGrid Dashboard"; Layout = Defaults.masterLayout;}
+@section HeadContent
+{
+    <script src="@Url.Content("~/Content/JQG/ui.multiselect.js")"></script>    
+    @* Gives error anddoesn't work!
+    <script src="@Url.Content("~/Content/JQG/jqg.columnSelecter.js")"></script>  // must be after jqGrid *@
+    <script src="@Url.Content("~/Content/JQG/jquery.jqgrid.src-4.9.2.js")"></script>
+    <script src="@Url.Content("~/Content/JQG/grid.locale-en-4.9.2.js")"></script> 
+    
+
+    <link href="@Url.Content("~/Content/JQG/css/ui.jqgrid-4.9.2.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/JQG/css/ui.multiselect.css")" rel="stylesheet" type="text/css" />
+}
+<table id="tblJQGrid"></table>
+<div id="pagerTBL"></div>
+<img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="900px" />
+<script type="text/javascript">
+   var autocompleteURL = "@Defaults.commonRoot/Lookup?id=";
+   var dashboardURL = '@Url.Content("~/Dashboard/")'; 
+   
+   var ListURL = "@Html.Raw(@Url.Action("POListjqg", "Dashboard"))";
+      
+    $(document).ready(function () {        
+        initJQGrid();
+    });
+
+    function initJQGrid()
+    {
+        var gridHeight = ($(window).height() - 240);
+        var gridTBLid = "tblJQGrid", pagerTBL = "pagerTBL";
+        var tblJQGrid = jQuery('#' + gridTBLid);
+        var lastsel;
+
+        tblJQGrid.jqGrid({
+            url: ListURL,
+            datatype: 'json',
+            height: gridHeight,
+            width: ($('#' + gridTBLid).parent().width()), // to have horizontal scroll bar for frozen columns.
+            colNames: ['PO #', 'PO Date', 'Ship To', 'ETA', 'ETD', 'Status', 'Brand', 'Vendor'],
+            colModel: [
+                { name: 'POno', index: 'POno', width: 55 },
+                {
+                    name: 'POdt', index: 'POdt asc, POno', width: 90, editable: true,
+                    edittype: "text",
+                    editoptions: { // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                        // use it to place a third party control to customize the toolbar
+                        dataInit: function (element) {
+                            $(element).datepicker({
+                                id: 'orderDate_datePicker',
+                                dateFormat: 'M/d/yy',
+                                minDate: new Date(1753, 1, 1),
+                                maxDate: new Date(9999, 12, 31),
+                                showOn: 'focus'
+                            });
+                        }
+                    }
+                },
+                { name: 'Ship', index: 'Ship', width: 100, editable: true },
+                { name: 'ETA', index: 'ETA', width: 80, align: "center", editable: true, sortable: false },
+                { name: 'ETD', index: 'ETD', width: 80, align: "center", editable: true, sortable: false },
+                { name: 'Status', index: 'Status', width: 112, align: "center", editable: true, formatter: 'select', edittype: 'select',
+                     editoptions: { value: "null:null;24:Credit Approved;14:Placed with factory;19:On Hold;18:Revision Required;15:Waiting for Production;16:In Production;20:Booked;21:Shipped;25:In Transit;23:Completed;22:Cancelled"}  },
+                { name: 'Brand', index: 'Brand', width: 150, editable: true },
+                { name: 'Vndr', index: 'Vndr', width: 150, editable: true }
+            ],
+            gridview: true, // CAUTION: NOT for Treeview, Subgrid or afterInsertRow -  IMP : to improve grid performance by rendering whole row at once
+            //pager: '#' + GridId + 'Pager',
+            sortname: "PONumber", //default sorted column
+            autoWidth: true,
+            shrinkToFit: true,
+            forceFit: true,
+           // viewrecords: data.viewrecords,
+            ignoreCase: true, // make local search \ sort case-insensitive
+            navigator: true,   // for keys navigation in grid
+            //loadonce: true,   // single call to server for grid 
+            caption: "POT Dashboard jqGrid demo",
+            pager: "#pagerTBL",
+            //paging: false,
+            editable: true,
+            //pgtext: "",
+            //pginput: false,
+            //hidegrid: false,
+            //pgbuttons: false,
+            //toppager: true,
+            rowList: [10, 20, 30, 50, 100],
+            rowNum: 100, // give -1 if need to show all the rows
+            rownumbers: true,
+            //editurl: GridEditUrl,
+            viewrecords: true,
+            @*onSelectRow: function (id) {
+                if (id && id !== lastsel)
+                {
+                    tblJQGrid.jqGrid('restoreRow', lastsel);
+                    tblJQGrid.jqGrid('editRow', id, true); lastsel = id;
+                }
+            }*@
+
+        }); // jqGrid init END
+
+        tblJQGrid.jqGrid('navGrid', "#" + pagerTBL,
+            { edit: true, add: true, del: true }, //options 
+            {height:280,reloadAfterSubmit:false}, // edit options 
+            {height:280,reloadAfterSubmit:false}, // add options 
+            { reloadAfterSubmit: false }, // del options
+            {} // search options
+            );
+        tblJQGrid.jqGrid('inlineNav', "#" + pagerTBL);
+
+        // Bind the navigation and set the onEnter event
+        tblJQGrid.jqGrid('bindKeys', {
+            "onEnter": function (id) {
+                if (id && id !== lastsel) {
+                    tblJQGrid.jqGrid('restoreRow', lastsel);
+                    tblJQGrid.jqGrid('editRow', id, true); lastsel = id;
+                }
+            }
+        });
+
+        @* SO : 8106655 (vertical scroll issue) 
+        tblJQGrid.bind('keydown', function (e) {
+            if (e.keyCode == 38 || e.keyCode == 40) e.preventDefault();
+        }); *@
+
+        // SO : 18163713
+        // http://www.ok-soft-gmbh.com/jqGrid/SimpleLocalGridWithColumnChooser5__.htm
+        tblJQGrid.jqGrid('navGrid', '#pagerTBL', { refreshstate: 'current', add: false, edit: false, del: false });
+        $.extend(true, $.ui.multiselect, {
+            locale: {
+                addAll: 'Make all visible',
+                removeAll: 'Hidde All',
+                itemsCount: 'Avlialble Columns'
+            }
+        });
+        $.extend(true, $.jgrid.col, {
+            width: 450,
+            modal: true,
+            msel_opts: { dividerLocation: 0.5 },
+            dialog_opts: {
+                minWidth: 470,
+                show: 'blind',
+                hide: 'explode'
+            }
+        });
+        tblJQGrid.jqGrid('navButtonAdd', '#pagerTBL', {
+            caption: "",
+            buttonicon: "ui-icon-calculator",
+            title: "Choose columns",
+            onClickButton: function () {
+                $(this).jqGrid('columnChooser');
+            }
+        });
+    }
+</script>
+
+<img src="@Url.Content("~/Content/Images/spacer.gif")" height="1px" width="900px" />

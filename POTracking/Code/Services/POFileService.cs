@@ -155,6 +155,9 @@ namespace POT.Services
             }
             if (doSubmit) dbc.SubmitChanges();//Make a FINAL submit instead of periodic updates
             //Move header files
+            /*if (isNewPO)
+                FileIO.MoveFilesFolderNewPOOrItem(poObj.ID, poObj.POGUID);
+            else*/
             ProcessFiles(records, poObj.ID, poObj.POGUID);
         }
 
@@ -168,10 +171,10 @@ namespace POT.Services
 
             foreach (POFile item in records)
                 if (item._Deleted)//Delete will always be for existing not Async (so use POID)
-                    FileIO.DeletePOFile(item.FileName, item.POID, null, FileIO.mode.header);
+                    FileIO.DeletePOFile(poID, "", item.FileName);
 
             if(records.Count > 0) //finally copy all the files from H_Temp to H
-            FileIO.MoveAsyncPOFiles(poID, POGUID);
+                FileIO.StripGUIDFromPOFileName(poID, POGUID);
         }
 
         #endregion

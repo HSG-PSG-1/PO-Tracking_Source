@@ -1,6 +1,6 @@
 ﻿@using POT.Services
 @using HSG.Helper
-<script language="javascript" type="text/javascript" defer="defer">
+<script type="text/javascript">
 var loading = '<div style="text-align:center;display:block;"><img src=" @Url.Content("~/Content/Images/loading.gif")" title="" alt="Loading" /></div>';
        
 function gotoUser(UserId)
@@ -27,7 +27,7 @@ function updatePagedRows(vm)
 }
 var oldEmail;
 var undoCache;
-var viewModel = function(){        
+var vmUser = function(){        
         var self = this;
         self.AllUsers =  ko.observableArray();//jsondata
         self.pageSize = ko.observable(@ViewData["gridPageSize"]);
@@ -71,7 +71,7 @@ var viewModel = function(){
         };
 
         self.saveEdit = function (user) {
-            
+            // HT: Won't work for KO dialog need to trigger email validation explicitly
             if(!$("#frmUsr").valid())//$('#btnSubmit').prop('disabled', true);            
                 return;
 
@@ -99,7 +99,7 @@ var viewModel = function(){
                         @* SQL does it as - CASE o.OrgTypeId WHEN 1 THEN 'Internal' WHEN 2 THEN 'Vendor' END *@
                         @Html.Raw(UserService.orgTypeJS)
                         //if(user.OrgTypeId() == 1)user.OrgType("Internal"); else if(user.OrgTypeId() == 2)user.OrgType("Vendor");
-                        //setDDLtext("ddlRoles", "RoleName"); // shud trigger the change instead of user.RoleName("Admin")
+                        //setDDLtext("#ddlRoles", "RoleName"); // shud trigger the change instead of user.RoleName("Admin")
                         
                         usr.OrgType = user.OrgType();
                         usr.RoleName = $('#ddlRoles option:selected').text(); // SO: 10289721
@@ -200,7 +200,7 @@ var viewModel = function(){
             
             self.pageIndex(0);
                         
-            return ko.utils.arrayFilter(self.AllUsers(), function(rec) {                                
+            return ko.utils.arrayFilter(self.AllUsers(), function(rec) {
                 return (
                     (OrgType == null || rec.OrgType().toLowerCase().indexOf(OrgType) > -1) &&
                     (UserName == null || rec.UserName().toLowerCase().indexOf(UserName) > -1) &&                    
@@ -270,7 +270,7 @@ var viewModel = function(){
             var url = '@Url.Action("UserKODelete", "User", new { ID = "" })';
             $.post(url, data);
 
-            usrIDToDel = txtVal;            
+            usrIDToDel = txtVal;
 
             return false; // prevent any postback
         }

@@ -36,7 +36,7 @@ namespace POT.Controllers
             if (authCookie != null)
             {
                 try
-                {// Set data as per cookie
+                {// Set data as per cookie                    
                     authCookie = new HttpCookie(Defaults.cookieName, Crypto.EncodeStr(authCookie.Value, false)); //authCookie = HttpSecureCookie.Decode(authCookie, CookieProtection.None);//HT: decode the encoded cookie
                     loginM.Email = authCookie.Values[Defaults.emailCookie];
                     loginM.Password = Crypto.EncodeStr(authCookie.Values[Defaults.passwordCookie], false);
@@ -92,7 +92,11 @@ namespace POT.Controllers
                         return RedirectToAction("List", "Dashboard");
                 }
                 else // Login failed
-                    ModelState.AddModelError("", "The email and/or password provided is incorrect.");
+                {
+                    ModelState.AddModelError("", Defaults.InvalidEmailPWD);
+                    ViewData["oprSuccess"] = false;
+                    ViewData["err"] = Defaults.InvalidEmailPWD;
+                }
             }
 
             LogOff();// To make sure no session is set until Login (or it'll go in Login HttpGet instead of Post)            
@@ -115,9 +119,9 @@ namespace POT.Controllers
                 
                 ViewData["oprSuccess"] = oprSuccess;//Err msg handled in View
                 if (oprSuccess)//Send email
-                {
                     MailManager.ForgotPwdMail(Email, Pwd, new SettingService().GetContactEmail());
-                }
+                else
+                    ViewData["err"] = Defaults.ForgotPWDInvalidEmail;
             }
             #endregion
 

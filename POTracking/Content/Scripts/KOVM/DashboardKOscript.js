@@ -1,6 +1,5 @@
 ﻿$().ready(function () {
-    setFocus("PONumbers");
-    doCollapse(); //If url has collapse
+    doCollapse(); //If url has collapse        
 
     renderAutoComplete(autocompleteURL + "Brand", "#BrandID", "#BrandName");
     renderAutoComplete(autocompleteURL + "Vendor", "#VendorID", "#VendorName");
@@ -60,7 +59,8 @@ function showDialog(action, poID) {
         modal: false,
         open: function () {
             $(this).html(loading);
-            $(this).load(dashboardURL + action + '?POID=' + poID); //+ '&Archived=' + archived
+            $(this).load(dashboardURL + action + '?POID=' + poID, function () { $("#NewStatusID").focus(); }); //+ '&Archived=' + archived
+            /*setTimeout(function () { $('.ui-dialog-titlebar-close').blur(); }, 1);*/
         },
         height: 360,
         width: 650,
@@ -100,11 +100,9 @@ function updateStatusHistory() {
     //persist updated status in textbox
     $(oldStatID).val($(newStatID).val());
     $(oldStat).val($(newStatID).children("option:selected").text());
-    
-    /*update in Grid (NOTE: make sure 'poObj' is set when td is clicked
-    $(poObj).html($(oldStat).val()); $(poObj).effect('highlight', {}, 2000); //highlight
-    $("#status" + poObj.ID).val($(oldStat).val()).trigger("change"); $("#statusID" + poObj.ID).val($(newStatID).val()).trigger("change");*/
-    
+
+    /*update in Grid (NOTE: make sure 'poObj' is set when td is clicked*/
+
     $("#statusDIV" + poObj.ID).text($(oldStat).val()).trigger("change").effect('highlight', {}, 2000);
     poObj.Status = $(oldStat).val(); poObj.OrdStat = $(newStatID).val();
 }
@@ -121,18 +119,18 @@ function excelPostback(e) {
     });
     return false; // to cause form postback
 }
+function openPrintDialog(POId) {
+    if (POId > 0) return openWinScrollable(printPOURL.replace('-99', POId), 648, 838);
+}
 
-function openPrintDialog(POId) { if (POId > 0)  return openWinScrollable(printPOURL.replace('-99', POId), 648, 838);}
-
-function doAJAXSubmit(frm) {    vm_D.invokeSearch(1);    return false; }
-
+function doAJAXSubmit(frm) { vm_D.invokeSearch(1); return false; }
 
 /* ============== ============== ============== ============== */
 
-var viewModel = function () {
+var vmDashboard = function () {
     var self = this;
     self.fields = ko.observableArray(); //jsondata
-    self.pageSize = ko.observable(100);
+    self.pageSize = ko.observable(gridPageSize);
     self.pageIndex = ko.observable(0);
     self.cachedPagesTill = ko.observable(0);
     self.sortField = ko.observable("POno");
@@ -235,10 +233,10 @@ var viewModel = function () {
                 self.fields.sort(function (l, r) { return new Date(l.POdt) > new Date(r.POdt) ? 1 * sortOrder : -1 * sortOrder }); // PODate
                 break;
             case "Vndr": // Need to convert into string while comparison
-                self.fields.sort(function (l, r) { return l.Vndr + "" > r.Vndr + "" ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return $.trim(l.Vndr) + "" > $.trim(r.Vndr) + "" ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Ship":
-                self.fields.sort(function (l, r) { return l.Ship > r.Ship ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return $.trim(l.Ship) > $.trim(r.Ship) ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "ETA":
                 self.fields.sort(function (l, r) { return new Date(l.ETA) > new Date(r.ETA) ? 1 * sortOrder : -1 * sortOrder });
@@ -247,10 +245,10 @@ var viewModel = function () {
                 self.fields.sort(function (l, r) { return new Date(l.ETD) > new Date(r.ETD) ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Brand":
-                self.fields.sort(function (l, r) { return l.Brand > r.Brand ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return $.trim(l.Brand) > $.trim(r.Brand) ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Status":
-                self.fields.sort(function (l, r) { return l.Status > r.Status ? 1 * sortOrder : -1 * sortOrder });
+                self.fields.sort(function (l, r) { return $.trim(l.Status) > $.trim(r.Status) ? 1 * sortOrder : -1 * sortOrder });
                 break;
             case "Cmts":
                 self.fields.sort(function (l, r) { return l.Cmts > r.Cmts ? 1 * sortOrder : -1 * sortOrder });
@@ -273,34 +271,86 @@ var viewModel = function () {
     }
 };
 
-var vm_D = new viewModel();
+var vm_D;
+
+function createKO() { //createKO_withAJAXFetchForFuture
+    showDlg(true);
+    //var data = $.parseJSON(initialJSONdata);
+    vm_D = new vmDashboard();
+    showDlg(false);
+    //vm_D.POs = ko.observableArray(data); // Initial items
+    vm_D.fields(initialJSONdata.records);
+    vm_D.search = ko.mapping.fromJS(initialJSONdata.search); // Otherwise the search button will be needed
+    //vm_D.quickSearch("");
+    vm_D.invokeSearch(2);
+    vm_D.pageSize(gridPageSize);
+    ko.applyBindings(vm_D);
+
+    $("#loading").hide();
+    //pagedGrid.DisplayFields(data);            
+    setDTPdateForKO();
+    var progressElem = $('#progressCounter');
+    // write something in #progressCounter , later will be changed to percentage
+    progressElem.text(ListURL);
+
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: ListURL,
+        cache: false,
+        error: function (xhr, ajaxOptions, thrownError) { alert(xhr.responseText); alert(thrownError); },
+        xhr: function () {
+            var xhr = new window.XMLHttpRequest();
+            //Download progress
+            xhr.addEventListener("progress", function (evt) {
+                console.log(evt.lengthComputable); // false
+                if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total;
+                    //if (percentComplete * 100 > 50 && percentComplete * 100 < 60)alert("(" + evt.loaded + ":" + evt.total +")");
+                    progressElem.html(Math.round(percentComplete * 100) + "% (" + evt.loaded + ":" + evt.total + ")");
+                }
+            }, false);
+            return xhr;
+        },
+        beforeSend: function () { $('#loading').html(loading); alert("Look at the record count. Two pages data pre-loaded. Now loading the remaining data."); progressElem.show(); },
+        //complete: function () { $("#loading").hide(); },
+        success: function (data) {
+            //$("#data").html("data receieved");
+            ko.utils.arrayPushAll(vm_D.fields, data.records); //SO: 9758490
+            vm_D.fields.valueHasMutated(); // http://www.strathweb.com/2012/07/knockout-js-pro-tips-working-with-observable-arrays/        
+            progressElem.hide();
+        }
+    });
+}
+
+/*
 function createKO() {
     showDlg(true);
     $.getJSON(ListURL, function (data) {
+        vm_D = new vmDashboard();
         showDlg(false);
         //vm_D.POs = ko.observableArray(data); // Initial items
         vm_D.fields(data.records);
         vm_D.search = ko.mapping.fromJS(data.search); // Otherwise the search button will be needed
-        /*vm_D.quickSearch("");*/
+        //vm_D.quickSearch("");
         vm_D.invokeSearch(2);
         vm_D.pageSize(gridPageSize);
         ko.applyBindings(vm_D);
+        ko.utils.arrayPushAll(vm_D.fields, data.records); //SO: 9758490
+        vm_D.fields.valueHasMutated(); // http://www.strathweb.com/2012/07/knockout-js-pro-tips-working-with-observable-arrays/
 
         //pagedGrid.DisplayFields(data);            
         setDTPdateForKO();
-
-        setFocus("PONumbers");
-    });
-}
-
+    }); //.fail(function () {alert("Error loading data!");}); http://api.jquery.com/jquery.getjson/
+}*/
 /* KO based pagination */
 function updatePagedRows(vm) {// Starts with : index=0
     ListURL = ListURL.replace("index=" + (vm.pageIndex() - 1), "index=" + vm.pageIndex());
     showDlg(true);
     $.getJSON(ListURL, function (data) {
         showDlg(false);
-        //viewModel.POs = ko.observableArray(data); // Initial items
-        //ko.applyBindings(viewModel);
+        //vm_D.POs = ko.observableArray(data); // Initial items
+        //ko.applyBindings(vm_D);
         if (data != null)
             ko.utils.arrayForEach(data, function (item) {
                 vm_D.fields.push(item);
