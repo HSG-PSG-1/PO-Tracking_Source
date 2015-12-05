@@ -15,7 +15,7 @@ ko.bindingHandlers.date = {
         var value = new Date(); // today by default         
         //alert(value.toString());        
         if (jsonDate != null && jsonDate != Date111) {
-        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e); } //value = new Date();
+        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e.message); } //value = new Date();
         }
         */
         var ret = ParseJSONdate(jsonDate); //value.getMonth() + 1 + "/" + value.getDate() + "/" + value.getFullYear();
@@ -33,7 +33,7 @@ ko.bindingHandlers.date = {
         var value = new Date(); // today by default         
         //alert(value.toString());        
         if (jsonDate != null && jsonDate != Date111) {
-        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e); } //value = new Date();
+        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e.message); } //value = new Date();
         }
         */
         var ret = ParseJSONdate(jsonDate); //value.getMonth() + 1 + "/" + value.getDate() + "/" + value.getFullYear();
@@ -51,8 +51,9 @@ function ParseJSONdate(jsonDate) {
     var value = new Date(); // today by default         
     //alert(value.toString());        
     if (jsonDate != null && jsonDate != Date111) {
-        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e + ":" + jsonDate + "."); }
+        try { value = new Date(parseInt(jsonDate.substr(6))); } catch (e) { alert(e.message + ":" + jsonDate + "."); }
     }
+    value = makeDateTimezoneNeutral(value); // HT: DON'T forget
     return value.getMonth() + 1 + "/" + value.getDate() + "/" + value.getFullYear();
 }
 
@@ -159,7 +160,7 @@ ko.bindingHandlers.datepicker = {
                 $(element).datepicker("destroy");
             });
 
-        } catch (ex) { alert(ex); }
+        } catch (ex) { alert(ex.message); }
     },
     update: function (element, valueAccessor) {
         try {
@@ -173,6 +174,7 @@ ko.bindingHandlers.datepicker = {
             current = $(element).datepicker("getDate");
 
             if (value - current !== 0) {
+                value = makeDateTimezoneNeutral(value); // HT: DON'T forget
                 $(element).datepicker("setDate", value);
             }
 
@@ -188,7 +190,16 @@ ko.bindingHandlers.datepicker = {
             $(element).datepicker("setDate", parsedDate);
             } */
 
-        } catch (ex) { alert(ex); }
+        } catch (ex) { alert(ex.message); }
     }
 };
 /* <input data-bind="datepicker: myDate, datepickerOptions: { minDate: new Date() }" /> */
+function makeDateTimezoneNeutral(dt) {
+    console.log(dt);
+    // HT: SPECIAL CASE - some time zone client browsers will show upto 1 day offset based on the UTC time diff
+    //DOESN'T work - dt = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000);
+    dt.setHours(dt.getHours() + dt.getTimezoneOffset() / 60);
+    // ^^^ this shud nullify that difference as per SO : 1486476 (works),  26028466 (nope)
+    console.log(dt);
+    return dt;
+}

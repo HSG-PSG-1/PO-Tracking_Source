@@ -238,7 +238,8 @@ namespace HSG.Helper
             }
             set
             {
-                HttpContext.Current.Session["ErrDetailsForELMAH"] = value;
+                if (HttpContext.Current != null && HttpContext.Current.Session != null)
+                    HttpContext.Current.Session["ErrDetailsForELMAH"] = value;
             }
         }
 
