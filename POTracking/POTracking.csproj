@@ -175,6 +175,7 @@
     <Content Include="Content\Images\tires_banner.gif" />
     <Content Include="Content\jQUI\min\jquery-1.11.0.js" />
     <Content Include="Content\jQUI\min\jquery-1.9.1.min.js" />
+    <Content Include="Content\jQUI\min\jquery-2.1.4.min.js" />
     <Content Include="Content\jQUI\min\jquery-migrate-1.1.1.min.js" />
     <Content Include="Content\jQUI\min\jquery-ui.1.10.2.min.js" />
     <Content Include="Content\jQUI\smoothness\images\animated-overlay.gif" />
@@ -259,6 +260,7 @@
     <Content Include="Views\PO\PrintInternal.cshtml" />
     <Content Include="Views\Dashboard\Status.cshtml" />
     <Content Include="Views\PO\PrintPO.cshtml" />
+    <Content Include="Content\jQUI\min\jquery-1.11.3.min.map" />
     <None Include="Properties\PublishProfiles\Profile1.pubxml" />
   </ItemGroup>
   <ItemGroup>

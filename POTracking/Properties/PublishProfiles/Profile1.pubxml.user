@@ -7,7 +7,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
     <LastUsedPlatform>Any CPU</LastUsedPlatform>
-    <TimeStampOfAssociatedLegacyPublishXmlFile>2014-09-15T18:07:11.0000000+05:30</TimeStampOfAssociatedLegacyPublishXmlFile>
+    <TimeStampOfAssociatedLegacyPublishXmlFile>2014-09-15T18:07:12.0000000+05:30</TimeStampOfAssociatedLegacyPublishXmlFile>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Browsers/BrowserFile.browser">
@@ -20,22 +20,22 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/13/2012 19:58:38</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
-      <publishTime>07/07/2014 14:06:41</publishTime>
+      <publishTime>07/07/2014 14:06:42</publishTime>
     </File>
     <File Include="bin/MiniProfiler.dll">
-      <publishTime>07/07/2014 14:06:56</publishTime>
+      <publishTime>07/07/2014 14:06:58</publishTime>
     </File>
     <File Include="bin/MvcPager.dll">
       <publishTime>06/14/2010 15:59:20</publishTime>
     </File>
     <File Include="bin/POT.dll">
-      <publishTime>07/19/2015 21:22:31</publishTime>
+      <publishTime>08/27/2015 01:24:45</publishTime>
     </File>
     <File Include="bin/protobuf-net.dll">
       <publishTime>08/01/2011 20:30:58</publishTime>
     </File>
     <File Include="bin/WebActivator.dll">
-      <publishTime>06/15/2013 20:44:23</publishTime>
+      <publishTime>06/15/2013 20:44:24</publishTime>
     </File>
     <File Include="Content/favicon.ico">
       <publishTime>10/20/2011 22:20:08</publishTime>
@@ -134,13 +134,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/21/2011 20:51:56</publishTime>
     </File>
     <File Include="Content/Images/tires_banner.gif">
-      <publishTime>08/22/2013 13:18:40</publishTime>
+      <publishTime>08/22/2013 13:18:42</publishTime>
     </File>
     <File Include="Content/jQUI/min/jquery-1.11.0.js">
       <publishTime>03/14/2014 14:00:34</publishTime>
     </File>
+    <File Include="Content/jQUI/min/jquery-1.11.3.min.map">
+      <publishTime>08/14/2015 15:29:35</publishTime>
+    </File>
     <File Include="Content/jQUI/min/jquery-1.9.1.min.js">
       <publishTime>02/10/2013 02:19:38</publishTime>
+    </File>
+    <File Include="Content/jQUI/min/jquery-2.1.4.min.js">
+      <publishTime>08/14/2015 15:32:47</publishTime>
     </File>
     <File Include="Content/jQUI/min/jquery-migrate-1.1.1.min.js">
       <publishTime>04/26/2013 03:36:02</publishTime>
@@ -200,7 +206,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/17/2013 01:10:34</publishTime>
     </File>
     <File Include="Content/Scripts/jquery.printElement.js">
-      <publishTime>12/19/2013 23:19:41</publishTime>
+      <publishTime>12/19/2013 23:19:42</publishTime>
     </File>
     <File Include="Content/Scripts/jquery.tablesorter.min.js">
       <publishTime>03/29/2012 12:54:44</publishTime>
@@ -221,25 +227,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/22/2012 21:24:40</publishTime>
     </File>
     <File Include="Content/Scripts/KO/KoExtra.js">
-      <publishTime>04/01/2014 19:56:09</publishTime>
+      <publishTime>04/01/2014 19:56:10</publishTime>
     </File>
     <File Include="Content/Scripts/KOVM/CommentsFilesKOscript.js">
-      <publishTime>01/01/2015 16:16:51</publishTime>
+      <publishTime>01/01/2015 16:16:52</publishTime>
     </File>
     <File Include="Content/Scripts/KOVM/DashboardKOscript.js">
-      <publishTime>09/15/2014 17:18:49</publishTime>
+      <publishTime>09/15/2014 17:18:50</publishTime>
     </File>
     <File Include="Content/Scripts/KOVM/MasterGridKOscript.js">
-      <publishTime>12/13/2013 01:58:30</publishTime>
+      <publishTime>12/13/2013 01:58:32</publishTime>
     </File>
     <File Include="Content/Scripts/KOVM/RoleGridKOscript.js">
-      <publishTime>12/13/2013 01:46:03</publishTime>
+      <publishTime>12/13/2013 01:46:04</publishTime>
     </File>
     <File Include="Content/Site.css">
-      <publishTime>09/16/2013 22:30:25</publishTime>
+      <publishTime>09/16/2013 22:30:26</publishTime>
     </File>
     <File Include="EmailTemplates/ApplicationError.xml">
-      <publishTime>09/18/2013 19:49:47</publishTime>
+      <publishTime>09/18/2013 19:49:48</publishTime>
     </File>
     <File Include="EmailTemplates/ForgotPwd.xml">
       <publishTime>10/15/2013 03:00:38</publishTime>
@@ -251,16 +257,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/20/2011 14:17:28</publishTime>
     </File>
     <File Include="Global.asax">
-      <publishTime>09/03/2013 14:55:31</publishTime>
+      <publishTime>09/03/2013 14:55:32</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>07/07/2014 14:06:58</publishTime>
+      <publishTime>07/07/2014 14:07:00</publishTime>
     </File>
     <File Include="Views/Activity/EditorTemplates/ActivityLog.cshtml">
-      <publishTime>12/13/2013 21:33:27</publishTime>
+      <publishTime>12/13/2013 21:33:28</publishTime>
     </File>
     <File Include="Views/Activity/Log.cshtml">
-      <publishTime>03/08/2014 01:32:01</publishTime>
+      <publishTime>03/08/2014 01:32:02</publishTime>
     </File>
     <File Include="Views/Common/Login.cshtml">
       <publishTime>07/02/2014 17:09:56</publishTime>
@@ -272,16 +278,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/04/2013 00:46:46</publishTime>
     </File>
     <File Include="Views/Dashboard/Comments.cshtml">
-      <publishTime>09/08/2013 00:52:57</publishTime>
+      <publishTime>09/08/2013 00:52:58</publishTime>
     </File>
     <File Include="Views/Dashboard/Excel.cshtml">
-      <publishTime>03/08/2014 01:32:01</publishTime>
+      <publishTime>03/08/2014 01:32:02</publishTime>
     </File>
     <File Include="Views/Dashboard/Files.cshtml">
-      <publishTime>12/11/2013 23:20:37</publishTime>
+      <publishTime>12/11/2013 23:20:38</publishTime>
     </File>
     <File Include="Views/Dashboard/KO/ListInternal.cshtml">
-      <publishTime>09/15/2014 17:26:45</publishTime>
+      <publishTime>09/15/2014 17:26:46</publishTime>
     </File>
     <File Include="Views/Dashboard/KO/ListVendor.cshtml">
       <publishTime>09/15/2014 17:24:44</publishTime>
@@ -290,7 +296,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/15/2014 18:19:24</publishTime>
     </File>
     <File Include="Views/Dashboard/Print.cshtml">
-      <publishTime>03/08/2014 01:32:01</publishTime>
+      <publishTime>03/08/2014 01:32:02</publishTime>
     </File>
     <File Include="Views/Dashboard/Status.cshtml">
       <publishTime>12/11/2013 23:19:12</publishTime>
@@ -302,13 +308,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/13/2013 21:38:56</publishTime>
     </File>
     <File Include="Views/PO/Comments.cshtml">
-      <publishTime>07/03/2014 18:30:33</publishTime>
+      <publishTime>08/11/2015 20:47:19</publishTime>
     </File>
     <File Include="Views/PO/Files.cshtml">
-      <publishTime>09/09/2014 13:47:25</publishTime>
+      <publishTime>09/09/2014 13:47:26</publishTime>
     </File>
     <File Include="Views/PO/GetFile.cshtml">
-      <publishTime>11/27/2013 13:43:34</publishTime>
+      <publishTime>11/27/2013 13:43:36</publishTime>
     </File>
     <File Include="Views/PO/Info.cshtml">
       <publishTime>04/01/2014 21:21:12</publishTime>
@@ -317,16 +323,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/11/2014 00:40:08</publishTime>
     </File>
     <File Include="Views/PO/Manage.cshtml">
-      <publishTime>07/02/2014 00:07:17</publishTime>
+      <publishTime>07/02/2014 00:07:18</publishTime>
     </File>
     <File Include="Views/PO/Print.cshtml">
-      <publishTime>11/27/2013 13:43:34</publishTime>
+      <publishTime>11/27/2013 13:43:36</publishTime>
     </File>
     <File Include="Views/PO/PrintInternal.cshtml">
       <publishTime>06/11/2014 00:36:32</publishTime>
     </File>
     <File Include="Views/PO/PrintPO.cshtml">
-      <publishTime>06/11/2014 00:35:49</publishTime>
+      <publishTime>06/11/2014 00:35:50</publishTime>
     </File>
     <File Include="Views/Role/Manage.cshtml">
       <publishTime>12/13/2013 21:38:56</publishTime>
@@ -365,13 +371,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/09/2013 01:01:08</publishTime>
     </File>
     <File Include="Views/User/KO/UserKOscript.cshtml">
-      <publishTime>02/04/2014 00:55:06</publishTime>
+      <publishTime>02/04/2014 00:55:08</publishTime>
     </File>
     <File Include="Views/User/KO/UserList.cshtml">
-      <publishTime>11/12/2013 00:29:01</publishTime>
+      <publishTime>11/12/2013 00:29:02</publishTime>
     </File>
     <File Include="Views/User/List.cshtml">
-      <publishTime>12/10/2013 01:45:17</publishTime>
+      <publishTime>12/10/2013 01:45:18</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>05/06/2012 21:49:26</publishTime>
@@ -380,7 +386,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/02/2012 21:19:18</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>01/01/2015 17:04:13</publishTime>
+      <publishTime>01/01/2015 17:04:14</publishTime>
     </File>
   </ItemGroup>
 </Project>
