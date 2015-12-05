@@ -86,13 +86,15 @@ var commentsViewModel = function () {
                     PONumber: _PONumber
                 },
                     function (result) {
-                        //alert(result); HT: we can notify user if a succesful email was sent                        
-                        if (result) {
+                        //alert(result); HT: we can notify user if a succesful email was sent
+                        if (result.sendMail) {
                             var spn = '#emailResult'; $(spn).html($(spn).attr("title"));
                             showOprResult(spn, 1);
 
                             $("#AssignToOLD").val(_AssignTo).trigger("change");
                         }
+                        else
+                            alert("No email sent! ERROR : " + result.msg);
                     }
             );
         }

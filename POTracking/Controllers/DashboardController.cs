@@ -39,7 +39,7 @@ namespace POT.Controllers
         #region Will need GET (for AJAX) & Post
         
         [CacheControl(HttpCacheability.NoCache)]//Don't mention GET or post as this is required for both!
-        public JsonResult POListKO(int? index, string qData, bool? fetchAll)
+        public ContentResult POListKO(int? index, string qData, bool? fetchAll)
         {
             base.SetTempDataSort(ref index);// Set TempDate, Sort & index
             //Make sure searchOpts is assigned to set ViewState
@@ -62,22 +62,31 @@ namespace POT.Controllers
                          select new
                          {
                              ID = vw_u.ID,
-                             PONumber = vw_u.PONumber,
-                             OrderStatusID = vw_u.OrderStatusID,
+                             POno = vw_u.PONumber,
+                             OrdStat = vw_u.OrderStatusID,
                              AssignTo = vw_u.AssignTo,
-                             VendorID = vw_u.VendorID,
-                             VendorName = vw_u.VendorName,
-                             BrandName = vw_u.BrandName,
+                             //VendorID = vw_u.VendorID,
+                             Vndr = vw_u.VendorName,
+                             Brand = vw_u.BrandName,
                              Status = vw_u.Status,
-                             CommentsExist = vw_u.CommentsExist,
-                             FilesHExist = vw_u.FilesHExist,
-                             PODateOnly = vw_u.PODateOnly,
-                             ETAOnly = vw_u.ETAOnly,
-                             ETDOnly = vw_u.ETDOnly,
-                             ShipToCity = vw_u.ShipToCity
+                             Cmts = vw_u.CommentsExist,
+                             Files = vw_u.FilesHExist,
+                             POdt = vw_u.PODateOnly,
+                             ETA = vw_u.ETAOnly,
+                             ETD = vw_u.ETDOnly,
+                             Ship = vw_u.ShipToCity
                          };
              
-            return Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
+            System.Web.Script.Serialization.JavaScriptSerializer jsSerializer = new System.Web.Script.Serialization.JavaScriptSerializer
+            { MaxJsonLength = Int32.MaxValue}; //Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
+            var jsonDataSet = new ContentResult
+            {
+                Content = jsSerializer.Serialize(new { records = result, search = oldSearchOpts }),
+                ContentType = "application/json",
+                //ContentEncoding = 
+            };
+            // MVC 4 : jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonDataSet;
         }
 
         [HttpPost]
@@ -88,7 +97,9 @@ namespace POT.Controllers
             populateData(false);// Populate ddl Viewdata
 
             //Ensure that Orderby has the correcy field (not the custom field so need to replace)
-            orderBy = orderBy.Replace("PODateOnly", "PODate").Replace("ETDOnly", "ETD").Replace("ETAOnly", "ETA");
+            orderBy = orderBy.Replace("POno", "PONumber").Replace("OrdStat", "OrderStatus").Replace("Vndr", "VendorName").Replace("Brand", "BrandName")
+                .Replace("Cmts", "CommentsExist").Replace("Files", "FilesHExist").Replace("POdt", "PODate").Replace("Ship", "ShipToCity");
+                //.Replace("ETD", "ETD").Replace("ETA", "ETA");
 
             _Session.POIDs = new DashboardService().SearchPOIDKO(searchObj, orderBy); 
 

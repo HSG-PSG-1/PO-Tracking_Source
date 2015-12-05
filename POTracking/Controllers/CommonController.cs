@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Principal;
-using AdamTibi.Web.Security;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -20,7 +19,7 @@ namespace POT.Controllers
     {
         #region Login/off Send password
 
-        [HttpGet]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
         //[ValidateInput(false)] // SO: 2673850/validaterequest-false-doesnt-work-in-asp-net-4
         public ActionResult Login(string from, string email, string pwd, bool remember = false)
         {
@@ -38,7 +37,7 @@ namespace POT.Controllers
             {
                 try
                 {// Set data as per cookie
-                    authCookie = HttpSecureCookie.Decode(authCookie);//HT: decode the encoded cookie
+                    authCookie = new HttpCookie(Defaults.cookieName, Crypto.EncodeStr(authCookie.Value, false)); //authCookie = HttpSecureCookie.Decode(authCookie, CookieProtection.None);//HT: decode the encoded cookie
                     loginM.Email = authCookie.Values[Defaults.emailCookie];
                     loginM.Password = Crypto.EncodeStr(authCookie.Values[Defaults.passwordCookie], false);
                     loginM.RememberMe = true;
@@ -141,7 +140,10 @@ namespace POT.Controllers
             authRememberCookie.Values[Defaults.passwordCookie] = remember?Crypto.EncodeStr(model.Password, true):"";
             authRememberCookie.Expires = remember ? DateTime.Now.AddHours(Config.RememberMeHours) 
                 : DateTime.Now.AddYears(-1);//to avoid any datetime diff
-            Response.Cookies.Add(HttpSecureCookie.Encode(authRememberCookie));//HT: encode the cookie            
+            /*HT: encode the cookie // Can't because of machine specific machine key - http://msdn.microsoft.com/en-us/library/ff649308.aspx#paght000007_webfarmdeploymentconsiderations
+            authRememberCookie.Value = Encoding.Unicode.GetString(MachineKey.Protect(Encoding.Unicode.GetBytes(authRememberCookie.Value)));*/
+            authRememberCookie.Value = Crypto.EncodeStr(authRememberCookie.Value, true);
+            Response.Cookies.Add(authRememberCookie);
         }
         
         //[CacheControl(HttpCacheability.NoCache), HttpGet]
