@@ -160,6 +160,19 @@ namespace HSG.Helper
             }
         }
 
+        /// VendorID for Siamtruck Radial Company Ltd.
+        /// <summary>
+        /// VendorID for Siamtruck Radial Company Ltd.
+        /// </summary>
+        public static int VendorIDSiamtruck
+        {
+            get
+            {
+                try { return int.Parse(ConfigurationManager.AppSettings.Get("VendorIDSiamtruck")); }
+                catch (Exception ex) { return -1; }
+            }
+        }
+
         #endregion //Properties
 
         #region Settings fetched from DB
