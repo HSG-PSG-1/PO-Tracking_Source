@@ -9,7 +9,7 @@
     vw_POHeader view = @Model.view;
     //List<POComment> comments = @Model.comments;
     //List<POFile> filesH = @Model.filesH;
-    List<vw_POLine> items = @Model.items;
+    var items = @Model.items; // declaring List<vw_POLine> - causes weird compiler error
 
     string root = Defaults.getAbsSiteURL(Request.Url.ToString());
 }
