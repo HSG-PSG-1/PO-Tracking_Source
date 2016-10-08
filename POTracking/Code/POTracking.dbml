@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="POTracking" EntityNamespace="POT.DAL" ContextNamespace="POT.DAL" Class="POTmodel" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=(local);Initial Catalog=POTracking;Persist Security Info=True;User ID=sa" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="POTConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=POTracking;Persist Security Info=True;User ID=sa" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="POTConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.ActivityHistory" Member="ActivityHistories">
     <Type Name="ActivityHistory">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -217,7 +217,7 @@
       <Column Name="Division" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
       <Column Name="VendorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="VendorNumber" Type="System.String" DbType="NVarChar(7)" CanBeNull="true" />
-      <Column Name="VendorName" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="VendorName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress1" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress2" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress3" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
@@ -435,7 +435,7 @@
       <Column Name="VendorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="VendorCode" Type="System.String" DbType="NVarChar(7)" CanBeNull="true" />
       <Column Name="VendorNumber" Type="System.String" DbType="NVarChar(7)" CanBeNull="true" />
-      <Column Name="VendorName" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="VendorName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress1" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress2" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress3" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
