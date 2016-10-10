@@ -182,11 +182,11 @@ namespace POT.Services
         {
             if (_Session.IsAsiaVendor) // Special Case for Asia Vendor
                 return (dbc.POHeaders.Where(c =>
-                    (c.VendorID == Config.VendorIDDeestone || c.VendorID == Config.VendorIDSvizz || c.VendorID == Config.VendorIDSiamtruck)
+                    (c.VendorID == Config.VendorIDDeestone || c.VendorID == Config.VendorIDDeestoneLtd || c.VendorID == Config.VendorIDSvizz || c.VendorID == Config.VendorIDSiamtruck)
                     && c.ID == POId).Count() > 0);
             else if (_Session.IsAsiaOperations) // Special Case for Asia Operations
                 return (dbc.POHeaders.Where(c =>
-                    (c.VendorID != Config.VendorIDDeestone && c.VendorID != Config.VendorIDSvizz && c.VendorID != Config.VendorIDSiamtruck)
+                    (c.VendorID != Config.VendorIDDeestone && c.VendorID != Config.VendorIDDeestoneLtd && c.VendorID != Config.VendorIDSvizz && c.VendorID != Config.VendorIDSiamtruck)
                     && c.ID == POId).Count() > 0);
             // HT: Make sure this is AFTER AsiaOperations
             else if (_Session.IsOrgInternal) // It can be an OrgType = Internal (but NONE of the above)
