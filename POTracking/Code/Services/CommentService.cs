@@ -52,7 +52,6 @@ namespace POT.Services
         {
             bool isSelfNotification = (AssignTo == _SessionUsr.ID);
             bool sendMail = (POID > Defaults.Integer && !isSelfNotification);// No need to send mail if its current user
-            Err = isSelfNotification ? "Self notification : No email queued" : Err;
             try
             {
                 #region Check and send email

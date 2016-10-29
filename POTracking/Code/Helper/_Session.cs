@@ -197,7 +197,7 @@ namespace HSG.Helper
             }
         }
 
-        public static bool IsValid(HttpContext ctx)
+        public static bool IsValid()
         {/*See in future if need more deep validation 
             if (!string.IsNullOrEmpty((ctx.Session["UserObj"] ?? "").ToString()))
                 return (_SessionUsr != new UserService().emptyView);

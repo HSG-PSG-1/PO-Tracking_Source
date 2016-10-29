@@ -51,7 +51,7 @@ namespace HSG.Helper
                 return string.Empty;
 
             return (doEncode? HttpUtility.HtmlEncode(textVal).Replace('&', '$').Replace(';', '!'): 
-                HttpUtility.HtmlEncode(textVal).Replace("$", "&").Replace("!", ";"));
+                HttpUtility.HtmlDecode(textVal).Replace("$", "&").Replace("!", ";"));
         }
     }
 }

@@ -68,6 +68,39 @@ namespace POT.Controllers
                 Defaults.getOprResult(proceed, "Unable to delete file"), "fileOprMsg"), "text/xml");
         }
 
+        [SkipModelValidation]
+        [HttpPost]
+        public ActionResult Upload(int POID, HttpPostedFileBase file, [FromJson] POFile FileHdrObj)
+        {          
+            bool success = true;
+            string result = "";
+
+            #region New file upload
+
+            if ((FileHdrObj.FileNameNEW ?? FileHdrObj.FileName) != null)
+            {
+                #region Old code (make sure the function 'ChkAndSaveClaimFile' does all of it)
+                //string docName = string.Empty;
+                //FileIO.result uploadResult = SaveClaimFile(Request.Files["FileNameNEW"], ref docName, ClaimID, true);
+
+                //if (uploadResult != FileIO.result.successful)
+                //    if (uploadResult == FileIO.result.duplicate)
+                //        ModelState.AddModelError("FileName", "Duplicate file found");
+                //    else
+                //        ModelState.AddModelError("FileName", "Unable to upload file");
+                #endregion
+                FileHdrObj.FileName = System.IO.Path.GetFileName(FileHdrObj.FileName); // Ensure its file name and not path!
+                ChkAndSavePOFile("FileNameNEW", POID, FileHdrObj.POGUID);
+                success = ((ModelState["FileName"] ?? new ModelState()).Errors.Count() < 1); // We won't have (initially) - ModelState["FileName"]
+            }
+
+            #endregion
+            result = !success ? ("Unable to upload file - " + ModelState["FileName"].Errors[0].ErrorMessage) : "";
+
+            string sepr = "~~~";
+            return Content((success ? "1" : "0") + sepr + Defaults.getOprResult(success, result) + sepr + FileHdrObj.ID + sepr + FileHdrObj.CodeStr);
+            //Url.Content(@"~\Content\" + fileUp.FileName));
+        }
         #endregion
 
         public FileVM GetFileKOModel(int POID, string POGUID)
@@ -114,8 +147,8 @@ namespace POT.Controllers
         void ChkAndSavePOFile(string hpFileKey, int POId, string POGUID, int? PODetailId = null)
         {
             HttpPostedFileBase hpFile = Request.Files[hpFileKey];
-
-            FileIO.result uploadResult = FileIO.UploadAndSave(hpFile, POId, POGUID, PODetailId);
+            string otherIssue = "Unable to upload file";
+            FileIO.result uploadResult = FileIO.UploadAndSave(hpFile, POId, POGUID, ref otherIssue, PODetailId);
 
             #region Add error in case of an Upload issue
 
@@ -129,7 +162,8 @@ namespace POT.Controllers
                     ModelState.AddModelError("FileName", string.Format("File size cannot exceed {0}MB", Config.MaxFileSizMB)); break;
                 case FileIO.result.successful: break;
                 default://Any other issue
-                    ModelState.AddModelError("FileName", "Unable to upload file"); break;
+                    otherIssue = otherIssue.Replace("'", "\"").Replace("\\", "\\\\"); // to avoid conflict with scripting
+                    ModelState.AddModelError("FileName", otherIssue); break;
             }
 
             #endregion

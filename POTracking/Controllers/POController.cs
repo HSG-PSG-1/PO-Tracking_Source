@@ -30,13 +30,24 @@ namespace POT.Controllers
 
             POHeader po = new POService().GetPOInfoById(POID);// GetPOHeaderById
 
-            if (po.ID <= Defaults.Integer && (po.OrderStatusID == null || po.OrderStatusID == Defaults.Integer))
+            #region Special case for invalid PO access
+
+            if (po.ID <= Defaults.Integer && 
+                (po.OrderStatusID == null || po.OrderStatusID == Defaults.Integer))
             {
-                ViewData["Message"] = "PO not found"; return View("DataNotFound"); /* deleted po accessed from Log*/
+                ViewData["Message"] = "PO not found";
+                return View("DataNotFound"); /* deleted po accessed from Log*/
             }
-            //// In case an archived entry is accessed
-            //if (vw.Archived)
-            //    return RedirectToAction("Archived", new { POID = POID });
+            // In case an archived entry is accessed
+            if (po.Archived)
+            {
+                ViewData["Message"] = "PO has been archived";
+                return View("DataNotFound");
+            }
+            // For Future - return RedirectToAction("Archived", new { POID = POID });
+            
+            #endregion
+
             //Empty so invalid POID - go to Home
             if (po == new POService().emptyPO)//emptyView
                 return RedirectToAction("List", "Dashboard");

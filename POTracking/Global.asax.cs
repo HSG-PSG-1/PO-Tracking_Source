@@ -31,7 +31,7 @@ namespace POT
             );
 
             routes.MapRoute("User", "Users/{action}", new { controller = "User", action = "List" });
-            routes.MapRoute("PO_Default", "PO/{POID}/{action}", new { controller = "PO", POID = -1, action = "Manage" });// (default action? because we dpn't want to hide it)            
+            routes.MapRoute("PO_Default", "PO/{POID}/{action}", new { controller = "PO", POID = -1, action = "Manage?" });// (default action? because we dpn't want to hide it)            
             routes.MapRoute("Role", "Roles/{action}", new { controller = "Role", action = "Manage" });
             routes.MapRoute("Master_Default", "Master/Manage/{masterTbl}", new { controller = "Master", action = "Manage"});
             routes.MapRoute("Home", "Dashboard/{action}", new { controller = "Dashboard", action = "List" });

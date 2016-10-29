@@ -132,7 +132,8 @@ ko.bindingHandlers.datepicker = {
 
             var funcOnSelectdate = function () {
                 var observable = valueAccessor();
-                observable($(element).datepicker("getDate"));
+                var dt = $(element).datepicker("getDate");
+                observable(validateSQLDate(dt));
 
                 // explicitly trigger change for alt field which stored the text date
                 try { $($(element).datepicker("option", 'altField')).change(); }
@@ -194,12 +195,19 @@ ko.bindingHandlers.datepicker = {
 /* <input data-bind="datepicker: myDate, datepickerOptions: { minDate: new Date() }" /> */
 
 function makeDateTimezoneNeutral(dt) {
-    console.log(dt);
+    // ERR in IE < 10 console.log(dt);
     // HT: SPECIAL CASE - some time zone client browsers will show upto 1 day offset based on the UTC time diff
     //DOESN'T work - dt = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000);
     dt.setHours(dt.getHours() + dt.getTimezoneOffset() / 60);
     // ^^^ this shud nullify that difference as per SO : 1486476 (works),  26028466 (nope)
-    console.log(dt);
-
+    // ERR in IE < 10 console.log(dt);
+    return dt;
+}
+function validateSQLDate(dt) {
+    // The best place to ensure that the dtp date is SQL valid
+    if (dt < minSQLDate || dt > maxSQLDate) {
+        alert("invalid date, reset to today");
+        dt = new Date();
+    }
     return dt;
 }

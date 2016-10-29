@@ -42,7 +42,7 @@
     <tr>
         <td align="center">            
                 <a title="Click to view this po" data-bind="text:$data.POno, 
-                attr:{href:'@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new {POID = -99 }))'.replace('-99', $data.ID)}">
+                attr:{href:'@Url.Action("Manage", "PO", new {POID = -99 })'.replace('-99', $data.ID)}">
                 </a>
         </td>
         <td align="center" data-bind="text:POdt"></td>

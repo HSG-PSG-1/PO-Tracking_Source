@@ -7,7 +7,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <NameOfLastUsedPublishProfile>Profile1</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>HT-Dell</NameOfLastUsedPublishProfile>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

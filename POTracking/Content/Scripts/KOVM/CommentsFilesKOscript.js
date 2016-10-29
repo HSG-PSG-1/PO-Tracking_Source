@@ -89,6 +89,7 @@ var commentsViewModel = function ()
                     },
                     function (result) {
                         //alert(result); HT: we can notify user if a successful email was sent
+                        if(!result.selfNotif)
                         showNOTY(result.msg, result.sendMail);
                         if (result.sendMail) {
                             $("#AssignToOLD").val(_AssignTo).trigger("change");
@@ -163,6 +164,8 @@ var filesHeaderModel = function () {
         file.LastModifiedDate(Date111);
     }
     self.addFile = function (file) {
+        try  
+        {
         if (file.FileName == null || file.FileName == "") {
             //http://knockoutjs.com/documentation/event-binding.html
             showNOTY("Please select a file to upload", false); return false;
@@ -180,6 +183,7 @@ var filesHeaderModel = function () {
             $('#tblFilesH').tableNav(); // for newly created TR
             setFocusEditableGrid("tblFilesH", false);
         }
+        } catch (ex) { showNOTY(ex + ":" + ex.Message, false); }
         return true; // for ajax submit
     };
 

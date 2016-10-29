@@ -70,7 +70,9 @@ namespace POT.Services
                     else if (_Session.IsAsiaVendor)
                         results = new List<POT.Models.Lookup>(){
                             new Lookup(){ id = Config.VendorIDSvizz.ToString(), value = "Svizz-One Corporation Ltd." },
-                            new Lookup(){ id = Config.VendorIDDeestone.ToString(), value = "Deestone" }
+                            new Lookup(){ id = Config.VendorIDDeestone.ToString(), value = "Deestone" },
+                            new Lookup(){ id = Config.VendorIDDeestone.ToString(), value = "Deestone Limited" },
+                            new Lookup(){ id = Config.VendorIDSiamtruck.ToString(), value = "Siamtruck Radial Company Ltd" }
                         }.AsQueryable();
                     #endregion
                     else

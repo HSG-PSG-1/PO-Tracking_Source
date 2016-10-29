@@ -103,7 +103,7 @@ namespace HSG.Helper
             //set contents
             string claimLink = //FromComment ? Defaults.trimLastURLSegment(HttpContext.Current.Request.Url.ToString()) : HttpContext.Current.Request.Url.ToString();
             HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) +
-            new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext).Action("Manage?", "PO", new { POID = POId });
+            new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext).Action("Manage", "PO", new { POID = POId });
 
             claimLink = System.Web.HttpUtility.UrlDecode(claimLink);//.TrimEnd(new char[] { '?' });//Need to add Manage? so that mvc doesn't remove default action, now trim it.
 

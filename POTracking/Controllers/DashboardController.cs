@@ -25,8 +25,6 @@ namespace POT.Controllers
         public ActionResult List(int? index, string qData)
         {
             index = index ?? 0;
-            //_Session.NewSort = DashboardService.sortOn1; _Session.OldSort = string.Empty;//Initialize (only once)
-            //base.SetSearchOpts(index.Value);
             //Special case: Set the filter back if it existed so that if the user "re-visits" the page he gets the previous filter (unless reset or logged off)
             searchOpts = _Session.Search[Filters.list.Dashboard];//new vw_PO_Dashboard();
 
@@ -37,101 +35,11 @@ namespace POT.Controllers
             return View((object)FetchDataAndGetFirstPage(0, String.Empty)); // SO : 5635383/illegal-characters-in-path
         }
 
-        #region jq Grid demo
-
-        public ActionResult ListJQG()
-        {
-            return View();
-        }
-
-        [CacheControl(HttpCacheability.NoCache)]//Don't mention GET or post as this is required for both!
-        public ContentResult POListjqg()
-        {
-            //Make sure searchOpts is assigned to set ViewState
-            vw_PO_Dashboard oldSearchOpts = (vw_PO_Dashboard)searchOpts;
-            searchOpts = new vw_PO_Dashboard();
-            populateData(false); //Set the Vendor filter
-
-            var result = from vw_u in new DashboardService().SearchKO(
-                sortExpr, null, gridPageSize, (vw_PO_Dashboard)searchOpts, true, _Session.IsOnlyVendor)
-                         select new
-                         {
-                             ID = vw_u.ID,
-                             POno = vw_u.PONumber,
-                             OrdStat = vw_u.OrderStatusID,
-                             AssignTo = vw_u.AssignTo,
-                             //VendorID = vw_u.VendorID,
-                             Vndr = vw_u.VendorName,
-                             Brand = vw_u.BrandName,
-                             Status = vw_u.OrderStatusID,//Status,
-                             Cmts = vw_u.CommentsExist,
-                             Files = vw_u.FilesHExist,
-                             POdt = vw_u.PODateOnly,
-                             ETA = vw_u.ETAOnly,
-                             ETD = vw_u.ETDOnly,
-                             Ship = vw_u.ShipToCity
-                         };
-            
-            System.Web.Script.Serialization.JavaScriptSerializer jsSerializer =
-                new System.Web.Script.Serialization.JavaScriptSerializer { MaxJsonLength = Int32.MaxValue }; //Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet);
-
-            var jsonDataSet = new ContentResult
-            {
-                Content = jsSerializer.Serialize(result.Take(2900)),
-                ContentType = "application/json",
-                //ContentEncoding = 
-            };
-            // MVC 4 : jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonDataSet;
-        }
-
-        #endregion
-
         #region Will need GET (for AJAX) & Post
 
         [CacheControl(HttpCacheability.NoCache)]//Don't mention GET or post as this is required for both!
         public ContentResult POListKO(int? index, string qData, bool? fetchAll)
-        {
-            #region Obsolete (remove after confirmation)
-            /*base.SetTempDataSort(ref index);// Set TempDate, Sort & index
-            //Make sure searchOpts is assigned to set ViewState
-            vw_PO_Dashboard oldSearchOpts = (vw_PO_Dashboard)searchOpts;
-            searchOpts = new vw_PO_Dashboard();
-            populateData(false);
-            
-            #region Special case for Vendor Users
-            if (_Session.IsOnlyVendor)
-            {//Set the Vendor filter
-                oldSearchOpts.VendorID = _SessionUsr.OrgID;
-                oldSearchOpts.VendorName = _SessionUsr.OrgName;
-            }
-            #endregion
-
-            index = (index > 0) ? index + 1 : index; // paging starts with 2
-
-            var result = from vw_u in new DashboardService().SearchKO(
-                sortExpr, index, gridPageSize * 2, (vw_PO_Dashboard)searchOpts, fetchAll ?? false, _Session.IsOnlyVendor)
-                         select new
-                         {
-                             ID = vw_u.ID,
-                             POno = vw_u.PONumber,
-                             OrdStat = vw_u.OrderStatusID,
-                             AssignTo = vw_u.AssignTo,
-                             //VendorID = vw_u.VendorID,
-                             Vndr = vw_u.VendorName,
-                             Brand = vw_u.BrandName,
-                             Status = vw_u.Status,
-                             Cmts = vw_u.CommentsExist,
-                             Files = vw_u.FilesHExist,
-                             POdt = vw_u.PODateOnly,
-                             ETA = vw_u.ETAOnly,
-                             ETD = vw_u.ETDOnly,
-                             Ship = vw_u.ShipToCity
-                         };
-             
-            //return Json(new { records = result, search = oldSearchOpts }, JsonRequestBehavior.AllowGet); */
-            #endregion
-            //IEnumerable<object> result = Session[""];
+        {            
             //Make sure searchOpts is assigned to set ViewState
             vw_PO_Dashboard oldSearchOpts = (vw_PO_Dashboard)searchOpts;
 
@@ -154,15 +62,22 @@ namespace POT.Controllers
             searchOpts = (doReset == "on") ? new vw_PO_Dashboard() : searchObj; // Set or Reset Search-options
             populateData(false);// Populate ddl Viewdata
 
+            orderBy = reFormatSort(orderBy);
+
+            _Session.POIDs = new DashboardService().SearchPOIDKO(searchObj, orderBy);
+
+            return Json(true);// WE just need to set it in the session
+        }
+
+        private string reFormatSort(string orderBy)
+        {
             //Ensure that Orderby has the correcy field (not the custom field so need to replace)
             //Ensure that Orderby has the correcy field (not the custom field so need to replace)
             orderBy = orderBy.Replace("POno", "PONumber").Replace("OrdStat", "OrderStatus").Replace("Vndr", "VendorName").Replace("Brand", "BrandName")
                 .Replace("Cmts", "CommentsExist").Replace("Files", "FilesHExist").Replace("POdt", "PODate").Replace("Ship", "ShipToCity");
             //orderBy = orderBy.Replace("PODateOnly", "PODate").Replace("ETDOnly", "ETD").Replace("ETAOnly", "ETA");
 
-            _Session.POIDs = new DashboardService().SearchPOIDKO(searchObj, orderBy);
-
-            return Json(true);// WE just need to set it in the session
+            return orderBy;
         }
 
         [HttpPost]

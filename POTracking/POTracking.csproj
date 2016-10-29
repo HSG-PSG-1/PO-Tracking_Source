@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>POT</RootNamespace>
     <AssemblyName>POT</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>true</MvcBuildViews>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <FileUpgradeFlags>
@@ -21,6 +21,7 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
     <TargetFrameworkProfile />
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,16 +46,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\ELMAH\Elmah.dll</HintPath>
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elmah.Mvc, Version=2.1.2.1389, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="MiniProfiler">
-      <HintPath>..\packages\MiniProfiler.3.1.1.139\lib\net40\MiniProfiler.dll</HintPath>
+    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MvcPager, Version=1.4.0.0, Culture=neutral, PublicKeyToken=f6872c5a09aed72c, processorArchitecture=MSIL" />
     <Reference Include="protobuf-net, Version=2.0.0.431, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL" />
@@ -64,25 +69,48 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc.Extensions, Version=1.0.9.0, Culture=neutral, PublicKeyToken=17e35335fc9f8fc8, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Web.Mvc.Extensions.Mvc.4.1.0.9\lib\net40\System.Web.Mvc.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
-    <Reference Include="System.Web.WebPages" />
-    <Reference Include="System.Web.Helpers" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator">
       <HintPath>Lib\WebActivator.dll</HintPath>
@@ -123,6 +151,7 @@
     <Compile Include="Code\Services\_ServiceBase.cs" />
     <Compile Include="Code\Services\UserService.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\DashboardJQGController.cs" />
     <Compile Include="Controllers\POController.cs" />
     <Compile Include="Controllers\POCommentController.cs" />
     <Compile Include="Controllers\POFileController.cs" />
@@ -153,6 +182,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\BI_Fileupload\css\jquery.fileupload-ui.css" />
+    <Content Include="Content\BI_Fileupload\css\jquery.fileupload.css" />
+    <Content Include="Content\BI_Fileupload\jquery.fileupload.js" />
+    <Content Include="Content\BI_Fileupload\jquery.iframe-transport.js" />
     <Content Include="Content\Images\AOT-Header.png" />
     <Content Include="Content\Images\clip.gif" />
     <Content Include="Content\Images\del.gif" />
@@ -182,22 +215,18 @@
     <Content Include="Content\JQG\grid.locale-en-4.9.2.js" />
     <Content Include="Content\JQG\jquery.jqgrid.src-4.9.2.js" />
     <Content Include="Content\jQUI\css\images\animated-overlay.gif" />
-    <Content Include="Content\jQUI\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\jQUI\css\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\jQUI\css\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\jQUI\css\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\jQUI\css\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\jQUI\css\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\jQUI\css\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\jQUI\css\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\jQUI\css\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\jQUI\css\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\jQUI\css\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\jQUI\css\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\jQUI\css\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\jQUI\css\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\jQUI\css\jquery-ui.1.12.0.css" />
     <Content Include="Content\jQUI\css\jquery-ui.css" />
     <Content Include="Content\jQUI\min\jquery-2.1.1.min.js" />
+    <Content Include="Content\jQUI\min\jquery-3.1.0.js" />
     <Content Include="Content\jQUI\min\jquery-ui.1.11.4.min.js" />
+    <Content Include="Content\jQUI\min\jquery-ui.1.12.0.js" />
     <Content Include="Content\Scripts\jquery.noty.packaged.v222.js" />
     <Content Include="Content\Scripts\jquery.printElement.js" />
     <Content Include="Content\Scripts\jquery.table.nav.1.0.js" />
@@ -209,6 +238,9 @@
     <Content Include="Content\Scripts\KO\knockout.mapping-latest.js" />
     <Content Include="Content\Scripts\KO\KoExtra.js" />
     <Content Include="Content\Scripts\mousetrap.min.js" />
+    <Content Include="Content\timeout\timeout-dialog.css" />
+    <Content Include="Content\timeout\timeout-dialog.js" />
+    <Content Include="Content\timeout\timeout-icon.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\Scripts\common.js" />
     <Content Include="Web.config">
@@ -271,6 +303,8 @@
     <Content Include="Views\Dashboard\Status.cshtml" />
     <Content Include="Views\PO\PrintPO.cshtml" />
     <Content Include="Views\Dashboard\ListJQG.cshtml" />
+    <Content Include="Views\Dashboard\ListJQGold.cshtml" />
+    <None Include="Properties\PublishProfiles\HT-Dell.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
@@ -299,7 +333,9 @@
     <Content Include="EmailTemplates\ForgotPwd.xml" />
     <Content Include="favicon.ico" />
     <Content Include="Content\Scripts\jquery.form.js" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Start\" />

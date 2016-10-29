@@ -34,7 +34,7 @@ namespace HSG.Helper
 
         #region Upload
 
-        public static result UploadAndSave(HttpPostedFileBase upFile, int POID, string POGUID, int? DetailId)
+        public static result UploadAndSave(HttpPostedFileBase upFile, int POID, string POGUID,ref string OtherIssue, int? DetailId)
         {
             #region Init variables
 
@@ -76,7 +76,11 @@ namespace HSG.Helper
                 //reset original filename
 
             }
-            catch { return result.fileUploadIssue; }
+            catch (Exception ex) 
+            { 
+                OtherIssue = ex.Message + " " + (ex.InnerException??new Exception()).Message; 
+                return result.fileUploadIssue; 
+            }
 
             return result.successful;
         }

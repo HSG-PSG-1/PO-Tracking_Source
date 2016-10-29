@@ -217,7 +217,7 @@
       <Column Name="Division" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
       <Column Name="VendorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="VendorNumber" Type="System.String" DbType="NVarChar(7)" CanBeNull="true" />
-      <Column Name="VendorName" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="VendorName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress1" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress2" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress3" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
@@ -435,7 +435,7 @@
       <Column Name="VendorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="VendorCode" Type="System.String" DbType="NVarChar(7)" CanBeNull="true" />
       <Column Name="VendorNumber" Type="System.String" DbType="NVarChar(7)" CanBeNull="true" />
-      <Column Name="VendorName" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="VendorName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress1" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress2" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="VendorAddress3" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />

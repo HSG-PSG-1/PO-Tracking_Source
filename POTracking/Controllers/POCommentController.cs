@@ -16,12 +16,26 @@ namespace POT.Controllers
     public partial class POController : BaseController
     {
         [HttpPost]
-        public JsonResult CommentsKOEmail(int POID, /*string POGUID,*/ int AssignTo, string PONumber, [FromJson] POComment CommentObj)        
+        public JsonResult CommentsKOEmail(int POID, /*string POGUID,*/ int AssignTo, string PONumber, [FromJson] POComment CommentObj)
         {
-            string msg = "Email queued for new comment";
-            bool sendMail = CommentService.SendEmail(POID, AssignTo, PONumber, CommentObj, ref msg);
+            bool sendMail = (POID > Defaults.Integer && AssignTo != _SessionUsr.ID);// No need to send mail if its current user
+            bool selfNotif = !sendMail;
+            string msg = sendMail ? "Email queued for new comment" : "Self notification : No email queued";
+            try
+            {
+                #region Check and send email
+                if (sendMail)
+                {// No need to send mail if its current user
+                    string UserEmail = new UserService().GetUserEmailByID(AssignTo);
+                    sendMail = MailManager.AssignToMail(PONumber, CommentObj.Comment1,
+                        POID, UserEmail, (_SessionUsr.UserName), true);
+                }
+                #endregion
+            }
+            catch (Exception ex) { sendMail = false; msg = ex.Message; }
+
             HttpContext.Response.Clear(); // to avoid debug email content from rendering !
-            return Json(new { sendMail, msg }, JsonRequestBehavior.AllowGet);
+            return Json(new { sendMail, msg, selfNotif }, JsonRequestBehavior.AllowGet);
         }
 
         public CommentVM GetCommentKOModel(int POID, string POGUID, int AssignTo)

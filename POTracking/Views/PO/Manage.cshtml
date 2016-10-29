@@ -23,7 +23,7 @@
             beforeLoad: function( event, ui ) {
                 ui.ajaxSettings.cache = false;
                 if ( ui.tab.data( "loaded" ) ) {  event.preventDefault();  return;  } 
-                ui.jqXHR.success(function() {   ui.tab.data( "loaded", true ); });
+                ui.jqXHR.done(function() {   ui.tab.data( "loaded", true ); });
             },
             activate: function(event, ui) { setFocus1(event, ui) },
             active: @ViewBag.activeTab.ToString() 
@@ -49,7 +49,7 @@
          var activeTab = $( "#tabs" ).tabs( "option", "active" );
          if(POId > 0)
              window.location.href = 
-             "@HttpUtility.UrlDecode(Url.Action("Manage?", "PO", new { POId = -99 }))".replace('-99',POId) + 'activeTab=' + activeTab;
+             "@Url.Action("Manage", "PO", new { POId = -99 })".replace('-99',POId) + '?activeTab=' + activeTab;
     }
 
     var commentsEmailURL = '@Url.Action("CommentsKOEmail", "PO", new { POGUID = Model.POGUID })';
@@ -58,6 +58,7 @@
         var FileGetURL = '@Url.Action("GetFile", "PO")?';
         var FileDeleteURL = '@Url.Action("FileKODelete", "PO", new { POGUID = Model.POGUID })';        
     </script>
+    <link href="@Url.Content("~/Content/BI_Fileupload/css/jquery.fileupload.css")" rel="stylesheet" type="text/css" />
     <style>
         table.wideTX tr td input[type=text]
         {
@@ -340,7 +341,7 @@
                                                 <td align="right" nowrap="nowrap">Country :&nbsp;
                                                 </td>
                                                 <td align="left" nowrap="nowrap">
-                                                    <input type="text" id="VendorCountryName" name="VendorCountryName" data-bind="value:VendorCountryName" readonly="readonly" title="press <tab> key to move focus to next section" />
+                                                    <input type="text" id="VendorCountryCode" name="VendorCountryCode" data-bind="value:VendorCountryCode" readonly="readonly" title="press <tab> key to move focus to next section" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -475,6 +476,8 @@
 <div id="taco_niteDIV1" name="taco_niteDIV1" style1="display:none">
     &nbsp;
 </div>
+<script src="@Url.Content("~/Content/BI_Fileupload/jquery.iframe-transport.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/BI_Fileupload/jquery.fileupload.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/Scripts/KOVM/CommentsFilesKOscript.js")" type="text/javascript"></script>
 <script type="text/javascript"> 
     var headerViewModel = function () {
@@ -517,7 +520,7 @@
             @*reloadWithCallback('@Html.Raw(Url.Action("Comments", new { POGUID = Model.POGUID, AssignTo = Model.AssignTo }))',
             '',"#tabs-4", function(){createCommentsKO(POVM.Comments, POVM.Comments.AssignTo);});*@
 
-         createFilesHeaderKO(POVM.Files);
+        createFilesHeaderKO(POVM.Files); doUploadifyForMultiFile();
             @*reloadWithCallback('@Url.Action("Files", new { POGUID = Model.POGUID })','',"#tabs-5", 
                 function(){createFilesHeaderKO(POVM.Files);});*@
      }       
@@ -543,8 +546,8 @@
                 setFocus("Comment1");
                 break;
             case 6: // Files                
-                if(!filsTableNavDone) { $("#tblFilesH").tableNav(); filsTableNavDone = true; }
-                setFocus("Comment");
+                if(!filsTableNavDone) { $("#tblFilesH").tableNav(); filsTableNavDone = true;}
+                setFocus("FileType"); 
                 break;  //FileNameNEW
         }
     }
@@ -562,7 +565,7 @@
         if (e.stopPropagation) {e.stopPropagation();e.preventDefault();}
     }
     // A jQuery event , which is triggered after "onbeforeunload" 
-    $(window).unload(function(){ // SO : 19179514            
+    $(window).on('beforeunload', function(){ // SO : 18783535            
         // trigger the final cleanup 
         if (skipCommitChk) { skipCommitChk = false; return; }
         $.post('@Url.Action("CleanupTempUpload")', { POGUID : '@Model.POGUID'});            

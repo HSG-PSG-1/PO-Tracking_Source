@@ -61,7 +61,7 @@ namespace POT.Controllers
 
         [HttpPost]
         //[ValidateInput(false)] // SO: 2673850/validaterequest-false-doesnt-work-in-asp-net-4
-        public ActionResult Login(LogInModel model, string ReturnUrl, bool? IsForgotPassword, string UserEmail)
+        public ActionResult Login(LogInModel model, string ReturnUrl, bool? IsForgotPassword, string UserEmail, string next)
         {
             if (IsForgotPassword.HasValue && IsForgotPassword.Value)
                 return SendPassword(UserEmail, model);//SPECIAL CASE PROCESSING for Forgot password
@@ -86,6 +86,7 @@ namespace POT.Controllers
                     new ActivityLogService(ActivityLogService.Activity.Login).Add();
 
                     //Redirect to return url - if its valid
+                    ReturnUrl = next ?? ReturnUrl;
                     if (RedirectFromLogin(ref ReturnUrl))
                         return Redirect(ReturnUrl);
                     else//Go to the default url -  Dashboard?from=login
@@ -238,6 +239,17 @@ namespace POT.Controllers
         #endregion
 
         #region Misc actions
+
+        [AllowAnonymous]
+        public JsonResult KeepAlive()
+        {
+            //Session["User"] = Session["User"] + " + 1";
+            if (_Session.IsValid())
+                return Json("OK", JsonRequestBehavior.AllowGet);
+            else // OR send back taconite?
+                return Json("INVALID SESSION", JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult NoAccess()
         {

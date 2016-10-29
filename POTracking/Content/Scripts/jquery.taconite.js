@@ -123,7 +123,8 @@
     // 1.5+ hook
     if ($.ajaxPrefilter) {
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-            jqXHR.success(function (data, status, jqXHR) {
+            //HT: jqXHR.success(function (data, status, jqXHR) - is not a function
+            jqXHR.done(function (data, status, jqXHR) {
                 if ($.taconite.autodetect)
                     detect(jqXHR, options.dataType, options);
             });

@@ -147,6 +147,19 @@ namespace HSG.Helper
             }
         }
 
+        /// VendorID for Deestone Ltd
+        /// <summary>
+        /// VendorID for Deestone Ltd
+        /// </summary>
+        public static int VendorIDDeestoneLtd
+        {
+            get
+            {
+                try { return int.Parse(ConfigurationManager.AppSettings.Get("VendorIDDeestoneLtd")); }
+                catch (Exception ex) { return -1; }
+            }
+        }
+
         /// VendorID for Svizz
         /// <summary>
         /// VendorID for Svizz
@@ -156,6 +169,19 @@ namespace HSG.Helper
             get
             {
                 try { return int.Parse(ConfigurationManager.AppSettings.Get("VendorIDSvizz")); }
+                catch (Exception ex) { return -1; }
+            }
+        }
+
+        /// VendorID for Siamtruck Radial Company Ltd.
+        /// <summary>
+        /// VendorID for Siamtruck Radial Company Ltd.
+        /// </summary>
+        public static int VendorIDSiamtruck
+        {
+            get
+            {
+                try { return int.Parse(ConfigurationManager.AppSettings.Get("VendorIDSiamtruck")); }
                 catch (Exception ex) { return -1; }
             }
         }
