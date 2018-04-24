@@ -150,7 +150,7 @@ namespace POT.Services
 
             #region Special case for Asia: Operations
 
-            int[] orgs = new int[] { Config.VendorIDDeestone, Config.VendorIDSvizz, Config.VendorIDSiamtruck, Config.VendorIDDeestoneLtd };
+            int[] orgs = new int[] { Config.VendorIDDeestone, Config.VendorIDSvizz, Config.VendorIDSiamtruck, Config.VendorIDDeestoneLtd, Config.VendorIDDeestoneCorpLtd };
 
             if (_Session.IsAsiaOperations) // SO : 183791
                 dasQ = dasQ.Where(o => !orgs.Contains(o.VendorID ?? -1)); // (Internal) Asia operations role : can see all PO’s except Deestone and Svizz-One.

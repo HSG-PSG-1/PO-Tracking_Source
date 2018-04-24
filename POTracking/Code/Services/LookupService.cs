@@ -72,7 +72,8 @@ namespace POT.Services
                             new Lookup(){ id = Config.VendorIDSvizz.ToString(), value = "Svizz-One Corporation Ltd." },
                             new Lookup(){ id = Config.VendorIDDeestone.ToString(), value = "Deestone" },
                             new Lookup(){ id = Config.VendorIDDeestoneLtd.ToString(), value = "Deestone Limited" },
-                            new Lookup(){ id = Config.VendorIDSiamtruck.ToString(), value = "Siamtruck Radial Company Ltd" }
+                            new Lookup(){ id = Config.VendorIDSiamtruck.ToString(), value = "Siamtruck Radial Company Ltd" },
+                            new Lookup(){ id = Config.VendorIDDeestoneCorpLtd.ToString(), value = "Deestone Corporation Limited" }
                         }.AsQueryable();
                     #endregion
                     else

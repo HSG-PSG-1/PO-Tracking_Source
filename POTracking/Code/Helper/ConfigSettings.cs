@@ -186,6 +186,20 @@ namespace HSG.Helper
             }
         }
 
+        /// VendorID for Deestone Corporation Ltd
+        /// <summary>
+        /// VendorID for Deestone Corporation Ltd
+        /// </summary>
+        public static int VendorIDDeestoneCorpLtd
+        {
+            get
+            {
+                try { return int.Parse(ConfigurationManager.AppSettings.Get("VendorIDDeestoneCorpLtd")); }
+                catch (Exception ex) { return -1; }
+            }
+        }
+        
+
 
         #endregion //Properties
 
